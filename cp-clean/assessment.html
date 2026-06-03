@@ -139,6 +139,7 @@
     <div class="form-actions" style="margin-bottom:1rem">
       <button class="btn-save" onclick="saveAssessment()" id="saveBtn">Save assessment</button>
       <button class="btn-ai" onclick="generateSummary()" id="aiBtn">Generate AI assessment</button>
+      <button class="btn-ghost" onclick="exportToPDF()" id="pdfBtn">Download PDF Report</button>
       <a href="index.html" class="btn-ghost">← Back to dashboard</a>
       <span class="saved-msg" id="savedMsg">✓ Saved!</span>
       <span class="error-msg" id="errorMsg"></span>
@@ -153,5 +154,6 @@
 
 <script src="js/db.js"></script>
 <script src="js/assessment.js"></script>
+<script src="js/pdf-export.js"></script>  
 </body>
 </html>
