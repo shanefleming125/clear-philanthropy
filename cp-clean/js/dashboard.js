@@ -40,19 +40,29 @@ async function renderDashboard() {
         <td style="color:#6B7280">${o.reviewer || o.contactName || '—'}</td>
         <td style="color:#6B7280">${o.reviewDate || (o.created_at || '').split('T')[0] || '—'}</td>
         <td><button class="action-btn" style="background:#E6F1FB;border-color:#B5D4F4;color:#1A6EB5" onclick="event.stopPropagation();copyIntakeLink()">Copy intake link</button></td>
-        <td><button class="action-btn" onclick="event.stopPropagation();deleteOrg('${o.id}')">Delete</button></td>
+        <td><button class="action-btn" onclick="event.stopPropagation();deleteOrg('${o.id}', this)">Delete</button></td>
       </tr>`).join('');
   } catch(e) {
     document.getElementById('loadingState').innerHTML = `<div class="empty-desc" style="color:#E8472A">Error loading: ${e.message}</div>`;
   }
 }
 
-async function deleteOrg(id) {
+async function deleteOrg(id, btn) {
   if (!confirm('Delete this assessment? This cannot be undone.')) return;
+  // Delete from both Supabase and localStorage
   await DB.deleteAssessment(id);
+  // Also clear from localStorage directly
+  localStorage.removeItem('cp:' + id);
+  // Remove the row immediately from the UI
+  btn.closest('tr').remove();
+  // Update stats
   renderDashboard();
 }
 
+function copyIntakeLink() {
+  const url = `${window.location.origin}/intake`;
+  navigator.clipboard.writeText(url).then(() => alert('Intake link copied!\n\nSend this to the nonprofit:\n' + url));
+}
 function copyIntakeLink() {
   const url = `${window.location.origin}/intake`;
   navigator.clipboard.writeText(url).then(() => alert('Intake link copied!\n\nSend this to the nonprofit:\n' + url));
