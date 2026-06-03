@@ -1,0 +1,191 @@
+let editingId = null;
+
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  if (id) loadFromDB(id);
+  recalc();
+});
+
+async function loadFromDB(id) {
+  try {
+    const data = await DB.getAssessment(id);
+    if (data) { editingId = id; populateForm(data); }
+  } catch(e) { console.error('Load error:', e); }
+}
+
+function g(id) { return parseFloat(document.getElementById(id)?.value) || 0; }
+
+function rateBadge(k, v) {
+  return { om: v>=7?'g':v>=0?'m':'p', cr: v>=1.5?'g':v>=1?'m':'p', mc: v>=3?'g':v>=1.5?'m':'p', da: v<=40?'g':v<=65?'m':'p', pe: v>=65?'g':v>=55?'m':'p', fe: v<=20?'g':v<=35?'m':'p', rc: v<=40?'g':v<=60?'m':'p', na: v>=0.25?'g':v>=0.1?'m':'p' }[k] || 'm';
+}
+
+function setBadge(id, r) {
+  const cls = { g: 'bdg-g', m: 'bdg-m', p: 'bdg-p' }, lbl = { g: 'Good', m: 'Moderate', p: 'Poor' };
+  document.getElementById(id).innerHTML = `<span class="bdg ${cls[r]}">${lbl[r]}</span>`;
+  return r;
+}
+
+function setVal(id, val, pct) {
+  const el = document.getElementById(id);
+  if (isNaN(val) || !isFinite(val)) { el.textContent = '—'; return null; }
+  el.textContent = pct ? val.toFixed(1) + '%' : val.toFixed(2);
+  return val;
+}
+
+function recalc() {
+  const rev=g('rev0'), exp=g('exp0'), assets=g('assets0'), liab=g('liab0'), cash=g('cash0');
+  const curra=g('currassets0'), currl=g('currliab0'), prog=g('prog0'), fund=g('fund0'), contrib=g('contrib0'), toprev=g('toprev0');
+  const surplus=rev-exp, netassets=assets-liab;
+  const vals = { om:rev?(surplus/rev*100):NaN, cr:currl?(curra/currl):NaN, mc:exp?(cash/(exp/12)):NaN, da:assets?(liab/assets*100):NaN, pe:exp?(prog/exp*100):NaN, fe:contrib?(fund/contrib*100):NaN, rc:rev?(toprev/rev*100):NaN, na:exp?(netassets/exp):NaN };
+  const pctSet = new Set(['om','da','pe','fe','rc']);
+  const scores = {};
+  Object.entries(vals).forEach(([k,v]) => { const vv=setVal('r_'+k,v,pctSet.has(k)); if(vv!==null) scores[k]=setBadge('b_'+k,rateBadge(k,v)); });
+  const w = { om:18, cr:12, mc:20, da:10, pe:15, fe:8, rc:10, na:7 };
+  const totalW = Object.keys(scores).reduce((s,k) => s+w[k]*(scores[k]==='g'?1:scores[k]==='m'?0.5:0), 0);
+  const maxW = Object.keys(scores).reduce((s,k) => s+w[k], 0);
+  const score = maxW ? Math.round((totalW/maxW)*100) : 0;
+  const scoreEl = document.getElementById('scoreDisplay');
+  const badgeEl = document.getElementById('riskBadge');
+  if (Object.keys(scores).length) {
+    scoreEl.textContent = score;
+    badgeEl.style.display = 'inline-block';
+    if (score>=65) { badgeEl.className='risk-badge risk-low'; badgeEl.textContent='Low Risk'; }
+    else if (score>=35) { badgeEl.className='risk-badge risk-mod'; badgeEl.textContent='Moderate Risk'; }
+    else { badgeEl.className='risk-badge risk-high'; badgeEl.textContent='High Risk'; }
+  } else { scoreEl.textContent='—'; badgeEl.style.display='none'; }
+  updateFlags(vals); updateTrends();
+  return { score, scores, vals };
+}
+
+function updateFlags({ om, cr, mc, da, pe, fe, rc }) {
+  const flags=[], add=(ok,msg)=>flags.push({ok,msg});
+  if(!isNaN(rc)) add(rc<=40, rc>40?'Revenue concentration above 40% — diversification risk.':'Revenue sources are well-diversified.');
+  if(!isNaN(mc)) add(mc>=3, mc<3?'Months of cash below 3 — limited liquidity runway.':'Cash reserves meet the 3-month minimum.');
+  if(!isNaN(om)) add(om>=0, om<0?'Operating deficit — expenses exceed revenue.':'Operating margin is positive.');
+  if(!isNaN(da)) add(da<=65, da>65?'Debt load is high relative to total assets.':'Debt levels are within acceptable range.');
+  if(!isNaN(pe)) add(pe>=65, pe<65?'Program expense ratio below 65% — review overhead.':'Program expense ratio is healthy.');
+  if(!isNaN(fe)) add(fe<=35, fe>35?'Fundraising costs exceed 35% of contributions.':'Fundraising efficiency is strong.');
+  const list = document.getElementById('flagsList');
+  list.innerHTML = flags.length ? flags.map(f=>`<li><span class="fi ${f.ok?'fi-ok':'fi-warn'}">${f.ok?'✓':'⚠'}</span>${f.msg}</li>`).join('') : '<li class="flag-placeholder">Enter data to see risk flags.</li>';
+}
+
+function updateTrends() {
+  const metrics = [{ label:'Total Revenue', ids:['rev0','rev1','rev2'] }, { label:'Total Expenses', ids:['exp0','exp1','exp2'] }, { label:'Cash & Equivalents', ids:['cash0','cash1','cash2'] }];
+  const notes = { up:{ Revenue:'Growing — positive trend.', Expenses:'Rising costs — watch margin.', Equivalents:'Cash position improving.' }, down:{ Revenue:'Declining — investigate causes.', Expenses:'Costs decreasing.', Equivalents:'Cash declining — monitor closely.' }, flat:{ Revenue:'Revenue relatively stable.', Expenses:'Expenses stable.', Equivalents:'Cash holding steady.' } };
+  const container = document.getElementById('trendRows');
+  const hasData = metrics.some(m => m.ids.some(id => g(id)>0));
+  if (!hasData) { container.innerHTML='<div class="flag-placeholder">Enter 3 years of data to see trends.</div>'; return; }
+  container.innerHTML = metrics.map(m => {
+    const [a,b,c] = m.ids.map(id => g(id));
+    if (!a||!b||!c) return '';
+    const dir = a>=b&&b>=c?'up':a<=b&&b<=c?'down':'flat';
+    const arrow = { up:'↑', down:'↓', flat:'→' }, cls = { up:'tu', down:'td2', flat:'tf' };
+    const key = m.label.split(' ').pop();
+    return `<div class="trend-row"><span class="tl">${m.label}</span><span class="${cls[dir]}">${arrow[dir]}</span><span class="tn">${notes[dir][key]||''}</span></div>`;
+  }).join('');
+}
+
+async function saveAssessment() {
+  const { score } = recalc();
+  const badgeEl = document.getElementById('riskBadge');
+  const riskLevel = badgeEl.textContent.replace(' Risk','') || 'Unknown';
+  const data = {
+    id: editingId || ('id_' + Date.now()),
+    orgName: document.getElementById('orgName').value || 'Unnamed Organization',
+    fyEnd: document.getElementById('fyEnd').value,
+    reviewer: document.getElementById('reviewer').value,
+    reviewDate: document.getElementById('reviewDate').value,
+    recommendation: document.getElementById('recommendation').value,
+    impression: document.getElementById('impression').value,
+    questions: document.getElementById('questions').value,
+    score, riskLevel,
+    rev:g('rev0'), exp:g('exp0'), assets:g('assets0'), liab:g('liab0'), cash:g('cash0'),
+    currassets:g('currassets0'), currliab:g('currliab0'),
+    prog:g('prog0'), mgmt:g('mgmt0'), fund:g('fund0'), contrib:g('contrib0'), toprev:g('toprev0'),
+    rev1:g('rev1'), rev2:g('rev2'), exp1:g('exp1'), exp2:g('exp2'), cash1:g('cash1'), cash2:g('cash2'),
+    docs: ['doc_990','doc_audit','doc_bs','doc_is','doc_cf','doc_budget','doc_minutes','doc_strategic'].filter(id => document.getElementById(id)?.checked),
+    created_at: new Date().toISOString(),
+    savedAt: new Date().toISOString()
+  };
+  const savedMsg = document.getElementById('savedMsg'), errorMsg = document.getElementById('errorMsg');
+  try {
+    await DB.saveAssessment(data);
+    editingId = data.id;
+    document.getElementById('formTitle').textContent = 'Edit — ' + data.orgName;
+    const url = new URL(window.location); url.searchParams.set('id', data.id); window.history.replaceState({}, '', url);
+    savedMsg.style.display = 'inline'; errorMsg.style.display = 'none';
+    setTimeout(() => savedMsg.style.display = 'none', 2500);
+  } catch(e) {
+    errorMsg.textContent = 'Save failed: ' + e.message; errorMsg.style.display = 'inline';
+  }
+}
+
+async function generateSummary() {
+  const rev=g('rev0'), exp=g('exp0'), cash=g('cash0'), prog=g('prog0'), assets=g('assets0'), liab=g('liab0'), contrib=g('contrib0'), fund=g('fund0'), toprev=g('toprev0');
+  const surplus=rev-exp, netassets=assets-liab;
+  const fmt = n => '$' + n.toLocaleString();
+  const pct = (a,b) => b ? (a/b*100).toFixed(1)+'%' : 'N/A';
+  const mc = exp ? (cash/(exp/12)).toFixed(1) : 'N/A';
+  const score = document.getElementById('scoreDisplay').textContent;
+  const org = document.getElementById('orgName').value || 'the organization';
+  const fy = document.getElementById('fyEnd').value || 'current fiscal year';
+  const rec = document.getElementById('recommendation').value || 'not selected';
+  const notes = document.getElementById('impression').value || 'none';
+  const qs = document.getElementById('questions').value || 'none';
+  const docMap = { 'doc_990':'Form 990', 'doc_audit':'Audited Financials', 'doc_bs':'Balance Sheet', 'doc_is':'Income Statement', 'doc_cf':'Cash Flow Statement', 'doc_budget':'Board Budget', 'doc_minutes':'Board Minutes', 'doc_strategic':'Strategic Plan' };
+  const docs = Object.keys(docMap).filter(id => document.getElementById(id)?.checked).map(id => docMap[id]).join(', ') || 'none';
+
+  const prompt = `Write a professional 3-paragraph nonprofit financial assessment as a formal grant reviewer narrative.
+
+ORGANIZATION: ${org} | FISCAL YEAR: ${fy} | HEALTH SCORE: ${score}/100
+Revenue: ${fmt(rev)} | Expenses: ${fmt(exp)} | Surplus/Deficit: ${fmt(surplus)} (${pct(surplus,rev)} margin)
+Cash: ${fmt(cash)} (${mc} months) | Assets: ${fmt(assets)} | Liabilities: ${fmt(liab)} | Net Assets: ${fmt(netassets)}
+Program Expense Ratio: ${pct(prog,exp)} | Fundraising Efficiency: ${pct(fund,contrib)}
+Revenue Concentration: ${pct(toprev,rev)} | Debt to Assets: ${pct(liab,assets)}
+Documents: ${docs} | Recommendation: ${rec}
+Reviewer notes: ${notes} | Follow-up questions: ${qs}
+
+Paragraph 1: Overall financial health and strengths with specific numbers.
+Paragraph 2: Key risks and concerns referencing specific ratios.
+Paragraph 3: Clear recommendation and next steps.`;
+
+  const btn = document.getElementById('aiBtn');
+  const resultDiv = document.getElementById('aiResult');
+  const textDiv = document.getElementById('aiText');
+  btn.textContent = 'Generating...'; btn.disabled = true;
+  resultDiv.style.display = 'block'; textDiv.textContent = 'Writing assessment...';
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    textDiv.textContent = data.result;
+  } catch(e) {
+    textDiv.textContent = 'Error: ' + e.message;
+  }
+  btn.textContent = 'Generate AI assessment'; btn.disabled = false;
+}
+
+function copyAssessment() {
+  const text = document.getElementById('aiText').textContent;
+  navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
+}
+
+function populateForm(d) {
+  document.getElementById('formTitle').textContent = 'Edit — ' + d.orgName;
+  ['orgName','fyEnd','reviewer','reviewDate','recommendation','impression','questions'].forEach(id => {
+    const el = document.getElementById(id); if (el && d[id] !== undefined) el.value = d[id];
+  });
+  const map = { rev0:'rev', exp0:'exp', assets0:'assets', liab0:'liab', cash0:'cash', currassets0:'currassets', currliab0:'currliab', prog0:'prog', mgmt0:'mgmt', fund0:'fund', contrib0:'contrib', toprev0:'toprev', rev1:'rev1', rev2:'rev2', exp1:'exp1', exp2:'exp2', cash1:'cash1', cash2:'cash2' };
+  Object.entries(map).forEach(([elId,key]) => { const el=document.getElementById(elId); if(el && d[key]) el.value=d[key]; });
+  ['doc_990','doc_audit','doc_bs','doc_is','doc_cf','doc_budget','doc_minutes','doc_strategic'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.checked = d.docs?.includes(id) || false;
+  });
+  recalc();
+}
