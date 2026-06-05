@@ -140,6 +140,6 @@ async function deleteOrg(id, btn) {
 }
 
 function copyIntakeLink() {
-  const url = `${window.location.origin}/intake`;
+  const url = `${window.location.origin}/intake.html`;
   navigator.clipboard.writeText(url).then(() => alert('Intake link copied!\n\nSend this to the nonprofit:\n' + url));
 }
