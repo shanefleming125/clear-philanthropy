@@ -1,7 +1,7 @@
 {
   "rewrites": [
-    { "source": "/assessment", "destination": "/assessment.html" },
     { "source": "/intake", "destination": "/intake.html" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/assessment", "destination": "/assessment.html" },
+    { "source": "/dashboard", "destination": "/index.html" }
   ]
 }
