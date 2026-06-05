@@ -1,3 +1,5 @@
+// assessment.js — Clear Philanthropy
+
 let editingId = null;
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -14,6 +16,8 @@ async function loadFromDB(id) {
   } catch(e) { console.error('Load error:', e); }
 }
 
+// g() is overridden by currency.js to handle formatted values
+// This version is a fallback only
 function g(id) { return parseFloat(document.getElementById(id)?.value) || 0; }
 
 function rateBadge(k, v) {
@@ -67,7 +71,7 @@ function updateFlags({ om, cr, mc, da, pe, fe, rc }) {
   if(!isNaN(pe)) add(pe>=65, pe<65?'Program expense ratio below 65% — review overhead.':'Program expense ratio is healthy.');
   if(!isNaN(fe)) add(fe<=35, fe>35?'Fundraising costs exceed 35% of contributions.':'Fundraising efficiency is strong.');
   const list = document.getElementById('flagsList');
-  list.innerHTML = flags.length ? flags.map(f=>`<li><span class="fi ${f.ok?'fi-ok':'fi-warn'}">${f.ok?'✓':'⚠'}</span>${f.msg}</li>`).join('') : '<li class="flag-placeholder">Enter data to see risk flags.</li>';
+  list.innerHTML = flags.length ? flags.map(f=>`<li><span class="fi ${f.ok?'fi-ok':'fi-warn'}">${f.ok?'✓':'⚠'}</span>${f.msg}</li>`).join('') : '<li class="flag-placeholder">Enter data to see financial health indicators.</li>';
 }
 
 function updateTrends() {
@@ -87,27 +91,50 @@ function updateTrends() {
 }
 
 async function saveAssessment() {
+  // Validate required fields
+  const required = [
+    { id: 'orgName', label: 'Organization Name' },
+    { id: 'ein', label: 'EIN' },
+    { id: 'fyEnd', label: 'Fiscal Year End' },
+    { id: 'reviewer', label: 'Reviewer Name' },
+  ];
+  const missing = required.filter(f => !document.getElementById(f.id)?.value?.trim());
+  if (missing.length) {
+    const errorMsg = document.getElementById('errorMsg');
+    errorMsg.textContent = 'Please fill in required fields: ' + missing.map(f => f.label).join(', ');
+    errorMsg.style.display = 'inline';
+    setTimeout(() => errorMsg.style.display = 'none', 4000);
+    return;
+  }
+
   const { score } = recalc();
   const badgeEl = document.getElementById('riskBadge');
   const riskLevel = badgeEl.textContent.replace(' Risk','') || 'Unknown';
+  const aiText = document.getElementById('aiText')?.textContent?.trim() || '';
+  const hasAI = aiText && aiText !== 'Writing assessment...';
+
   const data = {
     id: editingId || ('id_' + Date.now()),
     orgName: document.getElementById('orgName').value || 'Unnamed Organization',
+    ein: document.getElementById('ein').value,
     fyEnd: document.getElementById('fyEnd').value,
     reviewer: document.getElementById('reviewer').value,
     reviewDate: document.getElementById('reviewDate').value,
     recommendation: document.getElementById('recommendation').value,
     impression: document.getElementById('impression').value,
     questions: document.getElementById('questions').value,
+    aiNarrative: hasAI ? aiText : '',
     score, riskLevel,
     rev:g('rev0'), exp:g('exp0'), assets:g('assets0'), liab:g('liab0'), cash:g('cash0'),
     currassets:g('currassets0'), currliab:g('currliab0'),
     prog:g('prog0'), mgmt:g('mgmt0'), fund:g('fund0'), contrib:g('contrib0'), toprev:g('toprev0'),
     rev1:g('rev1'), rev2:g('rev2'), exp1:g('exp1'), exp2:g('exp2'), cash1:g('cash1'), cash2:g('cash2'),
     docs: ['doc_990','doc_audit','doc_bs','doc_is','doc_cf','doc_budget','doc_minutes','doc_strategic'].filter(id => document.getElementById(id)?.checked),
-    created_at: new Date().toISOString(),
+    created_at: editingId ? undefined : new Date().toISOString(),
     savedAt: new Date().toISOString()
   };
+  if (!data.created_at) delete data.created_at;
+
   const savedMsg = document.getElementById('savedMsg'), errorMsg = document.getElementById('errorMsg');
   try {
     await DB.saveAssessment(data);
@@ -169,7 +196,7 @@ Paragraph 3: Clear recommendation and next steps.`;
   } catch(e) {
     textDiv.textContent = 'Error: ' + e.message;
   }
-  btn.textContent = 'Generate AI assessment'; btn.disabled = false;
+  btn.textContent = 'Generate AI Assessment'; btn.disabled = false;
 }
 
 function copyAssessment() {
@@ -179,13 +206,22 @@ function copyAssessment() {
 
 function populateForm(d) {
   document.getElementById('formTitle').textContent = 'Edit — ' + d.orgName;
-  ['orgName','fyEnd','reviewer','reviewDate','recommendation','impression','questions'].forEach(id => {
+  ['orgName','ein','fyEnd','reviewer','reviewDate','recommendation','impression','questions'].forEach(id => {
     const el = document.getElementById(id); if (el && d[id] !== undefined) el.value = d[id];
   });
+
+  // Restore AI narrative if it was saved
+  if (d.aiNarrative) {
+    document.getElementById('aiResult').style.display = 'block';
+    document.getElementById('aiText').textContent = d.aiNarrative;
+  }
+
   const map = { rev0:'rev', exp0:'exp', assets0:'assets', liab0:'liab', cash0:'cash', currassets0:'currassets', currliab0:'currliab', prog0:'prog', mgmt0:'mgmt', fund0:'fund', contrib0:'contrib', toprev0:'toprev', rev1:'rev1', rev2:'rev2', exp1:'exp1', exp2:'exp2', cash1:'cash1', cash2:'cash2' };
   Object.entries(map).forEach(([elId,key]) => { const el=document.getElementById(elId); if(el && d[key]) el.value=d[key]; });
   ['doc_990','doc_audit','doc_bs','doc_is','doc_cf','doc_budget','doc_minutes','doc_strategic'].forEach(id => {
     const el = document.getElementById(id); if (el) el.checked = d.docs?.includes(id) || false;
   });
   recalc();
+  // Format currency fields after data is loaded — fixes the persistence bug
+  if (typeof formatAllFields === 'function') formatAllFields();
 }
