@@ -1,16 +1,7 @@
 {
   "rewrites": [
-    {
-      "source": "/intake",
-      "destination": "/intake.html"
-    },
-    {
-      "source": "/assessment",
-      "destination": "/assessment.html"
-    },
-    {
-      "source": "/dashboard",
-      "destination": "/index.html"
-    }
+    { "source": "/intake", "destination": "/intake.html" },
+    { "source": "/assessment", "destination": "/assessment.html" },
+    { "source": "/dashboard", "destination": "/index.html" }
   ]
 }
