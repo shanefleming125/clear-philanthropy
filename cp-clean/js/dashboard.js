@@ -4,7 +4,8 @@ let allOrgs = [];
 let sortKey = '';
 let sortDir = 'asc';
 
-window.addEventListener('DOMContentLoaded', renderDashboard);
+// Called directly after auth confirms session
+renderDashboard();
 
 async function renderDashboard() {
   try {
