@@ -1,8 +1,6 @@
 // db.js — Clear Philanthropy
 // All Supabase database operations, auth-aware
-
-const SUPABASE_URL = 'https://raqlumqmxlhecmgntvlt.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhcWx1bXFteGxoZWNtZ250dmx0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MzE3MDksImV4cCI6MjA5NjAwNzcwOX0.oViokaRl4CWMoOI6BrC8wCW4rq5AI_rjUhtwU_xsumc';
+// Note: SUPABASE_URL and SUPABASE_ANON are defined in auth.js
 
 const DB = {
 
