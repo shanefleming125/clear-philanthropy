@@ -18,26 +18,33 @@
   <div class="nav-links">
     <a href="index.html" class="nav-link active">Dashboard</a>
     <a href="assessment.html" class="nav-link">+ New Assessment</a>
+    <button class="btn-intake" onclick="copyIntakeLink()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      Copy Intake Link
+    </button>
   </div>
 </nav>
 
 <main class="container">
   <div class="page-header">
     <div>
-      <h1>Organization assessments</h1>
+      <h1>Organization Assessments</h1>
       <p class="page-sub">Review and manage all nonprofit financial assessments</p>
     </div>
-    <a href="assessment.html" class="btn-primary">+ New assessment</a>
+    <a href="assessment.html" class="btn-primary">+ New Assessment</a>
   </div>
 
   <div class="stats-row">
-    <div class="stat-card"><div class="stat-label">Total orgs</div><div class="stat-val" id="statTotal">—</div><div class="stat-sub">assessed</div></div>
-    <div class="stat-card"><div class="stat-label">Low risk</div><div class="stat-val green" id="statLow">—</div><div class="stat-sub">organizations</div></div>
-    <div class="stat-card"><div class="stat-label">Moderate risk</div><div class="stat-val amber" id="statMod">—</div><div class="stat-sub">organizations</div></div>
-    <div class="stat-card"><div class="stat-label">High risk</div><div class="stat-val red" id="statHigh">—</div><div class="stat-sub">organizations</div></div>
+    <div class="stat-card"><div class="stat-label">Total Orgs</div><div class="stat-val" id="statTotal">—</div><div class="stat-sub">assessed</div></div>
+    <div class="stat-card"><div class="stat-label">Low Risk</div><div class="stat-val green" id="statLow">—</div><div class="stat-sub">organizations</div></div>
+    <div class="stat-card"><div class="stat-label">Moderate Risk</div><div class="stat-val amber" id="statMod">—</div><div class="stat-sub">organizations</div></div>
+    <div class="stat-card"><div class="stat-label">High Risk</div><div class="stat-val red" id="statHigh">—</div><div class="stat-sub">organizations</div></div>
   </div>
 
   <div class="card">
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="searchInput" placeholder="Search organizations by name…" oninput="filterTable()">
+    </div>
     <div id="loadingState" class="empty-state">
       <div class="empty-desc">Loading assessments...</div>
     </div>
@@ -46,13 +53,23 @@
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#E6F1FB"/><path d="M12 20h16M12 14h16M12 26h10" stroke="#1A6EB5" stroke-width="1.5" stroke-linecap="round"/></svg>
       </div>
       <div class="empty-title">No assessments yet</div>
-      <div class="empty-desc">Click "New assessment" to get started.</div>
+      <div class="empty-desc">Click "New Assessment" to get started.</div>
       <a href="assessment.html" class="btn-primary" style="display:inline-flex;margin-top:1rem">Start your first assessment</a>
+    </div>
+    <div id="noResults" class="empty-state" style="display:none">
+      <div class="empty-title">No results found</div>
+      <div class="empty-desc">Try a different search term.</div>
     </div>
     <table class="org-table" id="orgTable" style="display:none">
       <thead>
         <tr>
-          <th>Organization</th><th>Score</th><th>Risk level</th><th>Recommendation</th><th>Reviewer</th><th>Date</th><th>Share link</th><th></th>
+          <th onclick="sortTable('orgName')">Organization</th>
+          <th onclick="sortTable('score')">Score</th>
+          <th onclick="sortTable('riskLevel')">Risk Level</th>
+          <th onclick="sortTable('recommendation')">Recommendation</th>
+          <th onclick="sortTable('reviewer')">Reviewer</th>
+          <th onclick="sortTable('reviewDate')">Date</th>
+          <th></th>
         </tr>
       </thead>
       <tbody id="orgTableBody"></tbody>
