@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Clear Philanthropy</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231A6EB5'/><path d='M8 16L13 21L24 11' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
+<style>
+  .admin-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.25rem; }
+  .user-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #F3F4F6; font-size: 13px; }
+  .user-row:last-child { border-bottom: none; }
+  .user-email { font-weight: 600; color: var(--text); }
+  .user-meta { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+  .user-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+  .badge-confirmed { background: #dcfce7; color: #166534; }
+  .badge-pending { background: #fef3c7; color: #92400e; }
+  .badge-admin { background: #E6F1FB; color: #0C447C; }
+  .invite-row { display: flex; gap: 10px; align-items: flex-end; }
+  .invite-row .field-wrap { flex: 1; margin: 0; }
+  .btn-danger { background: none; border: 1px solid #FCA5A5; color: var(--red); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .btn-danger:hover { background: #FEE2E2; }
+  .success-msg { font-size: 13px; color: var(--green); font-weight: 700; display: none; }
+  .users-loading { font-size: 13px; color: var(--text-secondary); padding: 1rem 0; }
+</style>
+</head>
+<body style="display:none">
+<nav class="topbar">
+  <a href="index.html" class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 4.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="logo-text">Clear <span>Philanthropy</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Dashboard</a>
+    <a href="admin.html" class="nav-link active">Admin</a>
+    <span id="userEmail" style="font-size:12px;color:rgba(255,255,255,0.4);padding:0 8px;"></span>
+    <button class="btn-intake" onclick="AUTH.signOut()">Sign Out</button>
+  </div>
+</nav>
+
+<main class="container" style="max-width:700px">
+  <div class="page-header">
+    <div>
+      <h1>User Management</h1>
+      <p class="page-sub">Invite reviewers and manage access to Clear Philanthropy</p>
+    </div>
+  </div>
+
+  <!-- Invite -->
+  <div class="admin-card">
+    <div class="sec-title">Invite A New User</div>
+    <div class="invite-row">
+      <div class="field-wrap">
+        <label>Email Address</label>
+        <input type="email" id="inviteEmail" placeholder="colleague@foundation.org">
+      </div>
+      <button class="btn-primary" onclick="inviteUser()" id="inviteBtn">Send Invite</button>
+    </div>
+    <div style="margin-top:10px">
+      <span class="success-msg" id="inviteSuccess">✓ Invite sent!</span>
+      <span class="error-msg" id="inviteError" style="display:none"></span>
+    </div>
+    <p style="font-size:12px;color:var(--text-secondary);margin-top:10px">
+      The user will receive an email with a link to set their password and access the dashboard.
+    </p>
+  </div>
+
+  <!-- Users list -->
+  <div class="admin-card">
+    <div class="sec-title">Current Users</div>
+    <div id="usersLoading" class="users-loading">Loading users...</div>
+    <div id="usersList"></div>
+  </div>
+</main>
+
+<script src="js/auth.js"></script>
+<script>
+  const SUPABASE_URL = 'https://raqlumqmxlhecmgntvlt.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhcWx1bXFteGxoZWNtZ250dmx0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MzE3MDksImV4cCI6MjA5NjAwNzcwOX0.oViokaRl4CWMoOI6BrC8wCW4rq5AI_rjUhtwU_xsumc';
+
+  // Auth guard
+  (async () => {
+    const session = await AUTH.requireAuth();
+    if (!session) return;
+    document.body.style.display = '';
+    if (session.user?.email) {
+      document.getElementById('userEmail').textContent = session.user.email;
+    }
+    loadUsers();
+  })();
+
+  async function inviteUser() {
+    const email = document.getElementById('inviteEmail').value.trim();
+    const btn = document.getElementById('inviteBtn');
+    const successEl = document.getElementById('inviteSuccess');
+    const errorEl = document.getElementById('inviteError');
+
+    if (!email) {
+      errorEl.textContent = 'Please enter an email address.';
+      errorEl.style.display = 'inline';
+      return;
+    }
+
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+
+    try {
+      const token = await AUTH.getToken();
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/invite`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON,
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error_description || data.msg || 'Failed to send invite.');
+      }
+
+      document.getElementById('inviteEmail').value = '';
+      successEl.style.display = 'inline';
+      setTimeout(() => successEl.style.display = 'none', 3000);
+      loadUsers();
+    } catch(e) {
+      errorEl.textContent = e.message;
+      errorEl.style.display = 'inline';
+    }
+
+    btn.textContent = 'Send Invite';
+    btn.disabled = false;
+  }
+
+  async function loadUsers() {
+    const loadingEl = document.getElementById('usersLoading');
+    const listEl = document.getElementById('usersList');
+
+    try {
+      const token = await AUTH.getToken();
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
+        headers: {
+          'apikey': SUPABASE_ANON,
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+
+      if (!res.ok) throw new Error('Could not load users.');
+      const data = await res.json();
+      const users = data.users || [];
+
+      loadingEl.style.display = 'none';
+
+      if (!users.length) {
+        listEl.innerHTML = '<div class="users-loading">No users yet.</div>';
+        return;
+      }
+
+      const currentUser = (await AUTH.getUser())?.id;
+
+      listEl.innerHTML = users.map(u => {
+        const isYou = u.id === currentUser;
+        const confirmed = !!u.email_confirmed_at;
+        const lastSign = u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleDateString() : 'Never';
+        const created = new Date(u.created_at).toLocaleDateString();
+
+        return `
+          <div class="user-row">
+            <div>
+              <div class="user-email">${u.email} ${isYou ? '<span class="user-badge badge-admin">You</span>' : ''}</div>
+              <div class="user-meta">Invited: ${created}  ·  Last login: ${lastSign}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="user-badge ${confirmed ? 'badge-confirmed' : 'badge-pending'}">
+                ${confirmed ? 'Active' : 'Pending'}
+              </span>
+              ${!isYou ? `<button class="btn-danger" onclick="revokeUser('${u.id}', '${u.email}', this)">Revoke</button>` : ''}
+            </div>
+          </div>`;
+      }).join('');
+
+    } catch(e) {
+      loadingEl.textContent = 'Unable to load users. Admin API access may be required.';
+    }
+  }
+
+  async function revokeUser(id, email, btn) {
+    if (!confirm(`Revoke access for ${email}? They will no longer be able to log in.`)) return;
+    btn.textContent = 'Revoking...';
+    btn.disabled = true;
+
+    try {
+      const token = await AUTH.getToken();
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'apikey': SUPABASE_ANON,
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+      if (!res.ok) throw new Error('Failed to revoke access.');
+      btn.closest('.user-row').remove();
+    } catch(e) {
+      alert('Error: ' + e.message);
+      btn.textContent = 'Revoke';
+      btn.disabled = false;
+    }
+  }
+
+  // Enter key on invite field
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('inviteEmail')?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') inviteUser();
+    });
+  });
+</script>
+</body>
+</html>
