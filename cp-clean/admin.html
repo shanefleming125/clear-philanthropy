@@ -106,22 +106,13 @@
     errorEl.style.display = 'none';
 
     try {
-      const token = await AUTH.getToken();
-      const res = await fetch(`${SUPABASE_URL}/auth/v1/invite`, {
+      const res = await fetch('https://calm-forest-dfc5.shanefleming125.workers.dev/invite', {
         method: 'POST',
-        headers: {
-          'apikey': SUPABASE_ANON,
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
       });
-
       const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error_description || data.msg || 'Failed to send invite.');
-      }
+      if (!res.ok) throw new Error(data.error || 'Failed to send invite.');
 
       document.getElementById('inviteEmail').value = '';
       successEl.style.display = 'inline';
@@ -141,14 +132,7 @@
     const listEl = document.getElementById('usersList');
 
     try {
-      const token = await AUTH.getToken();
-      const res = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
-        headers: {
-          'apikey': SUPABASE_ANON,
-          'Authorization': `Bearer ${token}`,
-        }
-      });
-
+      const res = await fetch('https://calm-forest-dfc5.shanefleming125.workers.dev/users');
       if (!res.ok) throw new Error('Could not load users.');
       const data = await res.json();
       const users = data.users || [];
@@ -194,13 +178,8 @@
     btn.disabled = true;
 
     try {
-      const token = await AUTH.getToken();
-      const res = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'apikey': SUPABASE_ANON,
-          'Authorization': `Bearer ${token}`,
-        }
+      const res = await fetch(`https://calm-forest-dfc5.shanefleming125.workers.dev/users/${id}`, {
+        method: 'DELETE'
       });
       if (!res.ok) throw new Error('Failed to revoke access.');
       btn.closest('.user-row').remove();
