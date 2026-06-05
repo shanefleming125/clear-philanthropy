@@ -24,8 +24,8 @@
 <main class="container">
   <div class="form-header-bar">
     <div>
-      <h1 id="formTitle">New assessment</h1>
-      <p class="page-sub">Enter financial data — ratios and score calculate automatically</p>
+      <h1 id="formTitle">New Assessment</h1>
+      <p style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:3px">Enter financial data — ratios and score calculate automatically</p>
     </div>
     <div class="score-display">
       <div class="score-label-sm">Health Score</div>
@@ -38,30 +38,31 @@
   </div>
 
   <div class="meta-grid">
-    <div class="field-wrap"><label>Organization name</label><input type="text" id="orgName" placeholder="e.g. Eastside Family Resource Center"></div>
-    <div class="field-wrap"><label>Fiscal year end</label><input type="text" id="fyEnd" placeholder="e.g. 12/31/2023"></div>
-    <div class="field-wrap"><label>Reviewer name</label><input type="text" id="reviewer" placeholder="e.g. Jane Smith"></div>
-    <div class="field-wrap"><label>Review date</label><input type="date" id="reviewDate"></div>
+    <div class="field-wrap"><label>Organization Name <span class="req">*</span></label><input type="text" id="orgName" placeholder="e.g. Eastside Family Resource Center" required></div>
+    <div class="field-wrap"><label>EIN <span class="req">*</span></label><input type="text" id="ein" placeholder="e.g. 12-3456789" required></div>
+    <div class="field-wrap"><label>Fiscal Year End <span class="req">*</span></label><input type="text" id="fyEnd" placeholder="e.g. 12/31/2023" required></div>
+    <div class="field-wrap"><label>Reviewer Name <span class="req">*</span></label><input type="text" id="reviewer" placeholder="e.g. Jane Smith" required></div>
+    <div class="field-wrap"><label>Review Date</label><input type="date" id="reviewDate"></div>
   </div>
 
   <div class="card">
-    <div class="sec-title">1. Financial data input</div>
+    <div class="sec-title">1. Financial Data Input</div>
     <div class="table-scroll">
       <table class="data-table">
-        <thead><tr><th>Metric</th><th>Current year</th><th>Prior year</th><th>Two years ago</th></tr></thead>
+        <thead><tr><th>Metric</th><th>Current Year</th><th>Prior Year</th><th>Two Years Ago</th></tr></thead>
         <tbody>
-          <tr><td>Total Revenue</td><td><input type="number" id="rev0" placeholder="0" oninput="recalc()"></td><td><input type="number" id="rev1" placeholder="0" oninput="recalc()"></td><td><input type="number" id="rev2" placeholder="0" oninput="recalc()"></td></tr>
-          <tr><td>Total Expenses</td><td><input type="number" id="exp0" placeholder="0" oninput="recalc()"></td><td><input type="number" id="exp1" placeholder="0" oninput="recalc()"></td><td><input type="number" id="exp2" placeholder="0" oninput="recalc()"></td></tr>
-          <tr><td>Total Assets</td><td><input type="number" id="assets0" placeholder="0" oninput="recalc()"></td><td><input type="number" id="assets1" placeholder="0" oninput="recalc()"></td><td><input type="number" id="assets2" placeholder="0" oninput="recalc()"></td></tr>
-          <tr><td>Total Liabilities</td><td><input type="number" id="liab0" placeholder="0" oninput="recalc()"></td><td><input type="number" id="liab1" placeholder="0" oninput="recalc()"></td><td><input type="number" id="liab2" placeholder="0" oninput="recalc()"></td></tr>
-          <tr><td>Cash &amp; Cash Equivalents</td><td><input type="number" id="cash0" placeholder="0" oninput="recalc()"></td><td><input type="number" id="cash1" placeholder="0" oninput="recalc()"></td><td><input type="number" id="cash2" placeholder="0" oninput="recalc()"></td></tr>
-          <tr><td>Current Assets</td><td><input type="number" id="currassets0" placeholder="0" oninput="recalc()"></td><td><input type="number" id="currassets1" placeholder="0" oninput="recalc()"></td><td><input type="number" id="currassets2" placeholder="0" oninput="recalc()"></td></tr>
-          <tr><td>Current Liabilities</td><td><input type="number" id="currliab0" placeholder="0" oninput="recalc()"></td><td><input type="number" id="currliab1" placeholder="0" oninput="recalc()"></td><td><input type="number" id="currliab2" placeholder="0" oninput="recalc()"></td></tr>
-          <tr><td>Program Service Expenses</td><td><input type="number" id="prog0" placeholder="0" oninput="recalc()"></td><td><input type="number" id="prog1" placeholder="0" oninput="recalc()"></td><td><input type="number" id="prog2" placeholder="0" oninput="recalc()"></td></tr>
-          <tr><td>Management &amp; General Expenses</td><td><input type="number" id="mgmt0" placeholder="0" oninput="recalc()"></td><td><input type="number" id="mgmt1" placeholder="0" oninput="recalc()"></td><td><input type="number" id="mgmt2" placeholder="0" oninput="recalc()"></td></tr>
-          <tr><td>Fundraising Expenses</td><td><input type="number" id="fund0" placeholder="0" oninput="recalc()"></td><td><input type="number" id="fund1" placeholder="0" oninput="recalc()"></td><td><input type="number" id="fund2" placeholder="0" oninput="recalc()"></td></tr>
-          <tr><td>Total Contributions (Donations)</td><td><input type="number" id="contrib0" placeholder="0" oninput="recalc()"></td><td><input type="number" id="contrib1" placeholder="0" oninput="recalc()"></td><td><input type="number" id="contrib2" placeholder="0" oninput="recalc()"></td></tr>
-          <tr><td>Largest Single Revenue Source</td><td><input type="number" id="toprev0" placeholder="0" oninput="recalc()"></td><td><input type="number" id="toprev1" placeholder="0" oninput="recalc()"></td><td><input type="number" id="toprev2" placeholder="0" oninput="recalc()"></td></tr>
+          <tr><td>Total Revenue</td><td><input type="text" id="rev0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="rev1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="rev2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Total Expenses</td><td><input type="text" id="exp0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="exp1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="exp2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Total Assets</td><td><input type="text" id="assets0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="assets1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="assets2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Total Liabilities</td><td><input type="text" id="liab0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="liab1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="liab2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Cash &amp; Cash Equivalents</td><td><input type="text" id="cash0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="cash1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="cash2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Current Assets</td><td><input type="text" id="currassets0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currassets1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currassets2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Current Liabilities</td><td><input type="text" id="currliab0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currliab1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currliab2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Program Service Expenses</td><td><input type="text" id="prog0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="prog1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="prog2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Management &amp; General Expenses</td><td><input type="text" id="mgmt0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="mgmt1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="mgmt2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Fundraising Expenses</td><td><input type="text" id="fund0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="fund1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="fund2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Total Contributions (Donations)</td><td><input type="text" id="contrib0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="contrib1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="contrib2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Largest Single Revenue Source</td><td><input type="text" id="toprev0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="toprev1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="toprev2" placeholder="$0" oninput="recalc()"></td></tr>
         </tbody>
       </table>
     </div>
@@ -69,7 +70,7 @@
 
   <div class="two-col">
     <div class="card">
-      <div class="sec-title">2. Key financial ratios</div>
+      <div class="sec-title">2. Key Financial Ratios</div>
       <table class="ratio-table">
         <thead><tr><th>Ratio</th><th style="text-align:right">Result</th><th style="text-align:center">Rating</th></tr></thead>
         <tbody>
@@ -87,10 +88,10 @@
     <div style="display:flex;flex-direction:column;gap:1.25rem;">
       <div class="card">
         <div class="sec-title">3. Financial Health Indicators</div>
-        <ul class="flags-list" id="flagsList"><li class="flag-placeholder">Enter data to see risk flags.</li></ul>
+        <ul class="flags-list" id="flagsList"><li class="flag-placeholder">Enter data to see financial health indicators.</li></ul>
       </div>
       <div class="card">
-        <div class="sec-title">4. Trend analysis</div>
+        <div class="sec-title">4. Trend Analysis</div>
         <div id="trendRows"><div class="flag-placeholder">Enter 3 years of data to see trends.</div></div>
       </div>
     </div>
@@ -98,7 +99,7 @@
 
   <div class="two-col">
     <div class="card">
-      <div class="sec-title">5. Documents received</div>
+      <div class="sec-title">5. Documents Received</div>
       <div class="docs-grid">
         <label class="doc-item"><input type="checkbox" id="doc_990"> Form 990</label>
         <label class="doc-item"><input type="checkbox" id="doc_audit"> Audited Financials</label>
@@ -111,9 +112,9 @@
       </div>
     </div>
     <div class="card">
-      <div class="sec-title">6. Reviewer notes &amp; decision</div>
+      <div class="sec-title">6. Reviewer Notes &amp; Decision</div>
       <div class="field-wrap" style="margin-bottom:10px">
-        <label>Preliminary recommendation</label>
+        <label>Preliminary Recommendation</label>
         <select id="recommendation">
           <option value="">— Select —</option>
           <option>Invite to Apply</option>
@@ -124,37 +125,37 @@
         </select>
       </div>
       <div class="field-wrap" style="margin-bottom:10px">
-        <label>Overall impression</label>
+        <label>Overall Impression</label>
         <textarea id="impression" class="textarea" placeholder="Overall impression of the organization's financial health..."></textarea>
       </div>
       <div class="field-wrap">
-        <label>Key questions for follow-up</label>
+        <label>Key Questions for Follow-Up</label>
         <textarea id="questions" class="textarea" placeholder="Questions to ask during site visit or follow-up call..."></textarea>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <div class="sec-title">AI assessment summary</div>
+    <div class="sec-title">AI Assessment Summary</div>
     <div class="form-actions" style="margin-bottom:1rem">
-      <button class="btn-save" onclick="saveAssessment()" id="saveBtn">Save assessment</button>
-      <button class="btn-ai" onclick="generateSummary()" id="aiBtn">Generate AI assessment</button>
+      <button class="btn-save" onclick="saveAssessment()" id="saveBtn">Save Assessment</button>
+      <button class="btn-ai" onclick="generateSummary()" id="aiBtn">Generate AI Assessment</button>
       <button class="btn-ghost" onclick="exportToPDF()" id="pdfBtn">Download PDF Report</button>
-      <a href="index.html" class="btn-ghost">← Back to dashboard</a>
+      <a href="index.html" class="btn-ghost">← Back to Dashboard</a>
       <span class="saved-msg" id="savedMsg">✓ Saved!</span>
       <span class="error-msg" id="errorMsg"></span>
     </div>
     <div id="aiResult" style="display:none">
-      <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#6B7280;margin-bottom:8px">Generated assessment</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#6B7280;margin-bottom:8px">Generated Assessment</div>
       <div id="aiText" style="font-size:14px;line-height:1.8;color:#111827;white-space:pre-wrap;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:1.25rem"></div>
-      <button class="btn-ghost" style="margin-top:10px" onclick="copyAssessment()">Copy to clipboard</button>
+      <button class="btn-ghost" style="margin-top:10px" onclick="copyAssessment()">Copy to Clipboard</button>
     </div>
   </div>
 </main>
 
 <script src="js/db.js"></script>
 <script src="js/assessment.js"></script>
-<script src="js/pdf-export.js"></script> 
+<script src="js/pdf-export.js"></script>
 <script src="js/currency.js"></script>
 </body>
 </html>
