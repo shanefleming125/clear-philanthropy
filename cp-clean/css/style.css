@@ -82,13 +82,14 @@ body {
 }
 .btn-intake:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
-/* Green intake button — matches btn-primary sizing */
+/* Green intake button — force identical rendering to btn-primary */
 .btn-intake-green {
   background: var(--green);
   border: none;
   color: #fff;
   border-radius: var(--radius-sm);
-  padding: 8px 16px;
+  padding: 0 16px;
+  height: 35px;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -96,10 +97,19 @@ body {
   transition: background 0.15s;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   text-decoration: none;
+  line-height: 1;
+  box-sizing: border-box;
 }
 .btn-intake-green:hover { background: #259963; }
+.btn-primary {
+  height: 35px;
+  padding: 0 16px;
+  line-height: 1;
+  box-sizing: border-box;
+}
 
 /* User email pill in nav */
 .nav-user-email {
