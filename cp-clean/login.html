@@ -6,7 +6,7 @@
 <title>Sign In — Clear Philanthropy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231A6EB5'/><path d='M8 16L13 21L24 11' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect width='44' height='44' rx='10' fill='%231A6EB5'/><circle cx='17' cy='22' r='10' stroke='white' stroke-width='1.8' fill='rgba(255,255,255,0.1)'/><circle cx='27' cy='22' r='10' stroke='rgba(255,255,255,0.5)' stroke-width='1.8' fill='rgba(255,255,255,0.05)'/><path d='M22 13.2C19 16 19 28 22 30.8C25 28 25 16 22 13.2Z' fill='white'/></svg>">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -129,19 +129,19 @@
 </style>
 </head>
 <body>
- 
+
 <div class="login-wrap">
   <div class="login-logo">
     <div class="logo-mark">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 4.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 28 26" fill="none" width="16" height="15"><circle cx="10" cy="13" r="9" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.15)"/><circle cx="18" cy="13" r="9" stroke="rgba(255,255,255,0.5)" stroke-width="2" fill="rgba(255,255,255,0.05)"/><path d="M14 5.2C11.2 7.8 11.2 18.2 14 20.8C16.8 18.2 16.8 7.8 14 5.2Z" fill="white"/></svg>
     </div>
     <div class="logo-text">Clear <span>Philanthropy</span></div>
   </div>
- 
+
   <div class="login-card">
     <div class="login-title">Welcome back</div>
     <div class="login-sub">Sign in to your Clear Philanthropy account</div>
- 
+
     <div class="field-wrap">
       <label>Email Address</label>
       <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email">
@@ -150,9 +150,9 @@
       <label>Password</label>
       <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="current-password">
     </div>
- 
+
     <button class="btn-signin" id="signinBtn" onclick="signIn()">Sign In</button>
- 
+
     <div class="error-msg" id="errorMsg"></div>
     <div class="success-msg" id="successMsg"></div>
     <hr style="border:none;border-top:1px solid #E5E7EB;margin:1.25rem 0">
@@ -160,12 +160,12 @@
       Need access? <a href="signup.html" style="color:#1A6EB5;text-decoration:none;font-weight:600">Create an account</a>
     </div>
   </div>
- 
+
   <div class="login-footer">
     Clear Philanthropy · Financial clarity for every grant decision
   </div>
 </div>
- 
+
 <script src="js/auth.js"></script>
 <script>
   // If already logged in, go straight to dashboard
@@ -173,23 +173,23 @@
     const session = await AUTH.getSession();
     if (session) window.location.href = 'index.html';
   });
- 
+
   async function signIn() {
     const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value;
     const btn = document.getElementById('signinBtn');
     const errorEl = document.getElementById('errorMsg');
     const successEl = document.getElementById('successMsg');
- 
+
     if (!email || !password) {
       showError('Please enter your email and password.');
       return;
     }
- 
+
     btn.textContent = 'Signing in...';
     btn.disabled = true;
     errorEl.style.display = 'none';
- 
+
     const result = await AUTH.signIn(email, password);
     if (result.error) {
       showError(result.error);
@@ -199,13 +199,13 @@
       window.location.href = 'index.html';
     }
   }
- 
+
   function showError(msg) {
     const el = document.getElementById('errorMsg');
     el.textContent = msg;
     el.style.display = 'block';
   }
- 
+
   // Allow Enter key to submit
   document.addEventListener('keydown', e => {
     if (e.key === 'Enter') signIn();
