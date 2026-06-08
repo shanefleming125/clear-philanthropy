@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clear Philanthropy — Dashboard</title>
+<title>Assessment — Clear Philanthropy</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect width='44' height='44' rx='10' fill='%231A6EB5'/><circle cx='17' cy='22' r='10' stroke='white' stroke-width='1.8' fill='rgba(255,255,255,0.1)'/><circle cx='27' cy='22' r='10' stroke='rgba(255,255,255,0.5)' stroke-width='1.8' fill='rgba(255,255,255,0.05)'/><path d='M22 13.2C19 16 19 28 22 30.8C25 28 25 16 22 13.2Z' fill='white'/></svg>">
 </head>
@@ -16,86 +16,153 @@
     <div class="logo-text">Clear <span>Philanthropy</span></div>
   </a>
   <div class="nav-links">
-    <a href="index.html" class="nav-link active">Dashboard</a>
-    <a href="assessment.html" class="nav-link">+ New Assessment</a>
-    <button class="btn-intake" onclick="copyIntakeLink()">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-      Copy Intake Link
-    </button>
-    <span id="userEmail" class="nav-user-email" style="font-size:12px;color:rgba(255,255,255,0.4);padding:0 8px;"></span>
-    <button class="btn-intake" onclick="AUTH.signOut()" style="color:rgba(255,255,255,0.5);">Sign Out</button>
+    <a href="index.html" class="nav-link">Dashboard</a>
+    <a href="assessment.html" class="nav-link active">Assessment</a>
   </div>
 </nav>
 
 <main class="container">
-  <div class="page-header">
+  <div class="form-header-bar">
     <div>
-      <h1>Organization Assessments</h1>
-      <p class="page-sub">Review and manage all nonprofit financial assessments</p>
+      <h1 id="formTitle">New Assessment</h1>
+      <p style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:3px">Enter financial data — ratios and score calculate automatically</p>
     </div>
-    <a href="assessment.html" class="btn-primary">+ New Assessment</a>
+    <div class="score-display">
+      <div class="score-label-sm">Health Score</div>
+      <div class="score-big-wrap">
+        <span class="score-big" id="scoreDisplay">—</span>
+        <span class="score-denom">/ 100</span>
+      </div>
+      <div id="riskBadge" class="risk-badge" style="display:none"></div>
+    </div>
   </div>
 
-  <div class="stats-row">
-    <div class="stat-card"><div class="stat-label">Total Orgs</div><div class="stat-val" id="statTotal">—</div><div class="stat-sub">assessed</div></div>
-    <div class="stat-card"><div class="stat-label">Low Risk</div><div class="stat-val green" id="statLow">—</div><div class="stat-sub">organizations</div></div>
-    <div class="stat-card"><div class="stat-label">Moderate Risk</div><div class="stat-val amber" id="statMod">—</div><div class="stat-sub">organizations</div></div>
-    <div class="stat-card"><div class="stat-label">High Risk</div><div class="stat-val red" id="statHigh">—</div><div class="stat-sub">organizations</div></div>
-  </div>
-
-  <div class="search-wrap">
-    <input type="text" class="search-input" id="searchInput" placeholder="Search organizations by name…" oninput="filterTable()">
+  <div class="meta-grid">
+    <div class="field-wrap"><label>Organization Name <span class="req">*</span></label><input type="text" id="orgName" placeholder="e.g. Eastside Family Resource Center" required></div>
+    <div class="field-wrap"><label>EIN <span class="req">*</span></label><input type="text" id="ein" placeholder="e.g. 12-3456789" required></div>
+    <div class="field-wrap"><label>Fiscal Year End <span class="req">*</span></label><input type="text" id="fyEnd" placeholder="e.g. 12/31/2023" required></div>
+    <div class="field-wrap"><label>Reviewer Name <span class="req">*</span></label><input type="text" id="reviewer" placeholder="e.g. Jane Smith" required></div>
+    <div class="field-wrap"><label>Review Date</label><input type="date" id="reviewDate"></div>
   </div>
 
   <div class="card">
-    <div id="loadingState" class="empty-state">
-      <div class="empty-desc">Loading assessments...</div>
+    <div class="sec-title">1. Financial Data Input</div>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>Metric</th><th>Current Year</th><th>Prior Year</th><th>Two Years Ago</th></tr></thead>
+        <tbody>
+          <tr><td>Total Revenue</td><td><input type="text" id="rev0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="rev1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="rev2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Total Expenses</td><td><input type="text" id="exp0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="exp1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="exp2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Total Assets</td><td><input type="text" id="assets0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="assets1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="assets2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Total Liabilities</td><td><input type="text" id="liab0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="liab1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="liab2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Cash &amp; Cash Equivalents</td><td><input type="text" id="cash0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="cash1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="cash2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Current Assets</td><td><input type="text" id="currassets0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currassets1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currassets2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Current Liabilities</td><td><input type="text" id="currliab0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currliab1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currliab2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Program Service Expenses</td><td><input type="text" id="prog0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="prog1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="prog2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Management &amp; General Expenses</td><td><input type="text" id="mgmt0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="mgmt1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="mgmt2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Fundraising Expenses</td><td><input type="text" id="fund0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="fund1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="fund2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Total Contributions (Donations)</td><td><input type="text" id="contrib0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="contrib1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="contrib2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Largest Single Revenue Source</td><td><input type="text" id="toprev0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="toprev1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="toprev2" placeholder="$0" oninput="recalc()"></td></tr>
+        </tbody>
+      </table>
     </div>
-    <div id="emptyState" class="empty-state" style="display:none">
-      <div class="empty-icon">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#E6F1FB"/><path d="M12 20h16M12 14h16M12 26h10" stroke="#1A6EB5" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="sec-title">2. Key Financial Ratios</div>
+      <table class="ratio-table">
+        <thead><tr><th>Ratio</th><th style="text-align:right">Result</th><th style="text-align:center">Rating</th></tr></thead>
+        <tbody>
+          <tr><td><span class="rn">Operating Margin</span><span class="rf">Surplus / Revenue</span></td><td class="rv" id="r_om">—</td><td style="text-align:center" id="b_om"><span class="bdg">—</span></td></tr>
+          <tr><td><span class="rn">Current Ratio</span><span class="rf">Current Assets / Current Liabilities</span></td><td class="rv" id="r_cr">—</td><td style="text-align:center" id="b_cr"><span class="bdg">—</span></td></tr>
+          <tr><td><span class="rn">Months of Cash</span><span class="rf">Cash / (Expenses / 12)</span></td><td class="rv" id="r_mc">—</td><td style="text-align:center" id="b_mc"><span class="bdg">—</span></td></tr>
+          <tr><td><span class="rn">Debt to Assets</span><span class="rf">Liabilities / Assets</span></td><td class="rv" id="r_da">—</td><td style="text-align:center" id="b_da"><span class="bdg">—</span></td></tr>
+          <tr><td><span class="rn">Program Expense Ratio</span><span class="rf">Program Exp / Total Exp</span></td><td class="rv" id="r_pe">—</td><td style="text-align:center" id="b_pe"><span class="bdg">—</span></td></tr>
+          <tr><td><span class="rn">Fundraising Efficiency</span><span class="rf">Fundraising / Contributions</span></td><td class="rv" id="r_fe">—</td><td style="text-align:center" id="b_fe"><span class="bdg">—</span></td></tr>
+          <tr><td><span class="rn">Revenue Concentration</span><span class="rf">Top Source / Revenue</span></td><td class="rv" id="r_rc">—</td><td style="text-align:center" id="b_rc"><span class="bdg">—</span></td></tr>
+          <tr><td><span class="rn">Net Asset Ratio</span><span class="rf">Net Assets / Expenses</span></td><td class="rv" id="r_na">—</td><td style="text-align:center" id="b_na"><span class="bdg">—</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1.25rem;">
+      <div class="card">
+        <div class="sec-title">3. Financial Health Indicators</div>
+        <ul class="flags-list" id="flagsList"><li class="flag-placeholder">Enter data to see financial health indicators.</li></ul>
       </div>
-      <div class="empty-title">No assessments yet</div>
-      <div class="empty-desc">Click "New Assessment" to get started.</div>
-      <a href="assessment.html" class="btn-primary" style="display:inline-flex;margin-top:1rem">Start your first assessment</a>
+      <div class="card">
+        <div class="sec-title">4. Trend Analysis</div>
+        <div id="trendRows"><div class="flag-placeholder">Enter 3 years of data to see trends.</div></div>
+      </div>
     </div>
-    <div id="noResults" class="empty-state" style="display:none">
-      <div class="empty-title">No results found</div>
-      <div class="empty-desc">Try a different search term.</div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="sec-title">5. Documents Received</div>
+      <div class="docs-grid">
+        <label class="doc-item"><input type="checkbox" id="doc_990"> Form 990</label>
+        <label class="doc-item"><input type="checkbox" id="doc_audit"> Audited Financials</label>
+        <label class="doc-item"><input type="checkbox" id="doc_bs"> Balance Sheet</label>
+        <label class="doc-item"><input type="checkbox" id="doc_is"> Income Statement</label>
+        <label class="doc-item"><input type="checkbox" id="doc_cf"> Cash Flow Statement</label>
+        <label class="doc-item"><input type="checkbox" id="doc_budget"> Board Approved Budget</label>
+        <label class="doc-item"><input type="checkbox" id="doc_minutes"> Board Minutes</label>
+        <label class="doc-item"><input type="checkbox" id="doc_strategic"> Strategic Plan</label>
+      </div>
     </div>
-    <table class="org-table" id="orgTable" style="display:none">
-      <thead>
-        <tr>
-          <th onclick="sortTable('orgName')">Organization</th>
-          <th onclick="sortTable('score')">Score</th>
-          <th onclick="sortTable('riskLevel')">Risk Level</th>
-          <th onclick="sortTable('recommendation')">Recommendation</th>
-          <th onclick="sortTable('reviewer')">Reviewer</th>
-          <th onclick="sortTable('reviewDate')">Date</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="orgTableBody"></tbody>
-    </table>
+    <div class="card">
+      <div class="sec-title">6. Reviewer Notes &amp; Decision</div>
+      <div class="field-wrap" style="margin-bottom:10px">
+        <label>Preliminary Recommendation</label>
+        <select id="recommendation">
+          <option value="">— Select —</option>
+          <option>Invite to Apply</option>
+          <option>Request More Info</option>
+          <option>Decline</option>
+          <option>Full Due Diligence</option>
+          <option>Approved</option>
+        </select>
+      </div>
+      <div class="field-wrap" style="margin-bottom:10px">
+        <label>Overall Impression</label>
+        <textarea id="impression" class="textarea" placeholder="Overall impression of the organization's financial health..."></textarea>
+      </div>
+      <div class="field-wrap">
+        <label>Key Questions for Follow-Up</label>
+        <textarea id="questions" class="textarea" placeholder="Questions to ask during site visit or follow-up call..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">AI Assessment Summary</div>
+    <div class="form-actions" style="margin-bottom:1rem">
+      <button class="btn-save" onclick="saveAssessment()" id="saveBtn">Save Assessment</button>
+      <button class="btn-ai" onclick="generateSummary()" id="aiBtn">Generate AI Assessment</button>
+      <button class="btn-ghost" onclick="exportToPDF()" id="pdfBtn">Download PDF Report</button>
+      <a href="index.html" class="btn-ghost">← Back to Dashboard</a>
+      <span class="saved-msg" id="savedMsg">✓ Saved!</span>
+      <span class="error-msg" id="errorMsg"></span>
+    </div>
+    <div id="aiResult" style="display:none">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#6B7280;margin-bottom:8px">Generated Assessment</div>
+      <div id="aiText" style="font-size:14px;line-height:1.8;color:#111827;white-space:pre-wrap;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:1.25rem"></div>
+      <button class="btn-ghost" style="margin-top:10px" onclick="copyAssessment()">Copy to Clipboard</button>
+    </div>
   </div>
 </main>
 
 <script src="js/auth.js"></script>
 <script src="js/db.js"></script>
+<script src="js/assessment.js"></script>
+<script src="js/pdf-export.js"></script>
+<script src="js/currency.js"></script>
 <script>
-  // Auth guard — runs before dashboard.js initializes
   (async () => {
     const session = await AUTH.requireAuth();
     if (!session) return;
     document.body.style.display = '';
-    const user = session.user;
-    if (user?.email) {
-      document.getElementById('userEmail').textContent = user.email;
-    }
-    // Now safe to load dashboard
-    const s = document.createElement('script');
-    s.src = 'js/dashboard.js';
-    document.body.appendChild(s);
   })();
 </script>
 </body>
