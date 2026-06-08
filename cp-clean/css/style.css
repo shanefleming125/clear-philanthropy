@@ -82,6 +82,34 @@ body {
 }
 .btn-intake:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
+/* Green intake button */
+.btn-intake-green {
+  background: var(--green);
+  border: none;
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-intake-green:hover { background: #259963; }
+
+/* User email pill in nav */
+.nav-user-email {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-weight: 500;
+}
+
 /* LAYOUT */
 .container { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 
@@ -378,8 +406,9 @@ body {
   .nav-links { gap: 2px; }
   .nav-link { font-size: 11px; padding: 5px 8px; }
   .btn-intake { display: none; }
-  /* Hide email on mobile — too cramped */
+  /* Hide email and intake button on mobile — too cramped */
   .nav-user-email { display: none !important; }
+  .btn-intake-green { display: none !important; }
   .container { padding: 1rem 0.75rem 3rem; }
   .page-header { flex-direction: column; gap: 0.75rem; }
   .page-header h1 { font-size: 17px; }
