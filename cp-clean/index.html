@@ -9,7 +9,7 @@
 </head>
 <body style="display:none">
 <nav class="topbar">
-  <a href="index.html" class="logo">
+  <a href="marketing.html" class="logo">
     <div class="logo-mark">
       <svg viewBox="0 0 28 26" fill="none" width="16" height="15"><circle cx="10" cy="13" r="9" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.15)"/><circle cx="18" cy="13" r="9" stroke="rgba(255,255,255,0.5)" stroke-width="2" fill="rgba(255,255,255,0.05)"/><path d="M14 5.2C11.2 7.8 11.2 18.2 14 20.8C16.8 18.2 16.8 7.8 14 5.2Z" fill="white"/></svg>
     </div>
@@ -18,11 +18,11 @@
   <div class="nav-links">
     <a href="index.html" class="nav-link active">Dashboard</a>
     <a href="assessment.html" class="nav-link">+ New Assessment</a>
-    <button class="btn-intake" onclick="copyIntakeLink()">
+    <button class="btn-intake-green" onclick="copyIntakeLink()">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
       Copy Intake Link
     </button>
-    <span id="userEmail" class="nav-user-email" style="font-size:12px;color:rgba(255,255,255,0.4);padding:0 8px;"></span>
+    <span id="userEmail" class="nav-user-email"></span>
     <button class="btn-intake" onclick="AUTH.signOut()" style="color:rgba(255,255,255,0.5);">Sign Out</button>
   </div>
 </nav>
