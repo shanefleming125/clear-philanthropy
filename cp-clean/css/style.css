@@ -62,7 +62,7 @@ body {
   transition: all 0.15s;
 }
 .nav-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
-.nav-link.active { background: rgba(255,255,255,0.12); color: #fff; }
+.nav-link.active { background: rgba(255,255,255,0.22); color: #fff; font-weight: 700; }
 
 /* Intake link button in nav */
 .btn-intake {
