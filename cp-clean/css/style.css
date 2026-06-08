@@ -406,9 +406,8 @@ body {
   .nav-links { gap: 2px; }
   .nav-link { font-size: 11px; padding: 5px 8px; }
   .btn-intake { display: none; }
-  /* Hide email and intake button on mobile — too cramped */
+  /* Hide email on mobile — too cramped */
   .nav-user-email { display: none !important; }
-  .btn-intake-green { display: none !important; }
   .container { padding: 1rem 0.75rem 3rem; }
   .page-header { flex-direction: column; gap: 0.75rem; }
   .page-header h1 { font-size: 17px; }
