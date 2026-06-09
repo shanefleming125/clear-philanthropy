@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clear Philanthropy — Know Before You Give</title>
-<meta name="description" content="Clear Philanthropy helps foundation teams assess nonprofit organizational health with confidence. Built for grantmakers who care deeply about where their dollars go.">
+<title>Clear Philanthropy — Pre-Grant Due Diligence</title>
+<meta name="description" content="Clear Philanthropy gives funders an independent organizational diagnostic before the proposal process begins. So every funding conversation starts with clarity, not guesswork.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -16,7 +16,6 @@
   --green: #2EAD77;
   --warm: #F7F4EF;
   --warm-border: #E8E2D9;
-  --light: #F3F6FA;
   --border: #E5E7EB;
   --text: #111827;
   --muted: #6B7280;
@@ -80,13 +79,13 @@ nav {
 .hero h1 em { font-style: normal; color: var(--sky); }
 .hero-sub {
   font-size: 18px; color: rgba(255,255,255,0.65);
-  line-height: 1.8; margin-bottom: 16px; font-weight: 400;
+  line-height: 1.8; margin-bottom: 12px; font-weight: 400;
 }
 .hero-sub-note {
-  font-size: 13px; color: rgba(255,255,255,0.35);
-  margin-bottom: 40px; line-height: 1.6;
+  font-size: 14px; color: rgba(255,255,255,0.4);
+  margin-bottom: 40px; line-height: 1.7; font-style: italic;
 }
-.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
 .btn-primary {
   background: var(--blue); color: var(--white); border: none;
   border-radius: 10px; padding: 14px 28px; font-size: 15px; font-weight: 700;
@@ -147,40 +146,39 @@ h2.stitle-light { color: var(--white); }
 .ssub { font-size: 17px; color: var(--muted); max-width: 580px; line-height: 1.8; }
 .ssub-light { color: rgba(255,255,255,0.55); }
 
-/* PROBLEM — warm background */
-.problem { background: var(--warm); }
-.problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; margin-top: 56px; }
-.problem-points { display: flex; flex-direction: column; gap: 28px; }
-.problem-point { display: flex; gap: 16px; }
-.pip {
+/* THE GAP */
+.gap { background: var(--warm); }
+.gap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; margin-top: 56px; }
+.gap-points { display: flex; flex-direction: column; gap: 28px; }
+.gap-point { display: flex; gap: 16px; }
+.gip {
   width: 44px; height: 44px; border-radius: 12px;
   background: var(--white); border: 1px solid var(--warm-border);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; font-size: 20px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.pp-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
-.pp-text { font-size: 14px; color: var(--muted); line-height: 1.7; }
-.problem-quote {
+.gp-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.gp-text { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.gap-quote {
   background: var(--navy); border-radius: 20px; padding: 2.5rem; position: relative;
 }
-.problem-quote::before {
+.gap-quote::before {
   content: '"'; font-size: 100px; font-weight: 800;
-  color: rgba(77,166,232,0.15); position: absolute;
-  top: 0px; left: 20px; line-height: 1; font-family: Georgia, serif;
+  color: rgba(77,166,232,0.12); position: absolute;
+  top: 0; left: 20px; line-height: 1; font-family: Georgia, serif;
 }
-.pq-text { font-size: 19px; font-weight: 500; color: var(--white); line-height: 1.7; margin-bottom: 24px; padding-top: 48px; font-style: italic; }
-.pq-attr { font-size: 13px; color: rgba(255,255,255,0.35); }
+.gq-text { font-size: 19px; font-weight: 500; color: var(--white); line-height: 1.7; margin-bottom: 24px; padding-top: 48px; font-style: italic; }
+.gq-attr { font-size: 13px; color: rgba(255,255,255,0.35); }
 
-/* WHAT IT DOES */
-.whatdoes { background: var(--white); }
-.platform-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end; margin-bottom: 56px; }
-.platform-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-.platform-card {
+/* WHAT WE PROVIDE */
+.provide { background: var(--white); }
+.provide-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end; margin-bottom: 56px; }
+.provide-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.provide-card {
   background: var(--warm); border: 1px solid var(--warm-border);
   border-radius: 16px; padding: 2rem;
   transition: border-color 0.2s, transform 0.2s;
 }
-.platform-card:hover { border-color: var(--blue); transform: translateY(-2px); }
+.provide-card:hover { border-color: var(--blue); transform: translateY(-2px); }
 .pc-icon { margin-bottom: 16px; }
 .pc-title { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 10px; line-height: 1.3; }
 .pc-text { font-size: 14px; color: var(--muted); line-height: 1.75; }
@@ -199,18 +197,14 @@ h2.stitle-light { color: var(--white); }
 }
 .step:first-child { border-radius: 12px 0 0 12px; }
 .step:last-child { border-radius: 0 12px 12px 0; }
-.step-num {
-  font-size: 11px; font-weight: 700; color: var(--sky);
-  letter-spacing: 0.1em; margin-bottom: 16px;
-}
+.step-num { font-size: 11px; font-weight: 700; color: var(--sky); letter-spacing: 0.1em; margin-bottom: 16px; }
 .step-title { font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
 .step-text { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.7; }
 .step-arrow {
-  position: absolute; right: -13px; top: 50%;
-  transform: translateY(-50%); z-index: 1;
+  position: absolute; right: -13px; top: 50%; transform: translateY(-50%); z-index: 1;
   width: 24px; height: 24px; background: var(--navy);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(255,255,255,0.15); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
   color: var(--sky); font-size: 12px;
 }
 .step:last-child .step-arrow { display: none; }
@@ -218,22 +212,37 @@ h2.stitle-light { color: var(--white); }
 /* WHO */
 .who { background: var(--warm); }
 .who-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 48px; }
-.who-card {
-  background: var(--white); border: 1px solid var(--warm-border);
-  border-radius: 16px; padding: 2rem;
-}
+.who-card { background: var(--white); border: 1px solid var(--warm-border); border-radius: 16px; padding: 2rem; }
 .wc-icon { margin-bottom: 14px; }
 .wc-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
 .wc-text { font-size: 14px; color: var(--muted); line-height: 1.7; }
 
+/* BOTH SIDES */
+.bothsides { background: var(--white); }
+.bothsides-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px; }
+.side-card {
+  border-radius: 16px; padding: 2.5rem;
+}
+.side-card-funder { background: var(--navy); }
+.side-card-org { background: var(--warm); border: 1px solid var(--warm-border); }
+.side-title { font-size: 18px; font-weight: 800; margin-bottom: 20px; }
+.side-title-light { color: var(--white); }
+.side-title-dark { color: var(--navy); }
+.side-points { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.side-points li { font-size: 14px; display: flex; gap: 10px; align-items: flex-start; line-height: 1.6; }
+.side-points-light li { color: rgba(255,255,255,0.7); }
+.side-points-dark li { color: var(--muted); }
+.side-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+.dot-light { background: var(--sky); }
+.dot-dark { background: var(--blue); }
+
 /* CTA */
 .cta-section { background: var(--blue); text-align: center; padding: 96px 2rem; }
 .cta-section h2 {
-  font-size: clamp(28px, 3.5vw, 42px); font-weight: 800;
-  color: var(--white); letter-spacing: -1px;
-  max-width: 600px; margin: 0 auto 16px; line-height: 1.15;
+  font-size: clamp(28px, 3.5vw, 42px); font-weight: 800; color: var(--white);
+  letter-spacing: -1px; max-width: 640px; margin: 0 auto 16px; line-height: 1.15;
 }
-.cta-sub { font-size: 18px; color: rgba(255,255,255,0.7); margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.75; }
+.cta-sub { font-size: 18px; color: rgba(255,255,255,0.7); margin-bottom: 40px; max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.75; }
 .cta-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
 .btn-white {
   background: var(--white); color: var(--blue); border: none;
@@ -268,6 +277,7 @@ footer { background: var(--navy); padding: 48px 2rem; }
 .hero-eyebrow { animation-delay: 0.1s; }
 .hero h1 { animation-delay: 0.2s; }
 .hero-sub { animation-delay: 0.3s; }
+.hero-sub-note { animation-delay: 0.35s; }
 .hero-actions { animation-delay: 0.4s; }
 .hero-free-note { animation-delay: 0.45s; }
 .hero-visual { animation: fadeUp 0.8s 0.35s ease forwards; opacity: 0; }
@@ -276,11 +286,12 @@ footer { background: var(--navy); padding: 48px 2rem; }
 @media (max-width: 900px) {
   .hero-inner { grid-template-columns: 1fr; gap: 48px; }
   .hero-visual { display: none; }
-  .problem-grid { grid-template-columns: 1fr; gap: 40px; }
-  .platform-intro { grid-template-columns: 1fr; gap: 24px; }
-  .platform-cards { grid-template-columns: 1fr; }
+  .gap-grid { grid-template-columns: 1fr; gap: 40px; }
+  .provide-intro { grid-template-columns: 1fr; gap: 24px; }
+  .provide-cards { grid-template-columns: 1fr; }
   .steps { grid-template-columns: 1fr 1fr; }
   .who-grid { grid-template-columns: 1fr; }
+  .bothsides-grid { grid-template-columns: 1fr; }
   nav { padding: 0 1rem; }
   .nav-link { display: none; }
   section { padding: 64px 1.25rem; }
@@ -310,10 +321,10 @@ footer { background: var(--navy); padding: 48px 2rem; }
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-content">
-      <div class="hero-eyebrow">Organizational diagnostics for grantmakers</div>
-      <h1>Know the organization behind <em>every</em> grant.</h1>
-      <p class="hero-sub">Clear Philanthropy helps foundation teams assess nonprofit organizational health — so you can make funding decisions with confidence, and give feedback that actually helps.</p>
-      <p class="hero-sub-note">Because the organizations you fund deserve more than a yes or no.</p>
+      <div class="hero-eyebrow">Pre-grant due diligence</div>
+      <h1>The diagnostic that happens <em>before</em> the proposal.</h1>
+      <p class="hero-sub">Clear Philanthropy gives funders an independent organizational diagnostic before the proposal process begins — so every funding conversation starts with clarity, not guesswork.</p>
+      <p class="hero-sub-note">The diagnostic surfaces what the data shows. What happens next is always your call.</p>
       <div class="hero-actions">
         <a href="https://clear-philanthropy.vercel.app/signup.html" class="btn-primary">
           Get Early Access — Free
@@ -321,18 +332,18 @@ footer { background: var(--navy); padding: 48px 2rem; }
         </a>
         <a href="mailto:hello@clearphilanthropy.com" class="btn-ghost-light">Get in Touch</a>
       </div>
-      <p class="hero-free-note">Free during beta. No credit card. No commitment.</p>
+      <p class="hero-free-note">Free during beta · No credit card required</p>
     </div>
     <div class="hero-visual">
       <div class="score-card">
         <div>
           <div class="score-org">Eastside Family Resource Center</div>
-          <div class="score-meta">FY 12/31/2024 · Reviewed by Clear Philanthropy</div>
+          <div class="score-meta">Pre-grant diagnostic · FY 12/31/2024</div>
         </div>
         <div>
           <div class="score-num">78</div>
           <div class="score-denom">/ 100</div>
-          <div class="score-badge">Low Risk</div>
+          <div class="score-badge">Financially Stable</div>
         </div>
       </div>
       <div class="ratio-grid">
@@ -357,83 +368,83 @@ footer { background: var(--navy); padding: 48px 2rem; }
   </div>
 </section>
 
-<!-- PROBLEM -->
-<section class="problem">
+<!-- THE GAP -->
+<section class="gap">
   <div class="section-inner">
-    <div class="eyebrow">Why it matters</div>
-    <h2 class="stitle">Great grantmaking starts with understanding who you're funding.</h2>
-    <div class="problem-grid">
-      <div class="problem-points">
-        <div class="problem-point">
-          <div class="pip">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
-        </div>
+    <div class="eyebrow">Where we fit</div>
+    <h2 class="stitle">Grant management systems handle the process. Clear Philanthropy handles what comes before it.</h2>
+    <div class="gap-grid">
+      <div class="gap-points">
+        <div class="gap-point">
+          <div class="gip">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
           <div>
-            <div class="pp-title">990s don't tell the full story</div>
-            <div class="pp-text">Tax filings are 12–18 months old by the time you read them. They capture what happened — not what's happening now. The organizations you're considering today have evolved since their last filing.</div>
+            <div class="gp-title">Organizational readiness is asked late</div>
+            <div class="gp-text">The full proposal process is resource-intensive for everyone involved. A structured pre-grant diagnostic lets funders understand an organization's readiness earlier — before either side has invested heavily in the relationship.</div>
           </div>
         </div>
-        <div class="problem-point">
-          <div class="pip">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
+        <div class="gap-point">
+          <div class="gip">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
           <div>
-            <div class="pp-title">Declined without explanation</div>
-            <div class="pp-text">Most foundations decline organizations without feedback — not because they don't care, but because translating financial data into constructive language is genuinely hard. Organizations are left wondering why, unable to improve.</div>
+            <div class="gp-title">Available data doesn't tell the full story</div>
+            <div class="gp-text">Public filings are a starting point — not a complete picture. An independent diagnostic built on current, org-submitted data gives funders a more accurate view of where an organization stands today, and what questions are worth exploring further.</div>
           </div>
         </div>
-        <div class="problem-point">
-          <div class="pip">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </div>
+        <div class="gap-point">
+          <div class="gip">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
           <div>
-            <div class="pp-title">Due diligence without infrastructure</div>
-            <div class="pp-text">Many foundation teams are doing serious grantmaking without the systems to support it. Every reviewer does it differently. Assessment quality varies. Decisions are hard to defend — to your board, and to yourself.</div>
+            <div class="gp-title">Feedback is valuable — and hard to give</div>
+            <div class="gp-text">Translating financial data into constructive, actionable language is genuinely difficult. A structured assessment narrative gives funders the framework to communicate findings clearly — whether the next step is an invitation, a conversation, or a referral to capacity support.</div>
           </div>
         </div>
       </div>
-      <div class="problem-quote">
-        <div class="pq-text">We genuinely wanted to help organizations improve. But we didn't know how to translate what we were seeing in the numbers into something we could share with them.</div>
-        <div class="pq-attr">— Foundation Program Officer</div>
+      <div class="gap-quote">
+        <div class="gq-text">We wanted to understand organizational readiness earlier in the process — before either side had invested heavily. We needed something structured, independent, and easy to act on.</div>
+        <div class="gq-attr">— Foundation Program Officer</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- WHAT IT DOES -->
-<section class="whatdoes" id="how">
+<!-- WHAT WE PROVIDE -->
+<section class="provide" id="how">
   <div class="section-inner">
-    <div class="platform-intro">
+    <div class="provide-intro">
       <div>
-        <div class="eyebrow">What Clear Philanthropy does</div>
-        <h2 class="stitle">Structured assessment. Plain language. Actionable findings.</h2>
+        <div class="eyebrow">What Clear Philanthropy provides</div>
+        <h2 class="stitle">An independent diagnostic. Before the process begins.</h2>
       </div>
-      <p class="ssub">We built the tool we always wished existed — one that takes the complexity out of due diligence and puts clarity back into the conversation between funders and the organizations they support.</p>
+      <p class="ssub">Like a doctor running tests before recommending treatment — the diagnostic doesn't judge the patient. It informs the conversation. The funder decides what to do with it.</p>
     </div>
-    <div class="platform-cards">
-      <div class="platform-card">
+    <div class="provide-cards">
+      <div class="provide-card">
         <div class="pc-icon">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         </div>
-        <div class="pc-title">Financial health assessment, built for grantmakers</div>
-        <div class="pc-text">Eight key financial ratios, automatically calculated from current org-submitted data. A weighted health score from 0–100. Three years of trend analysis. Everything you need to assess financial readiness — without needing a finance background.</div>
+        <div class="pc-title">Financial health assessment</div>
+        <div class="pc-text">Eight key financial ratios calculated from current, org-submitted data. A weighted health score from 0–100. Three years of trend analysis. Not a judgment — a picture of where the organization stands financially, right now.</div>
         <div class="pc-tag">Current data, not stale filings</div>
       </div>
-      <div class="platform-card">
+      <div class="provide-card">
         <div class="pc-icon">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
         </div>
-        <div class="pc-title">Assessment narratives that give you the language to act</div>
-        <div class="pc-text">Every assessment generates a plain-language funding memo — decline with feedback, conditional approval, or invite to apply. Finally, the words to communicate what you're seeing, in a way that's honest, constructive, and genuinely useful to the organization.</div>
+        <div class="pc-title">Plain-language assessment narrative</div>
+        <div class="pc-text">Every diagnostic produces a structured narrative — what the data shows, what questions it raises, and what a funder might want to explore further. Written to be shared. Finally, the language to have an honest, constructive conversation with an applicant.</div>
         <div class="pc-tag">Closes the feedback gap</div>
       </div>
-      <div class="platform-card">
+      <div class="provide-card">
         <div class="pc-icon">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
-        <div class="pc-title">Better conversations with the organizations you fund</div>
-        <div class="pc-text">When your team understands what the numbers mean, everything changes. You ask better questions. You can explain a decline. You build more honest, trust-based relationships with applicants — and the organizations you support feel that difference.</div>
-        <div class="pc-tag">Stronger relationships</div>
+        <div class="pc-title">A complete pre-grant workflow</div>
+        <div class="pc-text">Organizations submit data through a branded intake form. Your team reviews the diagnostic, adds observations, and exports a board-ready report. One place for everything that happens before the proposal process begins.</div>
+        <div class="pc-tag">End-to-end pre-grant process</div>
       </div>
     </div>
   </div>
@@ -443,32 +454,63 @@ footer { background: var(--navy); padding: 48px 2rem; }
 <section class="howitworks">
   <div class="section-inner">
     <div class="eyebrow eyebrow-light">How it works</div>
-    <h2 class="stitle stitle-light">From intake to decision — in one place.</h2>
-    <p class="ssub ssub-light" style="margin-bottom:0">A complete workflow for your team, from first contact to final recommendation.</p>
+    <h2 class="stitle stitle-light">Four steps. Before the proposal ever arrives.</h2>
+    <p class="ssub ssub-light" style="margin-bottom:0">A structured process that respects everyone's time — yours, and the organization's.</p>
     <div class="steps">
       <div class="step">
         <div class="step-num">01</div>
-        <div class="step-title">Org submits their data</div>
-        <div class="step-text">You share a branded intake link. The organization fills out their financial information directly — current, accurate, from the source.</div>
+        <div class="step-title">Share the intake link</div>
+        <div class="step-text">Send a branded link to the organization. They submit their current financial data directly — no 990 hunting, no spreadsheet requests.</div>
         <div class="step-arrow">→</div>
       </div>
       <div class="step">
         <div class="step-num">02</div>
-        <div class="step-title">Platform runs the assessment</div>
-        <div class="step-text">Eight ratios calculated automatically. Health score generated. Trend analysis across three years. Financial health indicators flagged.</div>
+        <div class="step-title">Diagnostic runs automatically</div>
+        <div class="step-text">Eight financial ratios calculated. Health score generated. Trends analyzed across three years. Indicators flagged. All from the data they submitted.</div>
         <div class="step-arrow">→</div>
       </div>
       <div class="step">
         <div class="step-num">03</div>
-        <div class="step-title">You add your judgment</div>
-        <div class="step-text">Review the findings, add your notes and observations, select a preliminary recommendation. The platform supports your thinking — it doesn't replace it.</div>
+        <div class="step-title">Reviewer adds context</div>
+        <div class="step-text">Your team reviews the findings, adds observations and questions, and generates an assessment narrative. The platform informs your judgment — it doesn't replace it.</div>
         <div class="step-arrow">→</div>
       </div>
       <div class="step">
         <div class="step-num">04</div>
-        <div class="step-title">Share with confidence</div>
-        <div class="step-text">Export a board-ready PDF report. Share the assessment narrative with the organization. Make your decision knowing you've done the work thoroughly.</div>
+        <div class="step-title">Decide with confidence</div>
+        <div class="step-text">Invite to apply, ask for more information, or decline with feedback that actually helps. Every decision backed by a clear, documented diagnostic.</div>
         <div class="step-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOTH SIDES BENEFIT -->
+<section class="bothsides">
+  <div class="section-inner">
+    <div class="eyebrow">Who benefits</div>
+    <h2 class="stitle">A clearer process benefits everyone in it.</h2>
+    <p class="ssub">Pre-grant due diligence serves funders and organizations equally. It's also a natural fit for the growing field of trust-based philanthropy — where the question isn't "do we trust this org?" but "what does the data tell us, and how do we build from here?"</p>
+    <div class="bothsides-grid">
+      <div class="side-card side-card-funder">
+        <div class="side-title side-title-light">For funders</div>
+        <ul class="side-points side-points-light">
+          <li><span class="side-dot dot-light"></span>Understand organizational readiness earlier in the process</li>
+          <li><span class="side-dot dot-light"></span>Ground funding decisions in current, structured data</li>
+          <li><span class="side-dot dot-light"></span>Communicate findings clearly — invitation, conditions, or referral to capacity support</li>
+          <li><span class="side-dot dot-light"></span>Build a consistent, documented due diligence process your board can follow</li>
+          <li><span class="side-dot dot-light"></span>Support trust-based models with objective, independent diagnostics</li>
+        </ul>
+      </div>
+      <div class="side-card side-card-org">
+        <div class="side-title side-title-dark">For organizations</div>
+        <ul class="side-points side-points-dark">
+          <li><span class="side-dot dot-dark"></span>Receive a clear picture of how their financial health reads to funders</li>
+          <li><span class="side-dot dot-dark"></span>Get structured, actionable feedback — not just a decision</li>
+          <li><span class="side-dot dot-dark"></span>Understand what to strengthen before the next funding cycle</li>
+          <li><span class="side-dot dot-dark"></span>Enter funding conversations with greater self-awareness and confidence</li>
+          <li><span class="side-dot dot-dark"></span>Build trust with funders through transparency and shared language</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -478,29 +520,29 @@ footer { background: var(--navy); padding: 48px 2rem; }
 <section class="who" id="who">
   <div class="section-inner">
     <div class="eyebrow">Who it's for</div>
-    <h2 class="stitle">Built for foundation teams doing meaningful work.</h2>
-    <p class="ssub">If you care deeply about where your dollars go — and want the tools to back that care with rigor — Clear Philanthropy was built for you.</p>
+    <h2 class="stitle">Built for any funder who wants to give more intentionally.</h2>
+    <p class="ssub">Pre-grant due diligence isn't just for large foundations. Any funder who cares about where their dollars go can bring this kind of rigor to their process.</p>
     <div class="who-grid">
       <div class="who-card">
         <div class="wc-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>
-      </div>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>
+        </div>
         <div class="wc-title">Private Family Foundations</div>
-        <div class="wc-text">Doing serious grantmaking without a full internal program team. CP gives you the structure, consistency, and language to assess organizations the way larger foundations do — without the overhead.</div>
+        <div class="wc-text">Doing meaningful grantmaking without a full internal program team. CP brings structure and consistency to your pre-grant process — so your board has confidence in every funding decision.</div>
       </div>
       <div class="who-card">
         <div class="wc-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-      </div>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        </div>
         <div class="wc-title">Family Offices</div>
-        <div class="wc-text">Managing philanthropic programs alongside other priorities. CP brings structure to your giving process so your team can make thoughtful funding decisions without getting lost in spreadsheets.</div>
+        <div class="wc-text">Managing philanthropic giving alongside other priorities. CP gives your team the tools to assess organizational readiness without building a separate program infrastructure.</div>
       </div>
       <div class="who-card">
         <div class="wc-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-      </div>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
         <div class="wc-title">Corporate Giving Programs</div>
-        <div class="wc-text">Community investment teams that want consistent, defensible due diligence. CP helps you assess organizations with the same rigor you bring to every other business decision.</div>
+        <div class="wc-text">Community investment teams that want consistent, defensible pre-grant due diligence. The same rigor you bring to every business decision — applied to your philanthropic investments.</div>
       </div>
     </div>
   </div>
@@ -509,8 +551,8 @@ footer { background: var(--navy); padding: 48px 2rem; }
 <!-- CTA -->
 <section class="cta-section">
   <div class="section-inner">
-    <h2>The organizations you fund deserve your best thinking.</h2>
-    <p class="cta-sub">Clear Philanthropy gives your team the tools to deliver it — consistently, confidently, and with the kind of feedback that actually moves organizations forward.</p>
+    <h2>Bring structure to the conversation that matters most.</h2>
+    <p class="cta-sub">Clear Philanthropy is free during beta. Join the funders building a more structured, transparent pre-grant process.</p>
     <div class="cta-actions">
       <a href="https://clear-philanthropy.vercel.app/signup.html" class="btn-white">
         Get Early Access — Free
