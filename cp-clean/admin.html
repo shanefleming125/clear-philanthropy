@@ -67,6 +67,13 @@
     </p>
   </div>
 
+  <!-- Access Requests -->
+  <div class="admin-card">
+    <div class="sec-title">Platform Access Requests</div>
+    <div id="requestsLoading" class="users-loading">Loading requests...</div>
+    <div id="requestsList"></div>
+  </div>
+
   <!-- Users list -->
   <div class="admin-card">
     <div class="sec-title">Current Users</div>
@@ -86,6 +93,7 @@
       document.getElementById('userEmail').textContent = session.user.email;
     }
     loadUsers();
+    loadRequests();
   })();
 
   async function inviteUser() {
@@ -118,6 +126,7 @@
       successEl.style.display = 'inline';
       setTimeout(() => successEl.style.display = 'none', 3000);
       loadUsers();
+    loadRequests();
     } catch(e) {
       errorEl.textContent = e.message;
       errorEl.style.display = 'inline';
@@ -196,6 +205,67 @@
       if (e.key === 'Enter') inviteUser();
     });
   });
+
+  async function loadRequests() {
+    const loadingEl = document.getElementById('requestsLoading');
+    const listEl    = document.getElementById('requestsList');
+    try {
+      const token = await AUTH.getToken();
+      const res = await fetch('https://calm-forest-dfc5.shanefleming125.workers.dev/access-requests');
+      if (!res.ok) throw new Error('Could not load requests.');
+      const data = await res.json();
+      const requests = data.requests || [];
+      loadingEl.style.display = 'none';
+      if (!requests.length) {
+        listEl.innerHTML = '<div class="users-loading">No pending requests.</div>';
+        return;
+      }
+      listEl.innerHTML = requests.map(r => `
+        <div class="user-row">
+          <div>
+            <div class="user-email">${r.name} <span style="font-weight:400;color:var(--text-secondary)">· ${r.org}${r.role ? ' · ' + r.role : ''}</span></div>
+            <div class="user-meta">${r.email} · Requested: ${new Date(r.created_at).toLocaleDateString()}</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="btn-primary" style="padding:4px 12px;font-size:12px;" onclick="approveRequest('${r.email}', '${r.id}', this)">Invite</button>
+            <button class="btn-danger" onclick="dismissRequest('${r.id}', this)">Dismiss</button>
+          </div>
+        </div>`).join('');
+    } catch(e) {
+      loadingEl.textContent = 'Unable to load access requests.';
+    }
+  }
+
+  async function approveRequest(email, id, btn) {
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    try {
+      const res = await fetch('https://calm-forest-dfc5.shanefleming125.workers.dev/invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      if (!res.ok) throw new Error('Invite failed.');
+      // Dismiss after approving
+      await dismissRequest(id, null);
+      loadRequests();
+    } catch(e) {
+      alert('Error: ' + e.message);
+      btn.textContent = 'Invite';
+      btn.disabled = false;
+    }
+  }
+
+  async function dismissRequest(id, btn) {
+    try {
+      await fetch(`https://calm-forest-dfc5.shanefleming125.workers.dev/access-requests/${id}`, {
+        method: 'DELETE'
+      });
+      loadRequests();
+    } catch(e) {
+      if (btn) alert('Error dismissing request.');
+    }
+  }
 </script>
 </body>
 </html>
