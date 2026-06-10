@@ -21,8 +21,8 @@
   --muted: #6B7280;
   --white: #fff;
 }
-html { scroll-behavior: smooth; }
-body { font-family: 'Manrope', sans-serif; color: var(--text); background: var(--white); line-height: 1.6; overflow-x: hidden; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body { font-family: 'Manrope', sans-serif; color: var(--text); background: var(--white); line-height: 1.6; overflow-x: hidden; width: 100%; }
 
 /* NAV */
 nav {
@@ -273,6 +273,20 @@ footer { background: var(--navy); padding: 48px 2rem; }
   nav { padding: 0 1rem; }
   .nav-link { display: none; }
   section { padding: 64px 1.25rem; }
+  /* Platform access form - stack on mobile */
+  .section-inner > div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .platform-access-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+}
+@media (max-width: 600px) {
+  .steps-visual { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 32px; letter-spacing: -1px; }
+  h2.stitle { font-size: 26px; }
 }
 </style>
 </head>
@@ -567,7 +581,7 @@ footer { background: var(--navy); padding: 48px 2rem; }
 <!-- PLATFORM ACCESS -->
 <section style="background: var(--white); padding: 88px 2rem;">
   <div class="section-inner">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;">
+    <div class="platform-access-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;">
       <div>
         <div class="eyebrow">Platform Access</div>
         <h2 class="stitle">Run Assessments With Your Own Team.</h2>
