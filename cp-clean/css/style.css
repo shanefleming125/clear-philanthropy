@@ -461,3 +461,15 @@ body {
   .card { break-inside: avoid; border: 1px solid #ddd; }
   body { background: white; }
 }
+
+/* Mobile table - hide less important columns */
+@media (max-width: 768px) {
+  .dash-table th:nth-child(5),
+  .dash-table td:nth-child(5),
+  .dash-table th:nth-child(6),
+  .dash-table td:nth-child(6),
+  .dash-table th:nth-child(7),
+  .dash-table td:nth-child(7) { display: none; }
+  .dash-table th:nth-child(3),
+  .dash-table td:nth-child(3) { display: none; }
+}
