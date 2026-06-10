@@ -289,6 +289,54 @@ footer { background: var(--navy); padding: 48px 2rem; }
   .hero h1 { font-size: 32px; letter-spacing: -1px; }
   h2.stitle { font-size: 26px; }
 }
+
+/* Hamburger */
+.nav-hamburger {
+  display: none;
+  flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer; padding: 4px;
+}
+.nav-hamburger span {
+  display: block; width: 24px; height: 2px;
+  background: var(--navy); border-radius: 2px;
+  transition: all 0.3s;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile overlay */
+.nav-overlay {
+  display: none; position: fixed;
+  top: 64px; left: 0; right: 0; bottom: 0;
+  background: rgba(11,37,69,0.97);
+  backdrop-filter: blur(12px);
+  z-index: 99; flex-direction: column;
+  align-items: center; justify-content: center; gap: 32px;
+  opacity: 0; transition: opacity 0.25s;
+}
+.nav-overlay.open { opacity: 1; }
+.nav-overlay a {
+  font-size: 22px; font-weight: 700; color: #fff;
+  text-decoration: none; letter-spacing: -0.5px;
+  transition: color 0.15s;
+}
+.nav-overlay a:hover { color: var(--sky); }
+.nav-overlay .overlay-cta {
+  margin-top: 16px;
+  background: var(--blue); color: #fff;
+  border-radius: 10px; padding: 14px 32px;
+  font-size: 16px; font-weight: 700;
+}
+.nav-overlay .overlay-signin {
+  font-size: 14px !important; color: rgba(255,255,255,0.5) !important;
+  margin-top: -16px;
+}
+
+@media (max-width: 900px) {
+  .nav-desktop { display: none !important; }
+  .nav-hamburger { display: flex; }
+}
 </style>
 </head>
 <body>
@@ -303,13 +351,37 @@ footer { background: var(--navy); padding: 48px 2rem; }
     </svg>
     <div class="nav-logo-text">Clear <strong>Philanthropy</strong></div>
   </a>
-  <div class="nav-actions">
+  <!-- Desktop nav -->
+  <div class="nav-actions nav-desktop">
     <a href="#how" class="nav-link">How It Works</a>
     <a href="#who" class="nav-link">Who It's For</a>
-    <a href="https://app.clearphilanthropy.com/login" class="nav-link nav-signin">Sign In</a>
+    <a href="https://app.clearphilanthropy.com/login" class="nav-link">Sign In</a>
     <a href="mailto:hello@clearphilanthropy.com" class="btn-nav">Get in Touch</a>
   </div>
+  <!-- Mobile hamburger -->
+  <button class="nav-hamburger" onclick="toggleMenu()" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<!-- Mobile nav overlay -->
+<div class="nav-overlay" id="navOverlay">
+  <a href="#how" onclick="toggleMenu()">How It Works</a>
+  <a href="#who" onclick="toggleMenu()">Who It's For</a>
+  <a href="mailto:hello@clearphilanthropy.com" class="overlay-cta" onclick="toggleMenu()">Get in Touch</a>
+  <a href="https://app.clearphilanthropy.com/login" class="overlay-signin" onclick="toggleMenu()">Sign In</a>
+</div>
+
+<script>
+function toggleMenu() {
+  const btn = document.getElementById('hamburger');
+  const overlay = document.getElementById('navOverlay');
+  const isOpen = btn.classList.toggle('open');
+  overlay.style.display = isOpen ? 'flex' : 'none';
+  setTimeout(() => overlay.classList.toggle('open', isOpen), 10);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+</script>
+
 
 <!-- HERO -->
 <section class="hero">
