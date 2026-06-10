@@ -464,12 +464,12 @@ body {
 
 /* Mobile table - hide less important columns */
 @media (max-width: 768px) {
-  .dash-table th:nth-child(5),
-  .dash-table td:nth-child(5),
-  .dash-table th:nth-child(6),
-  .dash-table td:nth-child(6),
-  .dash-table th:nth-child(7),
-  .dash-table td:nth-child(7) { display: none; }
-  .dash-table th:nth-child(3),
-  .dash-table td:nth-child(3) { display: none; }
+  .org-table th:nth-child(3),
+  .org-table td:nth-child(3) { display: none; }
+  .org-table th:nth-child(5),
+  .org-table td:nth-child(5),
+  .org-table th:nth-child(6),
+  .org-table td:nth-child(6),
+  .org-table th:nth-child(7),
+  .org-table td:nth-child(7) { display: none; }
 }
