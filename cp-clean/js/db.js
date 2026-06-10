@@ -53,12 +53,27 @@ const DB = {
   async listAssessments() {
     try {
       const headers = await this.headers();
+      // Fetch user's own assessments
       const res = await fetch(`${SUPABASE_URL}/rest/v1/assessments?order=created_at.desc&select=*`, {
         headers
       });
       if (!res.ok) throw new Error('DB error');
       const rows = await res.json();
-      return rows.map(r => r.data || r);
+      const userAssessments = rows.map(r => r.data || r);
+
+      // Fetch sample assessments (visible to all users)
+      const sampleRes = await fetch(`${SUPABASE_URL}/rest/v1/assessments?select=*&data->>is_sample=eq.true`, {
+        headers
+      });
+      let sampleAssessments = [];
+      if (sampleRes.ok) {
+        const sampleRows = await sampleRes.json();
+        sampleAssessments = sampleRows
+          .map(r => r.data || r)
+          .filter(d => d.is_sample && !userAssessments.find(u => u.id === d.id));
+      }
+
+      return [...userAssessments, ...sampleAssessments];
     } catch(e) {
       console.warn('Supabase list failed, using localStorage');
       return this.localList();
