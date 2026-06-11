@@ -321,12 +321,14 @@ async function loadExistingFiles(assessmentId) {
       const displayName = f.name.replace(/^\d+_/, '');
       const path = `${assessmentId}/${f.name}`;
       const url = await DB.getFileUrl(path);
+      const escapedPath = path.replace(/'/g, "\\'");
       return `
-        <div class="file-item uploaded">
+        <div class="file-item uploaded" id="file-${f.name}">
           <div class="file-item-name">${displayName}</div>
           <div class="file-item-size">${f.metadata?.size ? formatBytes(f.metadata.size) : ''}</div>
           <div class="file-status done">✓ On file</div>
           ${url ? `<a href="${url}" target="_blank" class="file-link">Open ↗</a>` : ''}
+          <button class="file-item-remove" onclick="deleteFile('${escapedPath}', '${f.name}')" title="Delete file">×</button>
         </div>
       `;
     }));
@@ -334,5 +336,16 @@ async function loadExistingFiles(assessmentId) {
     list.innerHTML = existingHtml.join('') + list.innerHTML;
   } catch(e) {
     console.warn('Could not load existing files:', e.message);
+  }
+}
+
+async function deleteFile(path, filename) {
+  if (!confirm(`Delete "${filename.replace(/^\d+_/, '')}"? This cannot be undone.`)) return;
+  try {
+    await DB.deleteFile(path);
+    const el = document.getElementById(`file-${filename}`);
+    if (el) el.remove();
+  } catch(e) {
+    alert('Could not delete file. Please try again.');
   }
 }
