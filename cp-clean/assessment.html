@@ -6,6 +6,167 @@
 <title>Assessment — Clear Philanthropy</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect width='44' height='44' rx='10' fill='%231A6EB5'/><circle cx='17' cy='22' r='10' stroke='white' stroke-width='1.8' fill='rgba(255,255,255,0.1)'/><circle cx='27' cy='22' r='10' stroke='rgba(255,255,255,0.5)' stroke-width='1.8' fill='rgba(255,255,255,0.05)'/><path d='M22 13.2C19 16 19 28 22 30.8C25 28 25 16 22 13.2Z' fill='white'/></svg>">
+<style>
+  /* ── Tooltip ── */
+  .tip-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #D1D5DB;
+    color: #374151;
+    font-size: 9px;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+    line-height: 1;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .tip-icon:hover, .tip-icon.active {
+    background: #1A6EB5;
+    color: white;
+  }
+  .tip-bubble {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: calc(100% + 8px);
+    width: 280px;
+    background: #0B2545;
+    color: #E5E7EB;
+    font-size: 11.5px;
+    line-height: 1.6;
+    border-radius: 8px;
+    padding: 12px 14px;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  }
+  .tip-bubble.active { display: block; }
+  .tip-bubble::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 14px;
+    width: 10px;
+    height: 10px;
+    background: #0B2545;
+    transform: rotate(45deg);
+    border-radius: 2px;
+  }
+  .tip-source-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .tip-source-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #9CA3AF;
+    margin-bottom: 2px;
+  }
+  .tip-source-item {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    font-size: 11px;
+    color: #D1D5DB;
+  }
+  .tip-source-item .tip-badge {
+    flex-shrink: 0;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-top: 1px;
+  }
+  .tip-badge.best { background: #2EAD77; color: white; }
+  .tip-badge.alt  { background: #4DA6E8; color: white; }
+  .tip-badge.last { background: #6B7280; color: white; }
+
+  /* ── Data Source card ── */
+  .source-card {
+    background: #F0F6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+  .source-card .field-wrap {
+    margin-bottom: 0;
+    flex: 1 1 220px;
+  }
+  .source-card label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .source-card select,
+  .source-card input[type="text"] {
+    background: white;
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 13px;
+    width: 100%;
+    color: #111827;
+    font-family: inherit;
+  }
+  .source-card select:focus,
+  .source-card input[type="text"]:focus {
+    outline: none;
+    border-color: #1A6EB5;
+    box-shadow: 0 0 0 3px rgba(26,110,181,0.12);
+  }
+  .source-hint {
+    font-size: 11px;
+    color: #6B7280;
+    margin-top: 3px;
+  }
+
+  /* ── Confidence indicator ── */
+  .confidence-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 3px 9px;
+    border-radius: 20px;
+    margin-top: 5px;
+    white-space: nowrap;
+  }
+  .conf-high   { background: rgba(46,173,119,0.18); color: #2EAD77; }
+  .conf-medium { background: rgba(77,166,232,0.18); color: #1A6EB5; }
+  .conf-low    { background: rgba(107,114,128,0.15); color: #6B7280; }
+  .conf-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+</style>
 </head>
 <body style="display:none">
 <nav class="topbar">
@@ -34,6 +195,7 @@
         <span class="score-denom">/ 100</span>
       </div>
       <div id="riskBadge" class="risk-badge" style="display:none"></div>
+      <div id="confidencePill" style="display:none"></div>
     </div>
   </div>
 
@@ -45,24 +207,286 @@
     <div class="field-wrap"><label>Review Date</label><input type="date" id="reviewDate"></div>
   </div>
 
+  <!-- Data Source -->
+  <div class="source-card">
+    <div class="field-wrap">
+      <label>Primary Data Source</label>
+      <select id="dataSource" onchange="updateConfidence()">
+        <option value="">— Select source —</option>
+        <option value="audited">Audited Financial Statements</option>
+        <option value="reviewed">Reviewed Financial Statements</option>
+        <option value="990">Form 990</option>
+        <option value="internal">Internal Statements Only</option>
+        <option value="mixed">Mixed Sources</option>
+      </select>
+      <div class="source-hint">The primary document used to populate financial data below.</div>
+    </div>
+    <div class="field-wrap" style="flex: 2 1 320px;">
+      <label>Source Notes <span style="font-weight:400;color:#9CA3AF">(optional)</span></label>
+      <input type="text" id="sourceNotes" placeholder="e.g. Audit for FY2023, Form 990 for FY2021–2022">
+      <div class="source-hint">Note any variation in sources across years or documents.</div>
+    </div>
+  </div>
+
   <div class="card">
     <div class="sec-title">1. Financial Data Input</div>
     <div class="table-scroll">
       <table class="data-table">
         <thead><tr><th>Metric</th><th>Current Year</th><th>Prior Year</th><th>Two Years Ago</th></tr></thead>
         <tbody>
-          <tr><td>Total Revenue</td><td><input type="text" id="rev0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="rev1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="rev2" placeholder="$0" oninput="recalc()"></td></tr>
-          <tr><td>Total Expenses</td><td><input type="text" id="exp0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="exp1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="exp2" placeholder="$0" oninput="recalc()"></td></tr>
-          <tr><td>Total Assets</td><td><input type="text" id="assets0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="assets1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="assets2" placeholder="$0" oninput="recalc()"></td></tr>
-          <tr><td>Total Liabilities</td><td><input type="text" id="liab0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="liab1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="liab2" placeholder="$0" oninput="recalc()"></td></tr>
-          <tr><td>Cash &amp; Cash Equivalents</td><td><input type="text" id="cash0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="cash1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="cash2" placeholder="$0" oninput="recalc()"></td></tr>
-          <tr><td>Current Assets</td><td><input type="text" id="currassets0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currassets1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currassets2" placeholder="$0" oninput="recalc()"></td></tr>
-          <tr><td>Current Liabilities</td><td><input type="text" id="currliab0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currliab1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currliab2" placeholder="$0" oninput="recalc()"></td></tr>
-          <tr><td>Program Service Expenses</td><td><input type="text" id="prog0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="prog1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="prog2" placeholder="$0" oninput="recalc()"></td></tr>
-          <tr><td>Management &amp; General Expenses</td><td><input type="text" id="mgmt0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="mgmt1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="mgmt2" placeholder="$0" oninput="recalc()"></td></tr>
-          <tr><td>Fundraising Expenses</td><td><input type="text" id="fund0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="fund1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="fund2" placeholder="$0" oninput="recalc()"></td></tr>
-          <tr><td>Total Contributions (Donations)</td><td><input type="text" id="contrib0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="contrib1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="contrib2" placeholder="$0" oninput="recalc()"></td></tr>
-          <tr><td>Largest Single Revenue Source</td><td><input type="text" id="toprev0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="toprev1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="toprev2" placeholder="$0" oninput="recalc()"></td></tr>
+
+          <tr>
+            <td>
+              <div class="tip-wrap">
+                Total Revenue
+                <span class="tip-icon" onclick="toggleTip('tip_rev')">?</span>
+                <div class="tip-bubble" id="tip_rev">
+                  <strong>Total Revenue</strong><br>All income received during the fiscal year — grants, donations, program fees, government contracts, investment income, and other sources combined.
+                  <div class="tip-source-row">
+                    <div class="tip-source-label">Where to find it</div>
+                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Activities, Total Revenue line</div>
+                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part VIII, Line 12 (Total Revenue)</div>
+                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Income statement or internal P&amp;L — top-line total</div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td><input type="text" id="rev0" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="rev1" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="rev2" placeholder="$0" oninput="recalc()"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="tip-wrap">
+                Total Expenses
+                <span class="tip-icon" onclick="toggleTip('tip_exp')">?</span>
+                <div class="tip-bubble" id="tip_exp">
+                  <strong>Total Expenses</strong><br>All money spent during the fiscal year across program, management, and fundraising activities.
+                  <div class="tip-source-row">
+                    <div class="tip-source-label">Where to find it</div>
+                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Activities, Total Expenses line</div>
+                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part IX, Line 25 (Total Functional Expenses)</div>
+                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Income statement or internal P&amp;L — total expenses line</div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td><input type="text" id="exp0" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="exp1" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="exp2" placeholder="$0" oninput="recalc()"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="tip-wrap">
+                Total Assets
+                <span class="tip-icon" onclick="toggleTip('tip_assets')">?</span>
+                <div class="tip-bubble" id="tip_assets">
+                  <strong>Total Assets</strong><br>Everything the organization owns or controls — cash, receivables, property, investments, and equipment at year-end.
+                  <div class="tip-source-row">
+                    <div class="tip-source-label">Where to find it</div>
+                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet (Statement of Financial Position), Total Assets</div>
+                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part X, Line 16 (Total Assets)</div>
+                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet — total assets line</div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td><input type="text" id="assets0" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="assets1" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="assets2" placeholder="$0" oninput="recalc()"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="tip-wrap">
+                Total Liabilities
+                <span class="tip-icon" onclick="toggleTip('tip_liab')">?</span>
+                <div class="tip-bubble" id="tip_liab">
+                  <strong>Total Liabilities</strong><br>Everything the organization owes — accounts payable, deferred revenue, loans, and other obligations at year-end.
+                  <div class="tip-source-row">
+                    <div class="tip-source-label">Where to find it</div>
+                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet, Total Liabilities</div>
+                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part X, Line 26 (Total Liabilities)</div>
+                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet — total liabilities line</div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td><input type="text" id="liab0" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="liab1" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="liab2" placeholder="$0" oninput="recalc()"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="tip-wrap">
+                Cash &amp; Cash Equivalents
+                <span class="tip-icon" onclick="toggleTip('tip_cash')">?</span>
+                <div class="tip-bubble" id="tip_cash">
+                  <strong>Cash &amp; Cash Equivalents</strong><br>Immediately accessible funds — checking, savings, money market accounts, and short-term instruments convertible to cash within 90 days.
+                  <div class="tip-source-row">
+                    <div class="tip-source-label">Where to find it</div>
+                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet, Cash and Cash Equivalents (top of asset section)</div>
+                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part X, Line 1 (Cash — non-interest bearing) + Line 2 (Savings and temporary cash investments)</div>
+                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet or bank statements at year-end</div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td><input type="text" id="cash0" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="cash1" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="cash2" placeholder="$0" oninput="recalc()"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="tip-wrap">
+                Current Assets
+                <span class="tip-icon" onclick="toggleTip('tip_currassets')">?</span>
+                <div class="tip-bubble" id="tip_currassets">
+                  <strong>Current Assets</strong><br>Assets expected to be converted to cash within 12 months — includes cash, receivables, prepaid expenses, and short-term investments.
+                  <div class="tip-source-row">
+                    <div class="tip-source-label">Where to find it</div>
+                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet, "Current Assets" subtotal (explicitly labeled)</div>
+                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990 does not label "current assets" — add Part X Lines 1–4 as an estimate (cash + receivables)</div>
+                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet — current assets subtotal, or ask the org directly</div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td><input type="text" id="currassets0" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="currassets1" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="currassets2" placeholder="$0" oninput="recalc()"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="tip-wrap">
+                Current Liabilities
+                <span class="tip-icon" onclick="toggleTip('tip_currliab')">?</span>
+                <div class="tip-bubble" id="tip_currliab">
+                  <strong>Current Liabilities</strong><br>Obligations due within 12 months — accounts payable, accrued expenses, short-term debt, and deferred revenue expected to be earned this year.
+                  <div class="tip-source-row">
+                    <div class="tip-source-label">Where to find it</div>
+                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet, "Current Liabilities" subtotal (explicitly labeled)</div>
+                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990 does not label "current liabilities" — use Part X Lines 17–18 as an estimate (accounts payable + deferred revenue)</div>
+                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet — current liabilities subtotal, or ask the org directly</div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td><input type="text" id="currliab0" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="currliab1" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="currliab2" placeholder="$0" oninput="recalc()"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="tip-wrap">
+                Program Service Expenses
+                <span class="tip-icon" onclick="toggleTip('tip_prog')">?</span>
+                <div class="tip-bubble" id="tip_prog">
+                  <strong>Program Service Expenses</strong><br>Money spent directly delivering the mission — staff, supplies, and overhead tied to programs and services. Excludes management and fundraising costs.
+                  <div class="tip-source-row">
+                    <div class="tip-source-label">Where to find it</div>
+                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Functional Expenses, Program Services column total</div>
+                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part IX, Line 25, Column B (Program Service Expenses)</div>
+                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal expense report — program or direct service costs</div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td><input type="text" id="prog0" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="prog1" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="prog2" placeholder="$0" oninput="recalc()"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="tip-wrap">
+                Management &amp; General Expenses
+                <span class="tip-icon" onclick="toggleTip('tip_mgmt')">?</span>
+                <div class="tip-bubble" id="tip_mgmt">
+                  <strong>Management &amp; General Expenses</strong><br>Overhead costs not tied to programs or fundraising — executive leadership, finance, HR, legal, IT, and general administration.
+                  <div class="tip-source-row">
+                    <div class="tip-source-label">Where to find it</div>
+                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Functional Expenses, Management &amp; General column total</div>
+                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part IX, Line 25, Column C (Management and General)</div>
+                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal expense report — admin or overhead cost category</div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td><input type="text" id="mgmt0" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="mgmt1" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="mgmt2" placeholder="$0" oninput="recalc()"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="tip-wrap">
+                Fundraising Expenses
+                <span class="tip-icon" onclick="toggleTip('tip_fund')">?</span>
+                <div class="tip-bubble" id="tip_fund">
+                  <strong>Fundraising Expenses</strong><br>Costs specifically incurred to solicit donations and grants — events, direct mail, donor stewardship, and development staff time allocated to fundraising.
+                  <div class="tip-source-row">
+                    <div class="tip-source-label">Where to find it</div>
+                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Functional Expenses, Fundraising column total</div>
+                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part IX, Line 25, Column D (Fundraising)</div>
+                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal expense report — development or fundraising cost category</div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td><input type="text" id="fund0" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="fund1" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="fund2" placeholder="$0" oninput="recalc()"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="tip-wrap">
+                Total Contributions (Donations)
+                <span class="tip-icon" onclick="toggleTip('tip_contrib')">?</span>
+                <div class="tip-bubble" id="tip_contrib">
+                  <strong>Total Contributions</strong><br>All philanthropic support received — individual donations, foundation grants, corporate giving, and government grants. Does not include earned revenue like program fees.
+                  <div class="tip-source-row">
+                    <div class="tip-source-label">Where to find it</div>
+                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Activities, Contributions and Grants line (or sum of all contribution types)</div>
+                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part VIII, Line 1h (Total Contributions, Gifts, Grants)</div>
+                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal revenue report — donations and grants received</div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td><input type="text" id="contrib0" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="contrib1" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="contrib2" placeholder="$0" oninput="recalc()"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="tip-wrap">
+                Largest Single Revenue Source
+                <span class="tip-icon" onclick="toggleTip('tip_toprev')">?</span>
+                <div class="tip-bubble" id="tip_toprev">
+                  <strong>Largest Single Revenue Source</strong><br>The single largest revenue line item — one funder, one contract, or one revenue stream. Used to measure concentration risk. If one source disappears, how exposed is the org?
+                  <div class="tip-source-row">
+                    <div class="tip-source-label">Where to find it</div>
+                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Schedule of Grants and Contributions, or notes to financial statements listing major funders</div>
+                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part VIII — scan Lines 1a–1f and other revenue lines to identify the largest single item. Schedule B lists major donors (&gt;$5K) but is not public.</div>
+                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Ask the org directly: "What is your largest single source of revenue and how much did it represent last year?"</div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td><input type="text" id="toprev0" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="toprev1" placeholder="$0" oninput="recalc()"></td>
+            <td><input type="text" id="toprev2" placeholder="$0" oninput="recalc()"></td>
+          </tr>
+
         </tbody>
       </table>
     </div>
@@ -164,6 +588,16 @@
     if (!session) return;
     document.body.style.display = '';
   })();
+
+  // Close tooltips when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.classList.contains('tip-icon')) {
+      document.querySelectorAll('.tip-bubble.active').forEach(b => {
+        b.classList.remove('active');
+        b.previousElementSibling?.classList.remove('active');
+      });
+    }
+  });
 </script>
 </body>
 </html>
