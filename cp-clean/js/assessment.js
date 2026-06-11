@@ -42,14 +42,10 @@ function toggleTip(id) {
   const bubble = document.getElementById(id);
   const icon = bubble.previousElementSibling;
   const isOpen = bubble.classList.contains('active');
-
-  // Close all open tooltips first
   document.querySelectorAll('.tip-bubble.active').forEach(b => {
     b.classList.remove('active');
     b.previousElementSibling?.classList.remove('active');
   });
-
-  // If it wasn't open, open it
   if (!isOpen) {
     bubble.classList.add('active');
     icon?.classList.add('active');
@@ -61,7 +57,6 @@ function updateConfidence() {
   const source = document.getElementById('dataSource')?.value;
   const pill = document.getElementById('confidencePill');
   if (!pill) return;
-
   const config = {
     audited:  { label: 'High Confidence', cls: 'conf-high' },
     reviewed: { label: 'Medium Confidence', cls: 'conf-medium' },
@@ -69,7 +64,6 @@ function updateConfidence() {
     internal: { label: 'Lower Confidence', cls: 'conf-low' },
     mixed:    { label: 'Mixed Sources', cls: 'conf-low' },
   };
-
   if (source && config[source]) {
     const { label, cls } = config[source];
     pill.style.display = 'inline-flex';
@@ -135,7 +129,7 @@ function updateTrends() {
   }).join('');
 }
 
-// ── Save ────────────────────────────────────────────────────────────────────
+// ── Save (with file upload built in) ────────────────────────────────────────
 async function saveAssessment() {
   const required = [
     { id: 'orgName', label: 'Organization Name' },
@@ -182,16 +176,31 @@ async function saveAssessment() {
   };
   if (!data.created_at) delete data.created_at;
 
-  const savedMsg = document.getElementById('savedMsg'), errorMsg = document.getElementById('errorMsg');
+  const saveBtn = document.getElementById('saveBtn');
+  const savedMsg = document.getElementById('savedMsg');
+  const errorMsg = document.getElementById('errorMsg');
+
   try {
     await DB.saveAssessment(data);
     editingId = data.id;
     document.getElementById('formTitle').textContent = 'Edit — ' + data.orgName;
     const url = new URL(window.location); url.searchParams.set('id', data.id); window.history.replaceState({}, '', url);
+
+    // Upload any staged files now that we have a confirmed editingId
+    const pending = typeof stagedFiles !== 'undefined' ? stagedFiles.filter(f => f.status === 'pending') : [];
+    if (pending.length) {
+      saveBtn.textContent = 'Uploading files...';
+      saveBtn.disabled = true;
+      await uploadStagedFiles(editingId);
+    }
+
     savedMsg.style.display = 'inline'; errorMsg.style.display = 'none';
     setTimeout(() => savedMsg.style.display = 'none', 2500);
   } catch(e) {
     errorMsg.textContent = 'Save failed: ' + e.message; errorMsg.style.display = 'inline';
+  } finally {
+    saveBtn.textContent = 'Save Assessment';
+    saveBtn.disabled = false;
   }
 }
 
@@ -209,7 +218,6 @@ async function generateSummary() {
   const notes = document.getElementById('impression').value || 'none';
   const qs = document.getElementById('questions').value || 'none';
 
-  // Data source context for AI
   const sourceMap = {
     audited: 'Audited Financial Statements (high confidence)',
     reviewed: 'Reviewed Financial Statements (medium confidence)',
@@ -274,7 +282,6 @@ function populateForm(d) {
     const el = document.getElementById(id); if (el && d[id] !== undefined) el.value = d[id];
   });
 
-  // Restore data source fields
   if (d.dataSource) {
     const el = document.getElementById('dataSource');
     if (el) { el.value = d.dataSource; updateConfidence(); }
@@ -284,7 +291,6 @@ function populateForm(d) {
     if (el) el.value = d.sourceNotes;
   }
 
-  // Restore AI narrative if it was saved
   if (d.aiNarrative) {
     document.getElementById('aiResult').style.display = 'block';
     document.getElementById('aiText').textContent = d.aiNarrative;
@@ -296,6 +302,8 @@ function populateForm(d) {
     const el = document.getElementById(id); if (el) el.checked = d.docs?.includes(id) || false;
   });
   recalc();
-  // Format currency fields after data is loaded — fixes the persistence bug
   if (typeof formatAllFields === 'function') formatAllFields();
+
+  // Load any files already uploaded to this assessment
+  setTimeout(() => loadExistingFiles(d.id), 600);
 }
