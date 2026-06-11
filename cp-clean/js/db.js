@@ -193,14 +193,22 @@ const DB = {
     }
   },
 
-  async deleteFile(path) {
+async deleteFile(path) {
     try {
       const headers = await this.headers();
       const res = await fetch(
-        `${SUPABASE_URL}/storage/v1/object/assessment-files/${path}`,
-        { method: 'DELETE', headers }
+        `${SUPABASE_URL}/storage/v1/object/assessment-files`,
+        {
+          method: 'DELETE',
+          headers: { ...headers, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prefixes: [path] })
+        }
       );
-      if (!res.ok) throw new Error('Delete failed ' + res.status);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.warn('File delete error:', res.status, err);
+        throw new Error('Delete failed ' + res.status);
+      }
       return true;
     } catch(e) {
       console.warn('File delete error:', e.message);
