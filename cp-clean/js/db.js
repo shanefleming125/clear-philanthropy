@@ -140,20 +140,28 @@ const DB = {
   async listFiles(assessmentId) {
     try {
       const headers = await this.headers();
-      delete headers['Content-Type'];
 
       const res = await fetch(
         `${SUPABASE_URL}/storage/v1/object/list/assessment-files`,
         {
           method: 'POST',
           headers: { ...headers, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prefix: `${assessmentId}/`, limit: 100 })
+          body: JSON.stringify({
+            prefix: `${assessmentId}/`,
+            limit: 100,
+            offset: 0,
+            sortBy: { column: 'name', order: 'asc' }
+          })
         }
       );
 
-      if (!res.ok) return [];
+      if (!res.ok) {
+        console.warn('listFiles response not ok:', res.status, await res.text());
+        return [];
+      }
       const files = await res.json();
-      return (files || []).filter(f => f.name && !f.name.endsWith('/'));
+      console.log('listFiles raw response:', files);
+      return (files || []).filter(f => f.name && f.name !== '.emptyFolderPlaceholder');
     } catch(e) {
       console.warn('File list error:', e.message);
       return [];
@@ -163,9 +171,7 @@ const DB = {
   async getFileUrl(path) {
     try {
       const headers = await this.headers();
-      delete headers['Content-Type'];
 
-      // Create a signed URL valid for 1 hour
       const res = await fetch(
         `${SUPABASE_URL}/storage/v1/object/sign/assessment-files/${path}`,
         {
@@ -175,7 +181,10 @@ const DB = {
         }
       );
 
-      if (!res.ok) return null;
+      if (!res.ok) {
+        console.warn('getFileUrl not ok:', res.status, await res.text());
+        return null;
+      }
       const data = await res.json();
       return `${SUPABASE_URL}/storage/v1${data.signedURL}`;
     } catch(e) {
