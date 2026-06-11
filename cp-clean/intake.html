@@ -6,6 +6,121 @@
 <title>Financial Self-Report — Clear Philanthropy</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect width='44' height='44' rx='10' fill='%231A6EB5'/><circle cx='17' cy='22' r='10' stroke='white' stroke-width='1.8' fill='rgba(255,255,255,0.1)'/><circle cx='27' cy='22' r='10' stroke='rgba(255,255,255,0.5)' stroke-width='1.8' fill='rgba(255,255,255,0.05)'/><path d='M22 13.2C19 16 19 28 22 30.8C25 28 25 16 22 13.2Z' fill='white'/></svg>">
+<style>
+  /* ── File upload ── */
+  .upload-zone {
+    border: 2px dashed #D1D5DB;
+    border-radius: 10px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    background: #FAFAFA;
+    position: relative;
+  }
+  .upload-zone:hover, .upload-zone.dragover {
+    border-color: #1A6EB5;
+    background: #F0F6FF;
+  }
+  .upload-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+  .upload-icon {
+    width: 40px;
+    height: 40px;
+    background: #E6F1FB;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+  }
+  .upload-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 4px;
+  }
+  .upload-hint {
+    font-size: 12px;
+    color: #9CA3AF;
+  }
+  .upload-hint span {
+    color: #1A6EB5;
+    font-weight: 600;
+  }
+  .file-list {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .file-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  .file-item-icon {
+    width: 32px;
+    height: 32px;
+    background: #E6F1FB;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .file-item-name {
+    flex: 1;
+    font-weight: 500;
+    color: #111827;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .file-item-size {
+    font-size: 11px;
+    color: #9CA3AF;
+    flex-shrink: 0;
+  }
+  .file-item-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9CA3AF;
+    padding: 2px;
+    line-height: 1;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+  .file-item-remove:hover { color: #EF4444; }
+  .file-item.uploading { opacity: 0.6; }
+  .file-item.uploaded { border-color: #2EAD77; }
+  .file-status {
+    font-size: 11px;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+  .file-status.done { color: #2EAD77; }
+  .file-status.error { color: #EF4444; }
+  .file-status.pending { color: #9CA3AF; }
+  .upload-progress {
+    font-size: 12px;
+    color: #6B7280;
+    margin-top: 8px;
+    text-align: center;
+  }
+</style>
 </head>
 <body>
 <nav class="topbar">
@@ -89,8 +204,30 @@
       </div>
     </div>
 
+    <!-- Document Upload -->
+    <div class="card">
+      <div class="sec-title">Upload Documents</div>
+      <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">Upload any financial documents you have available — Form 990, audited financials, balance sheet, strategic plan, or other relevant files. Accepted formats: PDF, Word, Excel, and images.</p>
+
+      <div class="upload-zone" id="uploadZone"
+        ondragover="handleDragOver(event)"
+        ondragleave="handleDragLeave(event)"
+        ondrop="handleDrop(event)">
+        <input type="file" id="fileInput" multiple
+          accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png"
+          onchange="handleFileSelect(event)">
+        <div class="upload-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <div class="upload-label">Drop files here or <span style="color:#1A6EB5">browse</span></div>
+        <div class="upload-hint">PDF, Word, Excel, images — up to 10MB per file</div>
+      </div>
+
+      <div class="file-list" id="fileList"></div>
+    </div>
+
     <div style="text-align:center;padding:1rem 0 2rem">
-      <button class="btn-primary" style="padding:12px 32px;font-size:15px" onclick="submitIntake()">Submit Financial Report</button>
+      <button class="btn-primary" style="padding:12px 32px;font-size:15px" onclick="submitIntake()" id="submitBtn">Submit Financial Report</button>
       <div class="error-msg" id="errorMsg" style="margin-top:10px;display:block;text-align:center"></div>
     </div>
   </div>
@@ -107,49 +244,141 @@
 <script src="js/auth.js"></script>
 <script src="js/db.js"></script>
 <script>
-async function submitIntake() {
-  const orgName = document.getElementById('orgName').value.trim();
-  const ein = document.getElementById('ein').value.trim();
-  const fyEnd = document.getElementById('fyEnd').value.trim();
-  const contactName = document.getElementById('contactName').value.trim();
-  const contactEmail = document.getElementById('contactEmail').value.trim();
-  const errorEl = document.getElementById('errorMsg');
+  // Files staged for upload — stored as {file, status, name}
+  let stagedFiles = [];
 
-  if (!orgName || !ein || !fyEnd || !contactName || !contactEmail) {
-    errorEl.textContent = 'Please fill in all required fields.';
-    errorEl.style.display = 'block';
-    return;
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
 
-  const g = id => parseFloat(document.getElementById(id)?.value) || 0;
-  const docs = ['doc_990','doc_audit','doc_bs','doc_is','doc_cf','doc_budget','doc_minutes','doc_strategic']
-    .filter(id => document.getElementById(id)?.checked);
-
-  const data = {
-    id: 'intake_' + Date.now(),
-    orgName, ein, fyEnd, contactName, contactEmail,
-    status: 'submitted',
-    rev: g('rev0'), exp: g('exp0'), assets: g('assets0'), liab: g('liab0'), cash: g('cash0'),
-    currassets: g('currassets0'), currliab: g('currliab0'),
-    prog: g('prog0'), mgmt: g('mgmt0'), fund: g('fund0'), contrib: g('contrib0'), toprev: g('toprev0'),
-    rev1: g('rev1'), rev2: g('rev2'), exp1: g('exp1'), exp2: g('exp2'), cash1: g('cash1'), cash2: g('cash2'),
-    docs,
-    score: 0,
-    riskLevel: 'Pending',
-    recommendation: 'Pending Review',
-    created_at: new Date().toISOString(),
-    savedAt: new Date().toISOString()
-  };
-
-  try {
-    await DB.saveAssessment(data);
-    document.getElementById('formView').style.display = 'none';
-    document.getElementById('successView').style.display = 'block';
-  } catch(e) {
-    errorEl.textContent = 'Submission failed. Please try again.';
-    errorEl.style.display = 'block';
+  function fileIcon() {
+    return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
   }
-}
+
+  function renderFileList() {
+    const list = document.getElementById('fileList');
+    if (!stagedFiles.length) { list.innerHTML = ''; return; }
+    list.innerHTML = stagedFiles.map((f, i) => `
+      <div class="file-item ${f.status}" id="file-item-${i}">
+        <div class="file-item-icon">${fileIcon()}</div>
+        <div class="file-item-name">${f.name}</div>
+        <div class="file-item-size">${formatBytes(f.file.size)}</div>
+        <div class="file-status ${f.status === 'pending' ? 'pending' : f.status === 'done' ? 'done' : 'error'}">
+          ${f.status === 'pending' ? 'Ready' : f.status === 'done' ? '✓ Uploaded' : '✗ Failed'}
+        </div>
+        ${f.status === 'pending' ? `<button class="file-item-remove" onclick="removeFile(${i})" title="Remove">×</button>` : ''}
+      </div>
+    `).join('');
+  }
+
+  function addFiles(files) {
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    Array.from(files).forEach(file => {
+      if (file.size > maxSize) {
+        alert(`${file.name} is too large. Maximum file size is 10MB.`);
+        return;
+      }
+      // Avoid duplicates
+      if (!stagedFiles.find(f => f.name === file.name && f.file.size === file.size)) {
+        stagedFiles.push({ file, name: file.name, status: 'pending' });
+      }
+    });
+    renderFileList();
+  }
+
+  function removeFile(index) {
+    stagedFiles.splice(index, 1);
+    renderFileList();
+  }
+
+  function handleFileSelect(e) { addFiles(e.target.files); e.target.value = ''; }
+  function handleDragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('dragover'); }
+  function handleDragLeave(e) { document.getElementById('uploadZone').classList.remove('dragover'); }
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('uploadZone').classList.remove('dragover');
+    addFiles(e.dataTransfer.files);
+  }
+
+  async function uploadStagedFiles(assessmentId) {
+    const pending = stagedFiles.filter(f => f.status === 'pending');
+    if (!pending.length) return;
+
+    for (let i = 0; i < stagedFiles.length; i++) {
+      if (stagedFiles[i].status !== 'pending') continue;
+      try {
+        await DB.uploadFile(assessmentId, stagedFiles[i].file);
+        stagedFiles[i].status = 'done';
+      } catch(e) {
+        stagedFiles[i].status = 'error';
+        console.error('Upload failed for', stagedFiles[i].name, e.message);
+      }
+      renderFileList();
+    }
+  }
+
+  async function submitIntake() {
+    const orgName = document.getElementById('orgName').value.trim();
+    const ein = document.getElementById('ein').value.trim();
+    const fyEnd = document.getElementById('fyEnd').value.trim();
+    const contactName = document.getElementById('contactName').value.trim();
+    const contactEmail = document.getElementById('contactEmail').value.trim();
+    const errorEl = document.getElementById('errorMsg');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (!orgName || !ein || !fyEnd || !contactName || !contactEmail) {
+      errorEl.textContent = 'Please fill in all required fields.';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    submitBtn.textContent = 'Submitting...';
+    submitBtn.disabled = true;
+    errorEl.textContent = '';
+
+    const g = id => parseFloat(document.getElementById(id)?.value) || 0;
+    const docs = ['doc_990','doc_audit','doc_bs','doc_is','doc_cf','doc_budget','doc_minutes','doc_strategic']
+      .filter(id => document.getElementById(id)?.checked);
+
+    const assessmentId = 'intake_' + Date.now();
+
+    const data = {
+      id: assessmentId,
+      orgName, ein, fyEnd, contactName, contactEmail,
+      status: 'submitted',
+      rev: g('rev0'), exp: g('exp0'), assets: g('assets0'), liab: g('liab0'), cash: g('cash0'),
+      currassets: g('currassets0'), currliab: g('currliab0'),
+      prog: g('prog0'), mgmt: g('mgmt0'), fund: g('fund0'), contrib: g('contrib0'), toprev: g('toprev0'),
+      rev1: g('rev1'), rev2: g('rev2'), exp1: g('exp1'), exp2: g('exp2'), cash1: g('cash1'), cash2: g('cash2'),
+      docs,
+      score: 0,
+      riskLevel: 'Pending',
+      recommendation: 'Pending Review',
+      created_at: new Date().toISOString(),
+      savedAt: new Date().toISOString()
+    };
+
+    try {
+      // Save the assessment record first
+      await DB.saveAssessment(data);
+
+      // Then upload any staged files
+      if (stagedFiles.length) {
+        submitBtn.textContent = 'Uploading documents...';
+        await uploadStagedFiles(assessmentId);
+      }
+
+      document.getElementById('formView').style.display = 'none';
+      document.getElementById('successView').style.display = 'block';
+    } catch(e) {
+      errorEl.textContent = 'Submission failed. Please try again.';
+      errorEl.style.display = 'block';
+      submitBtn.textContent = 'Submit Financial Report';
+      submitBtn.disabled = false;
+    }
+  }
 </script>
 </body>
 </html>
