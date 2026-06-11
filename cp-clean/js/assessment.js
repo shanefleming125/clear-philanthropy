@@ -37,6 +37,51 @@ function setVal(id, val, pct) {
   return val;
 }
 
+// ── Tooltip toggle ──────────────────────────────────────────────────────────
+function toggleTip(id) {
+  const bubble = document.getElementById(id);
+  const icon = bubble.previousElementSibling;
+  const isOpen = bubble.classList.contains('active');
+
+  // Close all open tooltips first
+  document.querySelectorAll('.tip-bubble.active').forEach(b => {
+    b.classList.remove('active');
+    b.previousElementSibling?.classList.remove('active');
+  });
+
+  // If it wasn't open, open it
+  if (!isOpen) {
+    bubble.classList.add('active');
+    icon?.classList.add('active');
+  }
+}
+
+// ── Confidence indicator ────────────────────────────────────────────────────
+function updateConfidence() {
+  const source = document.getElementById('dataSource')?.value;
+  const pill = document.getElementById('confidencePill');
+  if (!pill) return;
+
+  const config = {
+    audited:  { label: 'High Confidence', cls: 'conf-high' },
+    reviewed: { label: 'Medium Confidence', cls: 'conf-medium' },
+    '990':    { label: 'Medium Confidence', cls: 'conf-medium' },
+    internal: { label: 'Lower Confidence', cls: 'conf-low' },
+    mixed:    { label: 'Mixed Sources', cls: 'conf-low' },
+  };
+
+  if (source && config[source]) {
+    const { label, cls } = config[source];
+    pill.style.display = 'inline-flex';
+    pill.className = `confidence-pill ${cls}`;
+    pill.innerHTML = `<span class="conf-dot"></span>${label}`;
+  } else {
+    pill.style.display = 'none';
+    pill.innerHTML = '';
+  }
+}
+
+// ── Recalc ──────────────────────────────────────────────────────────────────
 function recalc() {
   const rev=g('rev0'), exp=g('exp0'), assets=g('assets0'), liab=g('liab0'), cash=g('cash0');
   const curra=g('currassets0'), currl=g('currliab0'), prog=g('prog0'), fund=g('fund0'), contrib=g('contrib0'), toprev=g('toprev0');
@@ -90,8 +135,8 @@ function updateTrends() {
   }).join('');
 }
 
+// ── Save ────────────────────────────────────────────────────────────────────
 async function saveAssessment() {
-  // Validate required fields
   const required = [
     { id: 'orgName', label: 'Organization Name' },
     { id: 'ein', label: 'EIN' },
@@ -124,6 +169,8 @@ async function saveAssessment() {
     impression: document.getElementById('impression').value,
     questions: document.getElementById('questions').value,
     aiNarrative: hasAI ? aiText : '',
+    dataSource: document.getElementById('dataSource').value,
+    sourceNotes: document.getElementById('sourceNotes').value,
     score, riskLevel,
     rev:g('rev0'), exp:g('exp0'), assets:g('assets0'), liab:g('liab0'), cash:g('cash0'),
     currassets:g('currassets0'), currliab:g('currliab0'),
@@ -148,6 +195,7 @@ async function saveAssessment() {
   }
 }
 
+// ── AI generation ───────────────────────────────────────────────────────────
 async function generateSummary() {
   const rev=g('rev0'), exp=g('exp0'), cash=g('cash0'), prog=g('prog0'), assets=g('assets0'), liab=g('liab0'), contrib=g('contrib0'), fund=g('fund0'), toprev=g('toprev0');
   const surplus=rev-exp, netassets=assets-liab;
@@ -160,6 +208,20 @@ async function generateSummary() {
   const rec = document.getElementById('recommendation').value || 'not selected';
   const notes = document.getElementById('impression').value || 'none';
   const qs = document.getElementById('questions').value || 'none';
+
+  // Data source context for AI
+  const sourceMap = {
+    audited: 'Audited Financial Statements (high confidence)',
+    reviewed: 'Reviewed Financial Statements (medium confidence)',
+    '990': 'Form 990 (medium confidence)',
+    internal: 'Internal Statements Only (lower confidence — unaudited)',
+    mixed: 'Mixed Sources (see source notes)',
+    '': 'Not specified'
+  };
+  const dataSource = document.getElementById('dataSource').value;
+  const sourceNotes = document.getElementById('sourceNotes').value;
+  const sourceContext = sourceMap[dataSource] || 'Not specified';
+
   const docMap = { 'doc_990':'Form 990', 'doc_audit':'Audited Financials', 'doc_bs':'Balance Sheet', 'doc_is':'Income Statement', 'doc_cf':'Cash Flow Statement', 'doc_budget':'Board Budget', 'doc_minutes':'Board Minutes', 'doc_strategic':'Strategic Plan' };
   const docs = Object.keys(docMap).filter(id => document.getElementById(id)?.checked).map(id => docMap[id]).join(', ') || 'none';
 
@@ -170,12 +232,13 @@ Revenue: ${fmt(rev)} | Expenses: ${fmt(exp)} | Surplus/Deficit: ${fmt(surplus)} 
 Cash: ${fmt(cash)} (${mc} months) | Assets: ${fmt(assets)} | Liabilities: ${fmt(liab)} | Net Assets: ${fmt(netassets)}
 Program Expense Ratio: ${pct(prog,exp)} | Fundraising Efficiency: ${pct(fund,contrib)}
 Revenue Concentration: ${pct(toprev,rev)} | Debt to Assets: ${pct(liab,assets)}
-Documents: ${docs} | Recommendation: ${rec}
+Primary Data Source: ${sourceContext}${sourceNotes ? ' | Source Notes: ' + sourceNotes : ''}
+Documents Reviewed: ${docs} | Recommendation: ${rec}
 Reviewer notes: ${notes} | Follow-up questions: ${qs}
 
 Paragraph 1: Overall financial health and strengths with specific numbers.
 Paragraph 2: Key risks and concerns referencing specific ratios.
-Paragraph 3: Clear recommendation and next steps.`;
+Paragraph 3: Clear recommendation and next steps. If data source reliability is lower (internal statements only or mixed), note appropriate caveats about confidence in the figures.`;
 
   const btn = document.getElementById('aiBtn');
   const resultDiv = document.getElementById('aiResult');
@@ -204,11 +267,22 @@ function copyAssessment() {
   navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
 }
 
+// ── Populate form on load ───────────────────────────────────────────────────
 function populateForm(d) {
   document.getElementById('formTitle').textContent = 'Edit — ' + d.orgName;
   ['orgName','ein','fyEnd','reviewer','reviewDate','recommendation','impression','questions'].forEach(id => {
     const el = document.getElementById(id); if (el && d[id] !== undefined) el.value = d[id];
   });
+
+  // Restore data source fields
+  if (d.dataSource) {
+    const el = document.getElementById('dataSource');
+    if (el) { el.value = d.dataSource; updateConfidence(); }
+  }
+  if (d.sourceNotes) {
+    const el = document.getElementById('sourceNotes');
+    if (el) el.value = d.sourceNotes;
+  }
 
   // Restore AI narrative if it was saved
   if (d.aiNarrative) {
