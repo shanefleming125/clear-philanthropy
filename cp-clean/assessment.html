@@ -1,227 +1,169 @@
-// assessment.js — Clear Philanthropy
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assessment — Clear Philanthropy</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect width='44' height='44' rx='10' fill='%231A6EB5'/><circle cx='17' cy='22' r='10' stroke='white' stroke-width='1.8' fill='rgba(255,255,255,0.1)'/><circle cx='27' cy='22' r='10' stroke='rgba(255,255,255,0.5)' stroke-width='1.8' fill='rgba(255,255,255,0.05)'/><path d='M22 13.2C19 16 19 28 22 30.8C25 28 25 16 22 13.2Z' fill='white'/></svg>">
+</head>
+<body style="display:none">
+<nav class="topbar">
+  <a href="marketing.html" class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 28 26" fill="none" width="16" height="15"><circle cx="10" cy="13" r="9" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.15)"/><circle cx="18" cy="13" r="9" stroke="rgba(255,255,255,0.5)" stroke-width="2" fill="rgba(255,255,255,0.05)"/><path d="M14 5.2C11.2 7.8 11.2 18.2 14 20.8C16.8 18.2 16.8 7.8 14 5.2Z" fill="white"/></svg>
+    </div>
+    <div class="logo-text">Clear <span>Philanthropy</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="/index" class="nav-link">Dashboard</a>
+    <a href="assessment.html" class="nav-link active">Assessment</a>
+  </div>
+</nav>
 
-let editingId = null;
+<main class="container">
+  <div class="form-header-bar">
+    <div>
+      <h1 id="formTitle">New Assessment</h1>
+      <p style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:3px">Enter financial data — ratios and score calculate automatically</p>
+    </div>
+    <div class="score-display">
+      <div class="score-label-sm">Health Score</div>
+      <div class="score-big-wrap">
+        <span class="score-big" id="scoreDisplay">—</span>
+        <span class="score-denom">/ 100</span>
+      </div>
+      <div id="riskBadge" class="risk-badge" style="display:none"></div>
+    </div>
+  </div>
 
-window.addEventListener('DOMContentLoaded', () => {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
-  if (id) loadFromDB(id);
-  recalc();
-});
+  <div class="meta-grid">
+    <div class="field-wrap"><label>Organization Name <span class="req">*</span></label><input type="text" id="orgName" placeholder="e.g. Eastside Family Resource Center" required></div>
+    <div class="field-wrap"><label>EIN <span class="req">*</span></label><input type="text" id="ein" placeholder="e.g. 12-3456789" required></div>
+    <div class="field-wrap"><label>Fiscal Year End <span class="req">*</span></label><input type="text" id="fyEnd" placeholder="e.g. 12/31/2023" required></div>
+    <div class="field-wrap"><label>Reviewer Name <span class="req">*</span></label><input type="text" id="reviewer" placeholder="e.g. Jane Smith" required></div>
+    <div class="field-wrap"><label>Review Date</label><input type="date" id="reviewDate"></div>
+  </div>
 
-async function loadFromDB(id) {
-  try {
-    const data = await DB.getAssessment(id);
-    if (data) { editingId = id; populateForm(data); }
-  } catch(e) { console.error('Load error:', e); }
-}
+  <div class="card">
+    <div class="sec-title">1. Financial Data Input</div>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>Metric</th><th>Current Year</th><th>Prior Year</th><th>Two Years Ago</th></tr></thead>
+        <tbody>
+          <tr><td>Total Revenue</td><td><input type="text" id="rev0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="rev1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="rev2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Total Expenses</td><td><input type="text" id="exp0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="exp1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="exp2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Total Assets</td><td><input type="text" id="assets0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="assets1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="assets2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Total Liabilities</td><td><input type="text" id="liab0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="liab1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="liab2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Cash &amp; Cash Equivalents</td><td><input type="text" id="cash0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="cash1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="cash2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Current Assets</td><td><input type="text" id="currassets0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currassets1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currassets2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Current Liabilities</td><td><input type="text" id="currliab0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currliab1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currliab2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Program Service Expenses</td><td><input type="text" id="prog0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="prog1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="prog2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Management &amp; General Expenses</td><td><input type="text" id="mgmt0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="mgmt1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="mgmt2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Fundraising Expenses</td><td><input type="text" id="fund0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="fund1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="fund2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Total Contributions (Donations)</td><td><input type="text" id="contrib0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="contrib1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="contrib2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td>Largest Single Revenue Source</td><td><input type="text" id="toprev0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="toprev1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="toprev2" placeholder="$0" oninput="recalc()"></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-// g() is overridden by currency.js to handle formatted values
-// This version is a fallback only
-function g(id) { return parseFloat(document.getElementById(id)?.value) || 0; }
+  <div class="two-col">
+    <div class="card">
+      <div class="sec-title">2. Key Financial Ratios</div>
+      <table class="ratio-table">
+        <thead><tr><th>Ratio</th><th style="text-align:right">Result</th><th style="text-align:center">Rating</th></tr></thead>
+        <tbody>
+          <tr><td><span class="rn">Operating Margin</span><span class="rf">Surplus / Revenue</span></td><td class="rv" id="r_om">—</td><td style="text-align:center" id="b_om"><span class="bdg">—</span></td></tr>
+          <tr><td><span class="rn">Current Ratio</span><span class="rf">Current Assets / Current Liabilities</span></td><td class="rv" id="r_cr">—</td><td style="text-align:center" id="b_cr"><span class="bdg">—</span></td></tr>
+          <tr><td><span class="rn">Months of Cash</span><span class="rf">Cash / (Expenses / 12)</span></td><td class="rv" id="r_mc">—</td><td style="text-align:center" id="b_mc"><span class="bdg">—</span></td></tr>
+          <tr><td><span class="rn">Debt to Assets</span><span class="rf">Liabilities / Assets</span></td><td class="rv" id="r_da">—</td><td style="text-align:center" id="b_da"><span class="bdg">—</span></td></tr>
+          <tr><td><span class="rn">Program Expense Ratio</span><span class="rf">Program Exp / Total Exp</span></td><td class="rv" id="r_pe">—</td><td style="text-align:center" id="b_pe"><span class="bdg">—</span></td></tr>
+          <tr><td><span class="rn">Fundraising Efficiency</span><span class="rf">Fundraising / Contributions</span></td><td class="rv" id="r_fe">—</td><td style="text-align:center" id="b_fe"><span class="bdg">—</span></td></tr>
+          <tr><td><span class="rn">Revenue Concentration</span><span class="rf">Top Source / Revenue</span></td><td class="rv" id="r_rc">—</td><td style="text-align:center" id="b_rc"><span class="bdg">—</span></td></tr>
+          <tr><td><span class="rn">Net Asset Ratio</span><span class="rf">Net Assets / Expenses</span></td><td class="rv" id="r_na">—</td><td style="text-align:center" id="b_na"><span class="bdg">—</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1.25rem;">
+      <div class="card">
+        <div class="sec-title">3. Financial Health Indicators</div>
+        <ul class="flags-list" id="flagsList"><li class="flag-placeholder">Enter data to see financial health indicators.</li></ul>
+      </div>
+      <div class="card">
+        <div class="sec-title">4. Trend Analysis</div>
+        <div id="trendRows"><div class="flag-placeholder">Enter 3 years of data to see trends.</div></div>
+      </div>
+    </div>
+  </div>
 
-function rateBadge(k, v) {
-  return { om: v>=7?'g':v>=0?'m':'p', cr: v>=1.5?'g':v>=1?'m':'p', mc: v>=3?'g':v>=1.5?'m':'p', da: v<=40?'g':v<=65?'m':'p', pe: v>=65?'g':v>=55?'m':'p', fe: v<=20?'g':v<=35?'m':'p', rc: v<=40?'g':v<=60?'m':'p', na: v>=0.25?'g':v>=0.1?'m':'p' }[k] || 'm';
-}
+  <div class="two-col">
+    <div class="card">
+      <div class="sec-title">5. Documents Received</div>
+      <div class="docs-grid">
+        <label class="doc-item"><input type="checkbox" id="doc_990"> Form 990</label>
+        <label class="doc-item"><input type="checkbox" id="doc_audit"> Audited Financials</label>
+        <label class="doc-item"><input type="checkbox" id="doc_bs"> Balance Sheet</label>
+        <label class="doc-item"><input type="checkbox" id="doc_is"> Income Statement</label>
+        <label class="doc-item"><input type="checkbox" id="doc_cf"> Cash Flow Statement</label>
+        <label class="doc-item"><input type="checkbox" id="doc_budget"> Board Approved Budget</label>
+        <label class="doc-item"><input type="checkbox" id="doc_minutes"> Board Minutes</label>
+        <label class="doc-item"><input type="checkbox" id="doc_strategic"> Strategic Plan</label>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-title">6. Reviewer Notes &amp; Decision</div>
+      <div class="field-wrap" style="margin-bottom:10px">
+        <label>Preliminary Recommendation</label>
+        <select id="recommendation">
+          <option value="">— Select —</option>
+          <option>Invite to Apply</option>
+          <option>Request More Info</option>
+          <option>Decline</option>
+          <option>Full Due Diligence</option>
+          <option>Approved</option>
+        </select>
+      </div>
+      <div class="field-wrap" style="margin-bottom:10px">
+        <label>Overall Impression</label>
+        <textarea id="impression" class="textarea" placeholder="Overall impression of the organization's financial health..."></textarea>
+      </div>
+      <div class="field-wrap">
+        <label>Key Questions for Follow-Up</label>
+        <textarea id="questions" class="textarea" placeholder="Questions to ask during site visit or follow-up call..."></textarea>
+      </div>
+    </div>
+  </div>
 
-function setBadge(id, r) {
-  const cls = { g: 'bdg-g', m: 'bdg-m', p: 'bdg-p' }, lbl = { g: 'Good', m: 'Moderate', p: 'Poor' };
-  document.getElementById(id).innerHTML = `<span class="bdg ${cls[r]}">${lbl[r]}</span>`;
-  return r;
-}
+  <div class="card">
+    <div class="sec-title">Assessment Summary</div>
+    <div class="form-actions" style="margin-bottom:1rem">
+      <button class="btn-save" onclick="saveAssessment()" id="saveBtn">Save Assessment</button>
+      <button class="btn-ai" onclick="generateSummary()" id="aiBtn">Generate Assessment</button>
+      <button class="btn-ghost" onclick="exportToPDF()" id="pdfBtn">Download PDF Report</button>
+      <a href="/index" class="btn-ghost">← Back to Dashboard</a>
+      <span class="saved-msg" id="savedMsg">✓ Saved!</span>
+      <span class="error-msg" id="errorMsg"></span>
+    </div>
+    <div id="aiResult" style="display:none">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#6B7280;margin-bottom:8px">Generated Assessment</div>
+      <div id="aiText" style="font-size:14px;line-height:1.8;color:#111827;white-space:pre-wrap;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:1.25rem"></div>
+      <button class="btn-ghost" style="margin-top:10px" onclick="copyAssessment()">Copy to Clipboard</button>
+    </div>
+  </div>
+</main>
 
-function setVal(id, val, pct) {
-  const el = document.getElementById(id);
-  if (isNaN(val) || !isFinite(val)) { el.textContent = '—'; return null; }
-  el.textContent = pct ? val.toFixed(1) + '%' : val.toFixed(2);
-  return val;
-}
-
-function recalc() {
-  const rev=g('rev0'), exp=g('exp0'), assets=g('assets0'), liab=g('liab0'), cash=g('cash0');
-  const curra=g('currassets0'), currl=g('currliab0'), prog=g('prog0'), fund=g('fund0'), contrib=g('contrib0'), toprev=g('toprev0');
-  const surplus=rev-exp, netassets=assets-liab;
-  const vals = { om:rev?(surplus/rev*100):NaN, cr:currl?(curra/currl):NaN, mc:exp?(cash/(exp/12)):NaN, da:assets?(liab/assets*100):NaN, pe:exp?(prog/exp*100):NaN, fe:contrib?(fund/contrib*100):NaN, rc:rev?(toprev/rev*100):NaN, na:exp?(netassets/exp):NaN };
-  const pctSet = new Set(['om','da','pe','fe','rc']);
-  const scores = {};
-  Object.entries(vals).forEach(([k,v]) => { const vv=setVal('r_'+k,v,pctSet.has(k)); if(vv!==null) scores[k]=setBadge('b_'+k,rateBadge(k,v)); });
-  const w = { om:18, cr:12, mc:20, da:10, pe:15, fe:8, rc:10, na:7 };
-  const totalW = Object.keys(scores).reduce((s,k) => s+w[k]*(scores[k]==='g'?1:scores[k]==='m'?0.5:0), 0);
-  const maxW = Object.keys(scores).reduce((s,k) => s+w[k], 0);
-  const score = maxW ? Math.round((totalW/maxW)*100) : 0;
-  const scoreEl = document.getElementById('scoreDisplay');
-  const badgeEl = document.getElementById('riskBadge');
-  if (Object.keys(scores).length) {
-    scoreEl.textContent = score;
-    badgeEl.style.display = 'inline-block';
-    if (score>=65) { badgeEl.className='risk-badge risk-low'; badgeEl.textContent='Low Risk'; }
-    else if (score>=35) { badgeEl.className='risk-badge risk-mod'; badgeEl.textContent='Moderate Risk'; }
-    else { badgeEl.className='risk-badge risk-high'; badgeEl.textContent='High Risk'; }
-  } else { scoreEl.textContent='—'; badgeEl.style.display='none'; }
-  updateFlags(vals); updateTrends();
-  return { score, scores, vals };
-}
-
-function updateFlags({ om, cr, mc, da, pe, fe, rc }) {
-  const flags=[], add=(ok,msg)=>flags.push({ok,msg});
-  if(!isNaN(rc)) add(rc<=40, rc>40?'Revenue concentration above 40% — diversification risk.':'Revenue sources are well-diversified.');
-  if(!isNaN(mc)) add(mc>=3, mc<3?'Months of cash below 3 — limited liquidity runway.':'Cash reserves meet the 3-month minimum.');
-  if(!isNaN(om)) add(om>=0, om<0?'Operating deficit — expenses exceed revenue.':'Operating margin is positive.');
-  if(!isNaN(da)) add(da<=65, da>65?'Debt load is high relative to total assets.':'Debt levels are within acceptable range.');
-  if(!isNaN(pe)) add(pe>=65, pe<65?'Program expense ratio below 65% — review overhead.':'Program expense ratio is healthy.');
-  if(!isNaN(fe)) add(fe<=35, fe>35?'Fundraising costs exceed 35% of contributions.':'Fundraising efficiency is strong.');
-  const list = document.getElementById('flagsList');
-  list.innerHTML = flags.length ? flags.map(f=>`<li><span class="fi ${f.ok?'fi-ok':'fi-warn'}">${f.ok?'✓':'⚠'}</span>${f.msg}</li>`).join('') : '<li class="flag-placeholder">Enter data to see financial health indicators.</li>';
-}
-
-function updateTrends() {
-  const metrics = [{ label:'Total Revenue', ids:['rev0','rev1','rev2'] }, { label:'Total Expenses', ids:['exp0','exp1','exp2'] }, { label:'Cash & Equivalents', ids:['cash0','cash1','cash2'] }];
-  const notes = { up:{ Revenue:'Growing — positive trend.', Expenses:'Rising costs — watch margin.', Equivalents:'Cash position improving.' }, down:{ Revenue:'Declining — investigate causes.', Expenses:'Costs decreasing.', Equivalents:'Cash declining — monitor closely.' }, flat:{ Revenue:'Revenue relatively stable.', Expenses:'Expenses stable.', Equivalents:'Cash holding steady.' } };
-  const container = document.getElementById('trendRows');
-  const hasData = metrics.some(m => m.ids.some(id => g(id)>0));
-  if (!hasData) { container.innerHTML='<div class="flag-placeholder">Enter 3 years of data to see trends.</div>'; return; }
-  container.innerHTML = metrics.map(m => {
-    const [a,b,c] = m.ids.map(id => g(id));
-    if (!a||!b||!c) return '';
-    const dir = a>=b&&b>=c?'up':a<=b&&b<=c?'down':'flat';
-    const arrow = { up:'↑', down:'↓', flat:'→' }, cls = { up:'tu', down:'td2', flat:'tf' };
-    const key = m.label.split(' ').pop();
-    return `<div class="trend-row"><span class="tl">${m.label}</span><span class="${cls[dir]}">${arrow[dir]}</span><span class="tn">${notes[dir][key]||''}</span></div>`;
-  }).join('');
-}
-
-async function saveAssessment() {
-  // Validate required fields
-  const required = [
-    { id: 'orgName', label: 'Organization Name' },
-    { id: 'ein', label: 'EIN' },
-    { id: 'fyEnd', label: 'Fiscal Year End' },
-    { id: 'reviewer', label: 'Reviewer Name' },
-  ];
-  const missing = required.filter(f => !document.getElementById(f.id)?.value?.trim());
-  if (missing.length) {
-    const errorMsg = document.getElementById('errorMsg');
-    errorMsg.textContent = 'Please fill in required fields: ' + missing.map(f => f.label).join(', ');
-    errorMsg.style.display = 'inline';
-    setTimeout(() => errorMsg.style.display = 'none', 4000);
-    return;
-  }
-
-  const { score } = recalc();
-  const badgeEl = document.getElementById('riskBadge');
-  const riskLevel = badgeEl.textContent.replace(' Risk','') || 'Unknown';
-  const aiText = document.getElementById('aiText')?.textContent?.trim() || '';
-  const hasAI = aiText && aiText !== 'Writing assessment...';
-
-  const data = {
-    id: editingId || ('id_' + Date.now()),
-    orgName: document.getElementById('orgName').value || 'Unnamed Organization',
-    ein: document.getElementById('ein').value,
-    fyEnd: document.getElementById('fyEnd').value,
-    reviewer: document.getElementById('reviewer').value,
-    reviewDate: document.getElementById('reviewDate').value,
-    recommendation: document.getElementById('recommendation').value,
-    impression: document.getElementById('impression').value,
-    questions: document.getElementById('questions').value,
-    aiNarrative: hasAI ? aiText : '',
-    score, riskLevel,
-    rev:g('rev0'), exp:g('exp0'), assets:g('assets0'), liab:g('liab0'), cash:g('cash0'),
-    currassets:g('currassets0'), currliab:g('currliab0'),
-    prog:g('prog0'), mgmt:g('mgmt0'), fund:g('fund0'), contrib:g('contrib0'), toprev:g('toprev0'),
-    rev1:g('rev1'), rev2:g('rev2'), exp1:g('exp1'), exp2:g('exp2'), cash1:g('cash1'), cash2:g('cash2'),
-    docs: ['doc_990','doc_audit','doc_bs','doc_is','doc_cf','doc_budget','doc_minutes','doc_strategic'].filter(id => document.getElementById(id)?.checked),
-    created_at: editingId ? undefined : new Date().toISOString(),
-    savedAt: new Date().toISOString()
-  };
-  if (!data.created_at) delete data.created_at;
-
-  const savedMsg = document.getElementById('savedMsg'), errorMsg = document.getElementById('errorMsg');
-  try {
-    await DB.saveAssessment(data);
-    editingId = data.id;
-    document.getElementById('formTitle').textContent = 'Edit — ' + data.orgName;
-    const url = new URL(window.location); url.searchParams.set('id', data.id); window.history.replaceState({}, '', url);
-    savedMsg.style.display = 'inline'; errorMsg.style.display = 'none';
-    setTimeout(() => savedMsg.style.display = 'none', 2500);
-  } catch(e) {
-    errorMsg.textContent = 'Save failed: ' + e.message; errorMsg.style.display = 'inline';
-  }
-}
-
-async function generateSummary() {
-  const rev=g('rev0'), exp=g('exp0'), cash=g('cash0'), prog=g('prog0'), assets=g('assets0'), liab=g('liab0'), contrib=g('contrib0'), fund=g('fund0'), toprev=g('toprev0');
-  const surplus=rev-exp, netassets=assets-liab;
-  const fmt = n => '$' + n.toLocaleString();
-  const pct = (a,b) => b ? (a/b*100).toFixed(1)+'%' : 'N/A';
-  const mc = exp ? (cash/(exp/12)).toFixed(1) : 'N/A';
-  const score = document.getElementById('scoreDisplay').textContent;
-  const org = document.getElementById('orgName').value || 'the organization';
-  const fy = document.getElementById('fyEnd').value || 'current fiscal year';
-  const rec = document.getElementById('recommendation').value || 'not selected';
-  const notes = document.getElementById('impression').value || 'none';
-  const qs = document.getElementById('questions').value || 'none';
-  const docMap = { 'doc_990':'Form 990', 'doc_audit':'Audited Financials', 'doc_bs':'Balance Sheet', 'doc_is':'Income Statement', 'doc_cf':'Cash Flow Statement', 'doc_budget':'Board Budget', 'doc_minutes':'Board Minutes', 'doc_strategic':'Strategic Plan' };
-  const docs = Object.keys(docMap).filter(id => document.getElementById(id)?.checked).map(id => docMap[id]).join(', ') || 'none';
-
-  const prompt = `Write a professional 3-paragraph nonprofit financial assessment as a formal grant reviewer narrative.
-
-ORGANIZATION: ${org} | FISCAL YEAR: ${fy} | HEALTH SCORE: ${score}/100
-Revenue: ${fmt(rev)} | Expenses: ${fmt(exp)} | Surplus/Deficit: ${fmt(surplus)} (${pct(surplus,rev)} margin)
-Cash: ${fmt(cash)} (${mc} months) | Assets: ${fmt(assets)} | Liabilities: ${fmt(liab)} | Net Assets: ${fmt(netassets)}
-Program Expense Ratio: ${pct(prog,exp)} | Fundraising Efficiency: ${pct(fund,contrib)}
-Revenue Concentration: ${pct(toprev,rev)} | Debt to Assets: ${pct(liab,assets)}
-Documents: ${docs} | Recommendation: ${rec}
-Reviewer notes: ${notes} | Follow-up questions: ${qs}
-
-Paragraph 1: Overall financial health and strengths with specific numbers.
-Paragraph 2: Key risks and concerns referencing specific ratios.
-Paragraph 3: Clear recommendation and next steps.`;
-
-  const btn = document.getElementById('aiBtn');
-  const resultDiv = document.getElementById('aiResult');
-  const textDiv = document.getElementById('aiText');
-  btn.textContent = 'Generating...'; btn.disabled = true;
-  resultDiv.style.display = 'block'; textDiv.textContent = 'Writing assessment...';
-
-  try {
-    const res = await fetch('https://calm-forest-dfc5.shanefleming125.workers.dev', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt })
-    });
-    if (!res.ok) throw new Error('API error ' + res.status);
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    textDiv.textContent = data.result;
-  } catch(e) {
-    textDiv.textContent = 'Error: ' + e.message;
-  }
-  btn.textContent = 'Generate Assessment'; btn.disabled = false;
-}
-
-function copyAssessment() {
-  const text = document.getElementById('aiText').textContent;
-  navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
-}
-
-function populateForm(d) {
-  document.getElementById('formTitle').textContent = 'Edit — ' + d.orgName;
-  ['orgName','ein','fyEnd','reviewer','reviewDate','recommendation','impression','questions'].forEach(id => {
-    const el = document.getElementById(id); if (el && d[id] !== undefined) el.value = d[id];
-  });
-
-  // Restore AI narrative if it was saved
-  if (d.aiNarrative) {
-    document.getElementById('aiResult').style.display = 'block';
-    document.getElementById('aiText').textContent = d.aiNarrative;
-  }
-
-  const map = { rev0:'rev', exp0:'exp', assets0:'assets', liab0:'liab', cash0:'cash', currassets0:'currassets', currliab0:'currliab', prog0:'prog', mgmt0:'mgmt', fund0:'fund', contrib0:'contrib', toprev0:'toprev', rev1:'rev1', rev2:'rev2', exp1:'exp1', exp2:'exp2', cash1:'cash1', cash2:'cash2' };
-  Object.entries(map).forEach(([elId,key]) => { const el=document.getElementById(elId); if(el && d[key]) el.value=d[key]; });
-  ['doc_990','doc_audit','doc_bs','doc_is','doc_cf','doc_budget','doc_minutes','doc_strategic'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.checked = d.docs?.includes(id) || false;
-  });
-  recalc();
-  // Format currency fields after data is loaded — fixes the persistence bug
-  if (typeof formatAllFields === 'function') formatAllFields();
-}
+<script src="js/auth.js"></script>
+<script src="js/db.js"></script>
+<script src="js/assessment.js"></script>
+<script src="js/pdf-export.js"></script>
+<script src="js/currency.js"></script>
+<script>
+  (async () => {
+    const session = await AUTH.requireAuth();
+    if (!session) return;
+    document.body.style.display = '';
+  })();
+</script>
+</body>
+</html>
