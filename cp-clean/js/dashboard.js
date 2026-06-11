@@ -64,7 +64,7 @@ function renderTable(orgs) {
   const barColor = { Low: '#2EAD77', Moderate: '#D97706', High: '#E8472A' };
 
   tbody.innerHTML = orgs.map(o => `
-    <tr onclick="window.location='assessment.html?id=${o.id}'" style="cursor:pointer${o.is_sample ? ';opacity:0.85' : ''}">
+    <tr onclick="window.location='/assessment?id=${o.id}'" style="cursor:pointer${o.is_sample ? ';opacity:0.85' : ''}">
       <td>
         <div class="org-name">${o.orgName}${o.is_sample ? ' <span style="font-size:10px;font-weight:700;background:#E6F1FB;color:#1A6EB5;padding:2px 7px;border-radius:10px;vertical-align:middle;">SAMPLE</span>' : ''}</div>
         <div class="org-fy">${o.fyEnd || ''}${o.status === 'submitted' ? ' · <span style="color:#1A6EB5;font-size:11px">Self-reported</span>' : ''}</div>
