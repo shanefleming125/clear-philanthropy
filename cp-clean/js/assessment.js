@@ -303,7 +303,36 @@ function populateForm(d) {
   });
   recalc();
   if (typeof formatAllFields === 'function') formatAllFields();
+  loadExistingFiles(d.id);
+}
 
-  // Load any files already uploaded to this assessment
-  setTimeout(() => loadExistingFiles(d.id), 600);
+async function loadExistingFiles(assessmentId) {
+  if (!assessmentId) return;
+  try {
+    const token = await AUTH.getToken();
+    if (!token) { console.warn('No auth token for file list'); return; }
+
+    const files = await DB.listFiles(assessmentId);
+    console.log('loadExistingFiles result:', files);
+    const list = document.getElementById('fileList');
+    if (!files || !files.length) return;
+
+    const existingHtml = await Promise.all(files.map(async f => {
+      const displayName = f.name.replace(/^\d+_/, '');
+      const path = `${assessmentId}/${f.name}`;
+      const url = await DB.getFileUrl(path);
+      return `
+        <div class="file-item uploaded">
+          <div class="file-item-name">${displayName}</div>
+          <div class="file-item-size">${f.metadata?.size ? formatBytes(f.metadata.size) : ''}</div>
+          <div class="file-status done">✓ On file</div>
+          ${url ? `<a href="${url}" target="_blank" class="file-link">Open ↗</a>` : ''}
+        </div>
+      `;
+    }));
+
+    list.innerHTML = existingHtml.join('') + list.innerHTML;
+  } catch(e) {
+    console.warn('Could not load existing files:', e.message);
+  }
 }
