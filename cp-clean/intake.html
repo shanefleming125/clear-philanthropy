@@ -7,6 +7,78 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect width='44' height='44' rx='10' fill='%231A6EB5'/><circle cx='17' cy='22' r='10' stroke='white' stroke-width='1.8' fill='rgba(255,255,255,0.1)'/><circle cx='27' cy='22' r='10' stroke='rgba(255,255,255,0.5)' stroke-width='1.8' fill='rgba(255,255,255,0.05)'/><path d='M22 13.2C19 16 19 28 22 30.8C25 28 25 16 22 13.2Z' fill='white'/></svg>">
 <style>
+  /* ── Tooltips ── */
+  .tip-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .tip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #D1D5DB;
+    color: #374151;
+    font-size: 9px;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+    line-height: 1;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .tip-icon:hover, .tip-icon.active { background: #1A6EB5; color: white; }
+  .tip-bubble {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: calc(100% + 6px);
+    width: 260px;
+    background: #0B2545;
+    color: #E5E7EB;
+    font-size: 12px;
+    line-height: 1.6;
+    border-radius: 8px;
+    padding: 12px 14px;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    font-weight: 400;
+  }
+  .tip-bubble.active { display: block; }
+  .tip-bubble::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 12px;
+    width: 10px;
+    height: 10px;
+    background: #0B2545;
+    transform: rotate(45deg);
+    border-radius: 2px;
+  }
+  .tip-where {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 11px;
+    color: #9CA3AF;
+  }
+  .tip-where strong { color: #D1D5DB; }
+
+  .field-wrap { position: relative; }
+  .field-label-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 4px;
+  }
+  .field-label-row label {
+    margin-bottom: 0;
+  }
+
   /* ── File upload ── */
   .upload-zone {
     border: 2px dashed #D1D5DB;
@@ -18,108 +90,23 @@
     background: #FAFAFA;
     position: relative;
   }
-  .upload-zone:hover, .upload-zone.dragover {
-    border-color: #1A6EB5;
-    background: #F0F6FF;
-  }
-  .upload-zone input[type="file"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-  }
-  .upload-icon {
-    width: 40px;
-    height: 40px;
-    background: #E6F1FB;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 12px;
-  }
-  .upload-label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 4px;
-  }
-  .upload-hint {
-    font-size: 12px;
-    color: #9CA3AF;
-  }
-  .upload-hint span {
-    color: #1A6EB5;
-    font-weight: 600;
-  }
-  .file-list {
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .file-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #F9FAFB;
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 13px;
-  }
-  .file-item-icon {
-    width: 32px;
-    height: 32px;
-    background: #E6F1FB;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .file-item-name {
-    flex: 1;
-    font-weight: 500;
-    color: #111827;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .file-item-size {
-    font-size: 11px;
-    color: #9CA3AF;
-    flex-shrink: 0;
-  }
-  .file-item-remove {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #9CA3AF;
-    padding: 2px;
-    line-height: 1;
-    flex-shrink: 0;
-    font-size: 16px;
-  }
+  .upload-zone:hover, .upload-zone.dragover { border-color: #1A6EB5; background: #F0F6FF; }
+  .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .upload-icon { width: 40px; height: 40px; background: #E6F1FB; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+  .upload-label { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 4px; }
+  .upload-hint { font-size: 12px; color: #9CA3AF; }
+  .file-list { margin-top: 1rem; display: flex; flex-direction: column; gap: 8px; }
+  .file-item { display: flex; align-items: center; gap: 10px; background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; padding: 10px 12px; font-size: 13px; }
+  .file-item-icon { width: 32px; height: 32px; background: #E6F1FB; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .file-item-name { flex: 1; font-weight: 500; color: #111827; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-item-size { font-size: 11px; color: #9CA3AF; flex-shrink: 0; }
+  .file-item-remove { background: none; border: none; cursor: pointer; color: #9CA3AF; padding: 2px; line-height: 1; flex-shrink: 0; font-size: 16px; }
   .file-item-remove:hover { color: #EF4444; }
-  .file-item.uploading { opacity: 0.6; }
   .file-item.uploaded { border-color: #2EAD77; }
-  .file-status {
-    font-size: 11px;
-    flex-shrink: 0;
-    font-weight: 600;
-  }
+  .file-status { font-size: 11px; flex-shrink: 0; font-weight: 600; }
   .file-status.done { color: #2EAD77; }
   .file-status.error { color: #EF4444; }
   .file-status.pending { color: #9CA3AF; }
-  .upload-progress {
-    font-size: 12px;
-    color: #6B7280;
-    margin-top: 8px;
-    text-align: center;
-  }
 </style>
 </head>
 <body>
@@ -136,15 +123,33 @@
   <div id="formView">
     <div style="text-align:center;padding:2rem 0 1.5rem">
       <div style="font-size:22px;font-weight:800;color:#111827;margin-bottom:8px">Financial Self-Report</div>
-      <div style="font-size:14px;color:#6B7280;max-width:480px;margin:0 auto">Please fill out your organization's financial information below. This helps us assess your financial health as part of our review process.</div>
+      <div style="font-size:14px;color:#6B7280;max-width:480px;margin:0 auto">Please fill out your organization's financial information below. This helps us assess your financial health as part of our review process. If you're unsure about a field, tap the <strong>?</strong> icon for guidance.</div>
     </div>
 
     <div class="card">
       <div class="sec-title">Organization Information</div>
       <div class="meta-grid">
         <div class="field-wrap"><label>Organization Name <span class="req">*</span></label><input type="text" id="orgName" placeholder="Legal name of your organization" required></div>
-        <div class="field-wrap"><label>EIN <span class="req">*</span></label><input type="text" id="ein" placeholder="e.g. 12-3456789" required></div>
-        <div class="field-wrap"><label>Fiscal Year End <span class="req">*</span></label><input type="text" id="fyEnd" placeholder="e.g. 12/31/2023" required></div>
+        <div class="field-wrap">
+          <div class="field-label-row">
+            <label>EIN <span class="req">*</span></label>
+            <div style="position:relative;display:inline-block;">
+              <span class="tip-icon" onclick="toggleTip('tip_ein')">?</span>
+              <div class="tip-bubble" id="tip_ein">Your Employer Identification Number — a 9-digit number assigned by the IRS, formatted as XX-XXXXXXX. You can find it on your Form 990, tax filings, or IRS determination letter.</div>
+            </div>
+          </div>
+          <input type="text" id="ein" placeholder="e.g. 12-3456789" required>
+        </div>
+        <div class="field-wrap">
+          <div class="field-label-row">
+            <label>Fiscal Year End <span class="req">*</span></label>
+            <div style="position:relative;display:inline-block;">
+              <span class="tip-icon" onclick="toggleTip('tip_fye')">?</span>
+              <div class="tip-bubble" id="tip_fye">The last day of your organization's financial year. Many nonprofits use December 31, but yours may differ. Check your Form 990 or ask your bookkeeper if unsure.</div>
+            </div>
+          </div>
+          <input type="text" id="fyEnd" placeholder="e.g. 12/31/2023" required>
+        </div>
         <div class="field-wrap"><label>Contact Name <span class="req">*</span></label><input type="text" id="contactName" placeholder="Person completing this form" required></div>
         <div class="field-wrap"><label>Contact Email <span class="req">*</span></label><input type="email" id="contactEmail" placeholder="email@organization.org" required></div>
       </div>
@@ -152,25 +157,147 @@
 
     <div class="card">
       <div class="sec-title">Financial Data — Current Year</div>
-      <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">Enter figures from your most recent completed fiscal year. All amounts in USD.</p>
+      <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">Enter figures from your most recent completed fiscal year. All amounts in USD. Tap <strong>?</strong> next to any field if you need help finding the number.</p>
       <div class="meta-grid">
-        <div class="field-wrap"><label>Total Revenue <span class="req">*</span></label><input type="number" id="rev0" placeholder="0"></div>
-        <div class="field-wrap"><label>Total Expenses <span class="req">*</span></label><input type="number" id="exp0" placeholder="0"></div>
-        <div class="field-wrap"><label>Total Assets</label><input type="number" id="assets0" placeholder="0"></div>
-        <div class="field-wrap"><label>Total Liabilities</label><input type="number" id="liab0" placeholder="0"></div>
-        <div class="field-wrap"><label>Cash &amp; Cash Equivalents</label><input type="number" id="cash0" placeholder="0"></div>
-        <div class="field-wrap"><label>Current Assets</label><input type="number" id="currassets0" placeholder="0"></div>
-        <div class="field-wrap"><label>Current Liabilities</label><input type="number" id="currliab0" placeholder="0"></div>
-        <div class="field-wrap"><label>Program Service Expenses</label><input type="number" id="prog0" placeholder="0"></div>
-        <div class="field-wrap"><label>Management &amp; General Expenses</label><input type="number" id="mgmt0" placeholder="0"></div>
-        <div class="field-wrap"><label>Fundraising Expenses</label><input type="number" id="fund0" placeholder="0"></div>
-        <div class="field-wrap"><label>Total Contributions (Donations)</label><input type="number" id="contrib0" placeholder="0"></div>
-        <div class="field-wrap"><label>Largest Single Revenue Source</label><input type="number" id="toprev0" placeholder="0"></div>
+
+        <div class="field-wrap">
+          <div class="field-label-row">
+            <label>Total Revenue <span class="req">*</span></label>
+            <div style="position:relative;display:inline-block;">
+              <span class="tip-icon" onclick="toggleTip('tip_rev')">?</span>
+              <div class="tip-bubble" id="tip_rev">All money your organization received during the year — grants, donations, program fees, government funding, and any other income. This is your top-line total.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part VIII Line 12, or the top of your income statement labeled "Total Revenue."</div></div>
+            </div>
+          </div>
+          <input type="number" id="rev0" placeholder="0">
+        </div>
+
+        <div class="field-wrap">
+          <div class="field-label-row">
+            <label>Total Expenses <span class="req">*</span></label>
+            <div style="position:relative;display:inline-block;">
+              <span class="tip-icon" onclick="toggleTip('tip_exp')">?</span>
+              <div class="tip-bubble" id="tip_exp">Everything your organization spent during the year — staff, programs, rent, administration, and all other costs combined.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25, or the bottom of your income statement labeled "Total Expenses."</div></div>
+            </div>
+          </div>
+          <input type="number" id="exp0" placeholder="0">
+        </div>
+
+        <div class="field-wrap">
+          <div class="field-label-row">
+            <label>Total Assets</label>
+            <div style="position:relative;display:inline-block;">
+              <span class="tip-icon" onclick="toggleTip('tip_assets')">?</span>
+              <div class="tip-bubble" id="tip_assets">Everything your organization owns — cash, bank accounts, investments, equipment, and property, as of your fiscal year end.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part X Line 16, or your balance sheet labeled "Total Assets."</div></div>
+            </div>
+          </div>
+          <input type="number" id="assets0" placeholder="0">
+        </div>
+
+        <div class="field-wrap">
+          <div class="field-label-row">
+            <label>Total Liabilities</label>
+            <div style="position:relative;display:inline-block;">
+              <span class="tip-icon" onclick="toggleTip('tip_liab')">?</span>
+              <div class="tip-bubble" id="tip_liab">Everything your organization owes — unpaid bills, loans, deferred revenue, and any other obligations as of your fiscal year end.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part X Line 26, or your balance sheet labeled "Total Liabilities."</div></div>
+            </div>
+          </div>
+          <input type="number" id="liab0" placeholder="0">
+        </div>
+
+        <div class="field-wrap">
+          <div class="field-label-row">
+            <label>Cash &amp; Cash Equivalents</label>
+            <div style="position:relative;display:inline-block;">
+              <span class="tip-icon" onclick="toggleTip('tip_cash')">?</span>
+              <div class="tip-bubble" id="tip_cash">Money your organization can access immediately — checking accounts, savings accounts, and money market funds. Does not include investments or receivables.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part X Lines 1–2, or the top of your balance sheet under "Cash and Cash Equivalents."</div></div>
+            </div>
+          </div>
+          <input type="number" id="cash0" placeholder="0">
+        </div>
+
+        <div class="field-wrap">
+          <div class="field-label-row">
+            <label>Current Assets</label>
+            <div style="position:relative;display:inline-block;">
+              <span class="tip-icon" onclick="toggleTip('tip_currassets')">?</span>
+              <div class="tip-bubble" id="tip_currassets">Assets you expect to convert to cash within the next 12 months — includes cash, money owed to you (receivables), and prepaid expenses. If you're not sure, use your cash figure as an estimate.<div class="tip-where"><strong>Where to find it:</strong> Your audited balance sheet under "Current Assets." The Form 990 doesn't label these separately.</div></div>
+            </div>
+          </div>
+          <input type="number" id="currassets0" placeholder="0">
+        </div>
+
+        <div class="field-wrap">
+          <div class="field-label-row">
+            <label>Current Liabilities</label>
+            <div style="position:relative;display:inline-block;">
+              <span class="tip-icon" onclick="toggleTip('tip_currliab')">?</span>
+              <div class="tip-bubble" id="tip_currliab">Bills and obligations due within the next 12 months — accounts payable, accrued payroll, and short-term debt. If you're unsure, use your accounts payable figure as an estimate.<div class="tip-where"><strong>Where to find it:</strong> Your audited balance sheet under "Current Liabilities." The Form 990 doesn't label these separately.</div></div>
+            </div>
+          </div>
+          <input type="number" id="currliab0" placeholder="0">
+        </div>
+
+        <div class="field-wrap">
+          <div class="field-label-row">
+            <label>Program Service Expenses</label>
+            <div style="position:relative;display:inline-block;">
+              <span class="tip-icon" onclick="toggleTip('tip_prog')">?</span>
+              <div class="tip-bubble" id="tip_prog">Money spent directly delivering your programs and services — staff time, supplies, and costs tied to your mission. Does not include admin or fundraising.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25 Column B, or your income statement under "Program Expenses."</div></div>
+            </div>
+          </div>
+          <input type="number" id="prog0" placeholder="0">
+        </div>
+
+        <div class="field-wrap">
+          <div class="field-label-row">
+            <label>Management &amp; General Expenses</label>
+            <div style="position:relative;display:inline-block;">
+              <span class="tip-icon" onclick="toggleTip('tip_mgmt')">?</span>
+              <div class="tip-bubble" id="tip_mgmt">Overhead costs that keep the organization running — executive staff, finance, HR, IT, and general administration. Not directly tied to programs.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25 Column C, or your income statement under "Management and General."</div></div>
+            </div>
+          </div>
+          <input type="number" id="mgmt0" placeholder="0">
+        </div>
+
+        <div class="field-wrap">
+          <div class="field-label-row">
+            <label>Fundraising Expenses</label>
+            <div style="position:relative;display:inline-block;">
+              <span class="tip-icon" onclick="toggleTip('tip_fund')">?</span>
+              <div class="tip-bubble" id="tip_fund">Money spent raising money — events, mailings, grant writing staff time, and donor outreach. If your organization does no formal fundraising, enter 0.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25 Column D, or your income statement under "Fundraising Expenses."</div></div>
+            </div>
+          </div>
+          <input type="number" id="fund0" placeholder="0">
+        </div>
+
+        <div class="field-wrap">
+          <div class="field-label-row">
+            <label>Total Contributions (Donations)</label>
+            <div style="position:relative;display:inline-block;">
+              <span class="tip-icon" onclick="toggleTip('tip_contrib')">?</span>
+              <div class="tip-bubble" id="tip_contrib">All philanthropic support received — individual donations, foundation grants, corporate gifts, and government grants. Does not include earned revenue like program fees or service contracts.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part VIII Line 1h, or your income statement under "Contributions and Grants."</div></div>
+            </div>
+          </div>
+          <input type="number" id="contrib0" placeholder="0">
+        </div>
+
+        <div class="field-wrap">
+          <div class="field-label-row">
+            <label>Largest Single Revenue Source</label>
+            <div style="position:relative;display:inline-block;">
+              <span class="tip-icon" onclick="toggleTip('tip_toprev')">?</span>
+              <div class="tip-bubble" id="tip_toprev">The single largest source of revenue in the year — one funder, one government contract, or one revenue stream. For example, if your biggest grant was $150,000 from a foundation, enter that amount.<div class="tip-where"><strong>Where to find it:</strong> Review your revenue sources and identify the largest single one. You may need to look at your grant records or income statement line by line.</div></div>
+            </div>
+          </div>
+          <input type="number" id="toprev0" placeholder="0">
+        </div>
+
       </div>
     </div>
 
     <div class="card">
       <div class="sec-title">Prior Years (Optional But Helpful)</div>
+      <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">If you have last year's figures available, please include them. This helps us identify trends over time.</p>
       <div style="margin-bottom:1rem">
         <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:8px">Prior Year</div>
         <div class="meta-grid">
@@ -208,7 +335,6 @@
     <div class="card">
       <div class="sec-title">Upload Documents</div>
       <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">Upload any financial documents you have available — Form 990, audited financials, balance sheet, strategic plan, or other relevant files. Accepted formats: PDF, Word, Excel, and images.</p>
-
       <div class="upload-zone" id="uploadZone"
         ondragover="handleDragOver(event)"
         ondragleave="handleDragLeave(event)"
@@ -222,7 +348,6 @@
         <div class="upload-label">Drop files here or <span style="color:#1A6EB5">browse</span></div>
         <div class="upload-hint">PDF, Word, Excel, images — up to 10MB per file</div>
       </div>
-
       <div class="file-list" id="fileList"></div>
     </div>
 
@@ -244,7 +369,32 @@
 <script src="js/auth.js"></script>
 <script src="js/db.js"></script>
 <script>
-  // Files staged for upload — stored as {file, status, name}
+
+  // ── Tooltip toggle ──────────────────────────────────────────────────────────
+  function toggleTip(id) {
+    const bubble = document.getElementById(id);
+    const icon = bubble.previousElementSibling;
+    const isOpen = bubble.classList.contains('active');
+    document.querySelectorAll('.tip-bubble.active').forEach(b => {
+      b.classList.remove('active');
+      b.previousElementSibling?.classList.remove('active');
+    });
+    if (!isOpen) {
+      bubble.classList.add('active');
+      icon?.classList.add('active');
+    }
+  }
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.classList.contains('tip-icon')) {
+      document.querySelectorAll('.tip-bubble.active').forEach(b => {
+        b.classList.remove('active');
+        b.previousElementSibling?.classList.remove('active');
+      });
+    }
+  });
+
+  // ── File upload ──────────────────────────────────────────────────────────────
   let stagedFiles = [];
 
   function formatBytes(bytes) {
@@ -274,13 +424,9 @@
   }
 
   function addFiles(files) {
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    const maxSize = 10 * 1024 * 1024;
     Array.from(files).forEach(file => {
-      if (file.size > maxSize) {
-        alert(`${file.name} is too large. Maximum file size is 10MB.`);
-        return;
-      }
-      // Avoid duplicates
+      if (file.size > maxSize) { alert(`${file.name} is too large. Maximum file size is 10MB.`); return; }
       if (!stagedFiles.find(f => f.name === file.name && f.file.size === file.size)) {
         stagedFiles.push({ file, name: file.name, status: 'pending' });
       }
@@ -288,11 +434,7 @@
     renderFileList();
   }
 
-  function removeFile(index) {
-    stagedFiles.splice(index, 1);
-    renderFileList();
-  }
-
+  function removeFile(index) { stagedFiles.splice(index, 1); renderFileList(); }
   function handleFileSelect(e) { addFiles(e.target.files); e.target.value = ''; }
   function handleDragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('dragover'); }
   function handleDragLeave(e) { document.getElementById('uploadZone').classList.remove('dragover'); }
@@ -305,7 +447,6 @@
   async function uploadStagedFiles(assessmentId) {
     const pending = stagedFiles.filter(f => f.status === 'pending');
     if (!pending.length) return;
-
     for (let i = 0; i < stagedFiles.length; i++) {
       if (stagedFiles[i].status !== 'pending') continue;
       try {
@@ -361,15 +502,11 @@
     };
 
     try {
-      // Save the assessment record first
       await DB.saveAssessment(data);
-
-      // Then upload any staged files
       if (stagedFiles.length) {
         submitBtn.textContent = 'Uploading documents...';
         await uploadStagedFiles(assessmentId);
       }
-
       document.getElementById('formView').style.display = 'none';
       document.getElementById('successView').style.display = 'block';
     } catch(e) {
