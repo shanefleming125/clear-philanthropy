@@ -94,7 +94,7 @@
   .nav-user {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
   .nav-user-avatar {
     width: 24px;
@@ -113,6 +113,13 @@
     color: rgba(255,255,255,0.75) !important;
     font-size: 13px;
     font-weight: 500;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  #navLinks {
+    gap: 10px;
   }
   .btn-signout {
     display: flex;
@@ -123,11 +130,12 @@
     font-weight: 600;
     border: 1px solid rgba(255,255,255,0.25);
     border-radius: 6px;
-    padding: 5px 12px;
+    padding: 5px 10px;
     background: none;
     font-family: 'Manrope', sans-serif;
     cursor: pointer;
     transition: color 0.15s, border-color 0.15s;
+    flex-shrink: 0;
   }
   .btn-signout:hover {
     color: rgba(255,255,255,0.95);
@@ -139,6 +147,7 @@
   }
 
   /* ── Header button tooltips ── */
+  .tip-target {
     position: relative;
   }
   .tip-target .header-tip {
