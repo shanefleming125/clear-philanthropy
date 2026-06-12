@@ -357,12 +357,39 @@
     </div>
   </div>
 
-  <div id="successView" style="display:none;text-align:center;padding:4rem 2rem">
+  <div id="successView" style="display:none;text-align:center;padding:3rem 2rem">
     <div style="width:64px;height:64px;background:#E8F5F0;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M5 14L11 20L23 8" stroke="#2EAD77" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <div style="font-size:22px;font-weight:800;color:#111827;margin-bottom:8px">Report Submitted!</div>
-    <div style="font-size:14px;color:#6B7280;max-width:400px;margin:0 auto">Thank you. Your financial information has been received and will be reviewed by the Clear Philanthropy team.</div>
+    <div style="font-size:14px;color:#6B7280;max-width:440px;margin:0 auto 28px">Thank you. Your financial information has been received and will be reviewed by the Clear Philanthropy team.</div>
+
+    <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:1.25rem 1.5rem;max-width:440px;margin:0 auto 24px;text-align:left">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#9CA3AF;margin-bottom:10px">Submission Summary</div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid #E5E7EB;">
+        <span style="color:#6B7280">Organization</span>
+        <span style="font-weight:600;color:#111827" id="summaryOrgName">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid #E5E7EB;">
+        <span style="color:#6B7280">Fiscal Year End</span>
+        <span style="font-weight:600;color:#111827" id="summaryFyEnd">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;">
+        <span style="color:#6B7280">Documents Uploaded</span>
+        <span style="font-weight:600;color:#111827" id="summaryFileCount">—</span>
+      </div>
+    </div>
+
+    <div style="background:#F0F6FF;border:1px solid #BFDBFE;border-radius:10px;padding:1.25rem 1.5rem;max-width:440px;margin:0 auto 24px;text-align:left">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#1A6EB5;margin-bottom:8px">What Happens Next</div>
+      <div style="font-size:13px;color:#374151;line-height:1.7">
+        The Clear Philanthropy team will review your submission as part of our assessment process. If we need any additional information or clarification, we'll reach out using the contact email you provided.
+      </div>
+    </div>
+
+    <div style="font-size:12px;color:#9CA3AF;max-width:440px;margin:0 auto">
+      Questions about your submission? Contact us at <a href="mailto:hello@clearphilanthropy.com" style="color:#1A6EB5;font-weight:600;text-decoration:none">hello@clearphilanthropy.com</a>
+    </div>
   </div>
 </main>
 
@@ -507,6 +534,15 @@
         submitBtn.textContent = 'Uploading documents...';
         await uploadStagedFiles(assessmentId);
       }
+
+      // Populate submission summary
+      document.getElementById('summaryOrgName').textContent = orgName;
+      document.getElementById('summaryFyEnd').textContent = fyEnd;
+      const fileCount = stagedFiles.filter(f => f.status === 'done').length;
+      document.getElementById('summaryFileCount').textContent = fileCount > 0
+        ? `${fileCount} file${fileCount === 1 ? '' : 's'}`
+        : 'None';
+
       document.getElementById('formView').style.display = 'none';
       document.getElementById('successView').style.display = 'block';
     } catch(e) {
