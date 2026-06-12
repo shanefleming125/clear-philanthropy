@@ -101,9 +101,9 @@ async function exportToPDF() {
     }
   };
 
-  // ── Section label ──
-  const sectionLabel = (label) => {
-    ensureSpace(10);
+  // ── Section label — pass minContentH to guarantee label isn't orphaned ──
+  const sectionLabel = (label, minContentH = 0) => {
+    ensureSpace(11 + minContentH);
     fill(M, y, W, 7, BLUE, 1);
     sf('bold', 8, WHITE);
     doc.text(label.toUpperCase(), M + 4, y + 5);
@@ -349,12 +349,13 @@ async function exportToPDF() {
   // Overall Impression
   // ════════════════════════════════
   if (impression) {
-    sectionLabel('Overall Impression');
+    sectionLabel('Overall Impression', 14);
     sf('normal', 9, TEXT);
     const impLines = doc.splitTextToSize(impression, W - 8);
     const lineH = 5;
     impLines.forEach(line => {
       ensureSpace(lineH + 2);
+      sf('normal', 9, TEXT);
       doc.text(line, M + 4, y + lineH - 1);
       y += lineH;
     });
@@ -365,12 +366,13 @@ async function exportToPDF() {
   // Key Questions for Follow-Up
   // ════════════════════════════════
   if (questions) {
-    sectionLabel('Key Questions for Follow-Up');
+    sectionLabel('Key Questions for Follow-Up', 14);
     sf('normal', 9, TEXT);
     const qLines = doc.splitTextToSize(questions, W - 8);
     const lineH = 5;
     qLines.forEach(line => {
       ensureSpace(lineH + 2);
+      sf('normal', 9, TEXT);
       doc.text(line, M + 4, y + lineH - 1);
       y += lineH;
     });
@@ -381,7 +383,7 @@ async function exportToPDF() {
   // AI-Generated Narrative
   // ════════════════════════════════
   if (hasAI) {
-    sectionLabel('Assessment Narrative');
+    sectionLabel('Assessment Narrative', 14);
     sf('normal', 9.5, TEXT);
     const cleanAI = aiText.replace(/#{1,6}\s+/g, '').replace(/\*\*(.+?)\*\*/g, '$1').trim();
     const paragraphs = cleanAI.split('\n').filter(p => p.trim());
@@ -390,6 +392,7 @@ async function exportToPDF() {
       const lines = doc.splitTextToSize(para.trim(), W - 4);
       lines.forEach(line => {
         ensureSpace(lineH + 2);
+        sf('normal', 9.5, TEXT);
         doc.text(line, M, y + lineH - 1.5);
         y += lineH;
       });
