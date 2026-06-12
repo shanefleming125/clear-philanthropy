@@ -219,6 +219,74 @@
     border-radius: 50%;
     background: currentColor;
   }
+
+  /* ── Nav user display ── */
+  .nav-divider {
+    width: 1px;
+    height: 16px;
+    background: rgba(255,255,255,0.15);
+  }
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-user-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #4DA6E8;
+    color: #0B2545;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .nav-user-email {
+    color: rgba(255,255,255,0.75) !important;
+    font-size: 13px;
+    font-weight: 500;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .btn-signout {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 6px;
+    padding: 5px 10px;
+    background: none;
+    font-family: 'Manrope', sans-serif;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+  }
+  .btn-signout:hover {
+    color: rgba(255,255,255,0.95);
+    border-color: rgba(255,255,255,0.4);
+  }
+  .btn-signout svg {
+    width: 14px;
+    height: 14px;
+  }
+  #navLinks {
+    gap: 10px;
+  }
+  @media (max-width: 640px) {
+    #navLinks .nav-divider,
+    #navLinks .nav-user,
+    #navLinks .btn-signout {
+      display: none;
+    }
+  }
 </style>
 </head>
 <body style="display:none">
