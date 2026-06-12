@@ -297,9 +297,18 @@
     </div>
     <div class="logo-text">Clear <span>Philanthropy</span></div>
   </a>
-  <div class="nav-links">
+  <div class="nav-links" id="navLinks">
     <a href="/index" class="nav-link">Dashboard</a>
     <a href="assessment.html" class="nav-link active">Assessment</a>
+    <div class="nav-divider"></div>
+    <div class="nav-user">
+      <div class="nav-user-avatar" id="userAvatar"></div>
+      <span id="userEmail" class="nav-user-email"></span>
+    </div>
+    <button class="btn-signout" onclick="AUTH.signOut()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign Out
+    </button>
   </div>
 </nav>
 
@@ -729,6 +738,11 @@
     const session = await AUTH.requireAuth();
     if (!session) return;
     document.body.style.display = '';
+    const user = session.user;
+    if (user?.email) {
+      document.getElementById('userEmail').textContent = user.email;
+      document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
+    }
   })();
 
   // ── File uploads ────────────────────────────────────────────────────────────
