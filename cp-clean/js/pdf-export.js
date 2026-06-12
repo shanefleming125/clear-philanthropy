@@ -203,9 +203,6 @@ async function exportToPDF() {
 
   // Health score — right side
   const scoreBlockX = M + W - 60;
-  doc.setDrawColor(...BORDER);
-  doc.setLineWidth(0.3);
-  doc.line(scoreBlockX, y + 5, scoreBlockX, y + heroH - 5);
 
   sf('bold', 7.5, MUTED);
   doc.text('HEALTH SCORE', scoreBlockX + 30, y + 9, { align: 'center' });
