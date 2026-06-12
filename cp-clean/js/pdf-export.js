@@ -231,7 +231,15 @@ async function exportToPDF() {
   // ── Data source / confidence strip ──
   if (dataSource) {
     const conf = confidenceLabels[dataSource];
-    const sourceH = 12;
+    let noteLines = [];
+    if (sourceNotes) {
+      sf('normal', 7.5);
+      noteLines = doc.splitTextToSize(`Note: ${sourceNotes}`, W - 8);
+    }
+    const baseH = 12;
+    const noteH = noteLines.length ? noteLines.length * 4 + 2 : 0;
+    const sourceH = baseH + noteH;
+
     fillBox(M, y, W, sourceH, WHITE, BORDER, 1.5);
     sf('bold', 7.5, MUTED);
     doc.text('DATA SOURCE', M + 4, y + 5);
@@ -247,10 +255,9 @@ async function exportToPDF() {
       doc.text(conf.label, M + W - ctw - 2, y + 7.3);
     }
 
-    if (sourceNotes) {
+    if (noteLines.length) {
       sf('normal', 7.5, MUTED);
-      const noteLines = doc.splitTextToSize(`Note: ${sourceNotes}`, W - 8);
-      doc.text(noteLines[0], M + 4, y + sourceH - 1.5);
+      doc.text(noteLines, M + 4, y + baseH + 1);
     }
     y += sourceH + 5;
   }
