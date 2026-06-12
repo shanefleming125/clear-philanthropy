@@ -405,9 +405,10 @@ async function exportToPDF() {
   if (totalPages > 1) {
     for (let p = 1; p <= totalPages; p++) {
       doc.setPage(p);
-      // overlay corrected page count text on top of footer
-      fill(PW - M - 22, PH - FOOTER_H, 22, FOOTER_H, NAVY);
+      // Redraw the full footer bar to fully cover old text, then stamp corrected page count
+      fill(0, PH - FOOTER_H, PW, FOOTER_H, NAVY);
       sf('normal', 6.5, [160,196,232]);
+      doc.text('Clear Philanthropy  ·  clearphilanthropy.com', M, PH - 3.5);
       doc.text(`Page ${p} of ${totalPages}`, PW - M, PH - 3.5, { align: 'right' });
     }
   }
