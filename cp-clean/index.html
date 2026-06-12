@@ -85,8 +85,60 @@
     .nav-links { display: none !important; }
   }
 
+  /* ── Nav user display ── */
+  .nav-divider {
+    width: 1px;
+    height: 16px;
+    background: rgba(255,255,255,0.15);
+  }
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-user-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #4DA6E8;
+    color: #0B2545;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .nav-user-email {
+    color: rgba(255,255,255,0.75) !important;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .btn-signout {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 6px;
+    padding: 5px 12px;
+    background: none;
+    font-family: 'Manrope', sans-serif;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .btn-signout:hover {
+    color: rgba(255,255,255,0.95);
+    border-color: rgba(255,255,255,0.4);
+  }
+  .btn-signout svg {
+    width: 14px;
+    height: 14px;
+  }
+
   /* ── Header button tooltips ── */
-  .tip-target {
     position: relative;
   }
   .tip-target .header-tip {
@@ -137,8 +189,15 @@
   <div class="nav-links" id="navLinks">
     <a href="index.html" class="nav-link active">Dashboard</a>
     <a href="/assessment" class="nav-link">+ New Assessment</a>
-    <span id="userEmail" class="nav-user-email"></span>
-    <button class="btn-intake" onclick="AUTH.signOut()" style="color:rgba(255,255,255,0.5);">Sign Out</button>
+    <div class="nav-divider"></div>
+    <div class="nav-user">
+      <div class="nav-user-avatar" id="userAvatar"></div>
+      <span id="userEmail" class="nav-user-email"></span>
+    </div>
+    <button class="btn-signout" onclick="AUTH.signOut()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign Out
+    </button>
   </div>
 
   <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Toggle menu">
@@ -258,6 +317,7 @@
     if (user?.email) {
       document.getElementById('userEmail').textContent = user.email;
       document.getElementById('overlayEmail').textContent = user.email;
+      document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
     }
     // Now safe to load dashboard
     const s = document.createElement('script');
