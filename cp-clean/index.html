@@ -84,6 +84,45 @@
     .hamburger { display: flex; }
     .nav-links { display: none !important; }
   }
+
+  /* ── Header button tooltips ── */
+  .tip-target {
+    position: relative;
+  }
+  .tip-target .header-tip {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 220px;
+    background: #0B2545;
+    color: #E5E7EB;
+    font-size: 12px;
+    line-height: 1.6;
+    font-weight: 400;
+    border-radius: 8px;
+    padding: 10px 12px;
+    z-index: 50;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    text-align: left;
+  }
+  .tip-target .header-tip::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    right: 16px;
+    width: 10px;
+    height: 10px;
+    background: #0B2545;
+    transform: rotate(45deg);
+    border-radius: 2px;
+  }
+  .tip-target:hover .header-tip {
+    display: block;
+  }
+  @media (max-width: 640px) {
+    .tip-target .header-tip { display: none !important; }
+  }
 </style>
 </head>
 <body style="display:none">
@@ -122,11 +161,17 @@
       <p class="page-sub">Review and manage all nonprofit financial assessments</p>
     </div>
     <div style="display:flex;gap:10px;align-items:center;">
-      <a href="/assessment" class="btn-primary">+ New Assessment</a>
-      <button class="btn-intake-green" onclick="copyIntakeLink()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-        Copy Intake Link
-      </button>
+      <div class="tip-target">
+        <a href="/assessment" class="btn-primary">+ New Assessment</a>
+        <div class="header-tip">Start a new financial health assessment by entering an organization's data yourself.</div>
+      </div>
+      <div class="tip-target">
+        <button class="btn-intake-green" onclick="copyIntakeLink()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Copy Intake Link
+        </button>
+        <div class="header-tip">Copy a link you can send directly to an organization — they fill in their own financial data through a guided form.</div>
+      </div>
     </div>
   </div>
 
