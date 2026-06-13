@@ -4,7 +4,6 @@ let allOrgs = [];
 let sortKey = '';
 let sortDir = 'asc';
 
-// Called directly after auth confirms session
 renderDashboard();
 
 async function renderDashboard() {
@@ -23,6 +22,11 @@ function updateStats(orgs) {
   document.getElementById('statLow').textContent = real.filter(o => o.riskLevel === 'Low').length;
   document.getElementById('statMod').textContent = real.filter(o => o.riskLevel === 'Moderate').length;
   document.getElementById('statHigh').textContent = real.filter(o => o.riskLevel === 'High').length;
+}
+
+function truncate(str, max) {
+  if (!str) return '—';
+  return str.length > max ? str.slice(0, max) + '…' : str;
 }
 
 function renderTable(orgs) {
@@ -53,12 +57,12 @@ function renderTable(orgs) {
   table.style.display = 'table';
 
   const recCls = {
-    'Invite to Apply': 'rec-invite',
-    'Request More Info': 'rec-info',
-    'Decline': 'rec-decline',
-    'Approved': 'rec-approved',
+    'Invite to Apply':    'rec-invite',
+    'Request More Info':  'rec-info',
+    'Decline':            'rec-decline',
+    'Approved':           'rec-approved',
     'Full Due Diligence': 'rec-due',
-    'Pending Review': 'rec-info'
+    'Pending Review':     'rec-info'
   };
   const dotCls = { Low: 'dot-low', Moderate: 'dot-mod', High: 'dot-high' };
   const barColor = { Low: '#2EAD77', Moderate: '#D97706', High: '#E8472A' };
@@ -71,47 +75,69 @@ function renderTable(orgs) {
     if (o.is_sample) {
       actionCell = '';
     } else if (isPending && !hasExtraction) {
-      actionCell = `<button class="action-btn" style="background:#0B2545;color:white;border-color:#0B2545" onclick="event.stopPropagation();runAutoFill('${o.id}', this)">Run Auto-Fill</button>
-        <button class="action-btn" onclick="event.stopPropagation();deleteOrg('${o.id}', this)">Delete</button>`;
+      actionCell = `
+        <button class="action-btn" style="background:#0B2545;color:white;border-color:#0B2545;margin-bottom:4px;display:block;width:100%" onclick="event.stopPropagation();runAutoFill('${o.id}', this)">Run Auto-Fill</button>
+        <button class="action-btn" style="display:block;width:100%" onclick="event.stopPropagation();deleteOrg('${o.id}', this)">Delete</button>`;
     } else if (isPending && hasExtraction) {
-      actionCell = `<button class="action-btn" style="background:#1A6EB5;color:white;border-color:#1A6EB5" onclick="event.stopPropagation();reviewExtracted('${o.id}')">Review Extracted Data</button>
-        <button class="action-btn" onclick="event.stopPropagation();deleteOrg('${o.id}', this)">Delete</button>`;
+      actionCell = `
+        <button class="action-btn" style="background:#1A6EB5;color:white;border-color:#1A6EB5;margin-bottom:4px;display:block;width:100%" onclick="event.stopPropagation();reviewExtracted('${o.id}')">Review Data</button>
+        <button class="action-btn" style="display:block;width:100%" onclick="event.stopPropagation();deleteOrg('${o.id}', this)">Delete</button>`;
     } else {
       actionCell = `<button class="action-btn" onclick="event.stopPropagation();deleteOrg('${o.id}', this)">Delete</button>`;
     }
 
     const pendingBadge = isPending
-      ? `<span style="font-size:10px;font-weight:700;background:#FEF3C7;color:#B45309;padding:2px 7px;border-radius:10px;vertical-align:middle;margin-left:6px">PENDING REVIEW</span>`
+      ? `<span style="font-size:9px;font-weight:700;background:#FEF3C7;color:#B45309;padding:1px 5px;border-radius:8px;vertical-align:middle;margin-left:4px;white-space:nowrap">PENDING</span>`
       : '';
 
-    const autoFillNote = isPending && hasExtraction
-      ? ' · <span style="color:#2EAD77;font-size:11px">Auto-fill ready</span>'
-      : isPending && !hasExtraction && (o.docs?.length || o.sourceNotes?.includes('documents uploaded'))
-        ? ' · <span style="color:#6B7280;font-size:11px">Awaiting auto-fill</span>'
-        : '';
+    const subLine = [
+      o.fyEnd || '',
+      o.status === 'submitted' ? '<span style="color:#1A6EB5">Self-reported</span>' : '',
+      isPending && hasExtraction ? '<span style="color:#2EAD77">Auto-fill ready</span>' : '',
+      isPending && !hasExtraction && (o.docs?.length || o.sourceNotes?.includes('documents uploaded')) ? '<span style="color:#9CA3AF">Awaiting auto-fill</span>' : ''
+    ].filter(Boolean).join(' · ');
+
+    const orgDisplay = truncate(o.orgName, 40);
+    const recDisplay = truncate(o.recommendation, 22);
+    const reviewerDisplay = truncate(o.reviewer || o.contactName, 18);
+    const dateDisplay = (o.reviewDate || (o.created_at || '').split('T')[0] || '—').slice(0, 10);
 
     return `
     <tr onclick="window.location='/assessment?id=${o.id}'" style="cursor:pointer${o.is_sample ? ';opacity:0.85' : ''}">
-      <td>
-        <div class="org-name">${o.orgName}${o.is_sample ? ' <span style="font-size:10px;font-weight:700;background:#E6F1FB;color:#1A6EB5;padding:2px 7px;border-radius:10px;vertical-align:middle;">SAMPLE</span>' : ''}${pendingBadge}</div>
-        <div class="org-fy">${o.fyEnd || ''}${o.status === 'submitted' ? ' · <span style="color:#1A6EB5;font-size:11px">Self-reported</span>' : ''}${autoFillNote}</div>
+      <td style="max-width:220px">
+        <div class="org-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${o.orgName || ''}">
+          ${orgDisplay}
+          ${o.is_sample ? '<span style="font-size:9px;font-weight:700;background:#E6F1FB;color:#1A6EB5;padding:1px 5px;border-radius:8px;vertical-align:middle;margin-left:4px">SAMPLE</span>' : ''}
+          ${pendingBadge}
+        </div>
+        ${subLine ? `<div class="org-fy" style="font-size:11px;margin-top:2px">${subLine}</div>` : ''}
       </td>
-      <td>
+      <td style="width:80px">
         <div class="score-pill">
           <span style="font-weight:700">${o.score || '—'}</span>
-          <span style="color:#9CA3AF;font-size:12px">${o.score ? '/100' : ''}</span>
+          <span style="color:#9CA3AF;font-size:11px">${o.score ? '/100' : ''}</span>
         </div>
         ${o.score ? `<div class="score-bar-wrap"><div class="score-bar" style="width:${o.score}%;background:${barColor[o.riskLevel] || '#9CA3AF'}"></div></div>` : ''}
       </td>
-      <td><span style="display:flex;align-items:center;gap:6px;font-size:13px"><span class="risk-dot ${dotCls[o.riskLevel] || 'dot-mod'}"></span>${o.riskLevel || 'Pending'} Risk</span></td>
-      <td><span class="rec-badge ${recCls[o.recommendation] || 'rec-none'}">${o.recommendation || '—'}</span></td>
-      <td style="color:#6B7280">${o.reviewer || o.contactName || '—'}</td>
-      <td style="color:#6B7280">${o.reviewDate || (o.created_at || '').split('T')[0] || '—'}</td>
-      <td style="white-space:nowrap">${actionCell}</td>
+      <td style="width:110px">
+        <span style="display:flex;align-items:center;gap:5px;font-size:12px;white-space:nowrap">
+          <span class="risk-dot ${dotCls[o.riskLevel] || 'dot-mod'}"></span>
+          ${o.riskLevel || 'Pending'}
+        </span>
+      </td>
+      <td style="width:140px">
+        <span class="rec-badge ${recCls[o.recommendation] || 'rec-none'}" style="font-size:11px;white-space:nowrap" title="${o.recommendation || ''}">
+          ${recDisplay || '—'}
+        </span>
+      </td>
+      <td style="color:#6B7280;font-size:12px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${o.reviewer || o.contactName || ''}">
+        ${reviewerDisplay}
+      </td>
+      <td style="color:#6B7280;font-size:12px;width:90px;white-space:nowrap">${dateDisplay}</td>
+      <td style="width:120px;vertical-align:middle">${actionCell}</td>
     </tr>`;
   }).join('');
 
-  // Update sort indicators
   document.querySelectorAll('.org-table th').forEach(th => {
     th.classList.remove('sort-asc', 'sort-desc');
   });
@@ -151,7 +177,6 @@ function sortTable(key) {
 
   renderTable(orgs);
 
-  // Update header indicator
   const headers = document.querySelectorAll('.org-table th');
   const keyMap = ['orgName','score','riskLevel','recommendation','reviewer','reviewDate'];
   headers.forEach((th, i) => {
@@ -174,10 +199,9 @@ function copyIntakeLink() {
   navigator.clipboard.writeText(url).then(() => alert('Intake link copied!\n\nSend this to the nonprofit:\n' + url));
 }
 
-// ── Auto-fill from already-uploaded documents (Pending Review records) ──────
 async function runAutoFill(id, btn) {
   const originalText = btn.textContent;
-  btn.textContent = 'Reading documents...';
+  btn.textContent = 'Reading docs...';
   btn.disabled = true;
 
   try {
@@ -190,7 +214,6 @@ async function runAutoFill(id, btn) {
     const data = await res.json();
     if (!res.ok || data.error) throw new Error(data.error || 'Auto-fill failed');
 
-    // Save extraction results onto the record for the reviewer to use
     const org = allOrgs.find(o => o.id === id);
     if (org) {
       org.extractedData = data;
@@ -205,7 +228,6 @@ async function runAutoFill(id, btn) {
   }
 }
 
-// ── Open an assessment with extracted data pre-applied ──────────────────────
 function reviewExtracted(id) {
   const org = allOrgs.find(o => o.id === id);
   if (!org || !org.extractedData) {
