@@ -8,8 +8,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const fromExtract = params.get('fromExtract');
 
   if (id && fromExtract) {
-    // Reviewing a Pending Review record with extracted data ready —
-    // load the existing record first, then overlay extracted values.
     loadFromDB(id).then(() => populateFromExtraction());
   } else if (id) {
     loadFromDB(id);
@@ -38,7 +36,6 @@ function populateFromExtraction() {
   const metrics = data.metrics || {};
   const org = data.orgInfo || {};
 
-  // Org info — only fill if currently empty (don't overwrite org-submitted info)
   if (org.orgName && !document.getElementById('orgName').value) document.getElementById('orgName').value = org.orgName;
   if (org.ein && !document.getElementById('ein').value) document.getElementById('ein').value = org.ein;
   if (org.fyEnd && !document.getElementById('fyEnd').value) document.getElementById('fyEnd').value = org.fyEnd;
@@ -70,8 +67,6 @@ function populateFromExtraction() {
     }
   }
 
-  // Extracted financial values overwrite the placeholder zeros from
-  // org-submitted records.
   const threeYear = ['rev', 'exp', 'cash'];
   Object.entries(metrics).forEach(([key, m]) => {
     if (threeYear.includes(key)) {
@@ -82,6 +77,18 @@ function populateFromExtraction() {
       if (m.year0 !== undefined) setFieldValue(key + '0', m.year0);
     }
   });
+
+  // Largest Single Revenue Source category — set dropdown + show reasoning
+  const toprevMeta = metrics.toprev;
+  if (toprevMeta?.category) {
+    const catEl = document.getElementById('toprevCategory');
+    if (catEl) catEl.value = toprevMeta.category;
+    if (toprevMeta.categoryReason) {
+      const reasonEl = document.getElementById('toprevCategoryReason');
+      if (reasonEl) reasonEl.textContent = toprevMeta.categoryReason;
+    }
+    updateToprevCategoryUI();
+  }
 
   // Pre-check "Documents Received" based on detected doc types
   const docCheckMap = { audited: 'doc_audit', '990': 'doc_990' };
@@ -108,8 +115,36 @@ function setFieldValue(elId, value) {
 // This version is a fallback only
 function g(id) { return parseFloat(document.getElementById(id)?.value) || 0; }
 
+// ── Revenue concentration category ──────────────────────────────────────────
+// "institutional" / "major_donor" = genuine concentration risk
+// "broad_base" = large aggregate of individual donors — not concentration risk
+function getToprevCategory() {
+  return document.getElementById('toprevCategory')?.value || 'broad_base';
+}
+
+function isConcentrationRisk() {
+  const cat = getToprevCategory();
+  return cat === 'institutional' || cat === 'major_donor';
+}
+
+function updateToprevCategoryUI() {
+  const cat = getToprevCategory();
+  const hintEl = document.getElementById('toprevCategoryHint');
+  const hints = {
+    institutional: 'Treated as concentration risk — if this grant/contract ends, this revenue is lost.',
+    major_donor: 'Treated as concentration risk, though relationship-based funding is often more durable than institutional contracts.',
+    broad_base: 'Not treated as concentration risk — a broad base of individual donors reflects community support and funding flexibility.'
+  };
+  if (hintEl) hintEl.textContent = hints[cat] || '';
+  recalc();
+}
+
 function rateBadge(k, v) {
-  return { om: v>=7?'g':v>=0?'m':'p', cr: v>=1.5?'g':v>=1?'m':'p', mc: v>=3?'g':v>=1.5?'m':'p', da: v<=40?'g':v<=65?'m':'p', pe: v>=65?'g':v>=55?'m':'p', fe: v<=20?'g':v<=35?'m':'p', rc: v<=40?'g':v<=60?'m':'p', na: v>=0.25?'g':v>=0.1?'m':'p' }[k] || 'm';
+  if (k === 'rc') {
+    if (!isConcentrationRisk()) return 'g'; // broad donor base — not penalized
+    return v<=40?'g':v<=60?'m':'p';
+  }
+  return { om: v>=7?'g':v>=0?'m':'p', cr: v>=1.5?'g':v>=1?'m':'p', mc: v>=3?'g':v>=1.5?'m':'p', da: v<=40?'g':v<=65?'m':'p', pe: v>=65?'g':v>=55?'m':'p', fe: v<=20?'g':v<=35?'m':'p', na: v>=0.25?'g':v>=0.1?'m':'p' }[k] || 'm';
 }
 
 function setBadge(id, r) {
@@ -191,7 +226,13 @@ function recalc() {
 
 function updateFlags({ om, cr, mc, da, pe, fe, rc }) {
   const flags=[], add=(ok,msg)=>flags.push({ok,msg});
-  if(!isNaN(rc)) add(rc<=40, rc>40?'Revenue concentration above 40% — diversification risk.':'Revenue sources are well-diversified.');
+  if(!isNaN(rc)) {
+    if (isConcentrationRisk()) {
+      add(rc<=40, rc>40?'Revenue concentration above 40% — diversification risk.':'Revenue sources are well-diversified.');
+    } else {
+      add(true, `Largest revenue source (${rc.toFixed(1)}% of total) reflects a broad base of individual donors — a sign of community support, not concentration risk.`);
+    }
+  }
   if(!isNaN(mc)) add(mc>=3, mc<3?'Months of cash below 3 — limited liquidity runway.':'Cash reserves meet the 3-month minimum.');
   if(!isNaN(om)) add(om>=0, om<0?'Operating deficit — expenses exceed revenue.':'Operating margin is positive.');
   if(!isNaN(da)) add(da<=65, da>65?'Debt load is high relative to total assets.':'Debt levels are within acceptable range.');
@@ -253,6 +294,8 @@ async function saveAssessment() {
     aiNarrative: hasAI ? aiText : '',
     dataSource: document.getElementById('dataSource').value,
     sourceNotes: document.getElementById('sourceNotes').value,
+    toprevCategory: getToprevCategory(),
+    toprevCategoryReason: document.getElementById('toprevCategoryReason')?.textContent || '',
     score, riskLevel,
     rev:g('rev0'), exp:g('exp0'), assets:g('assets0'), liab:g('liab0'), cash:g('cash0'),
     currassets:g('currassets0'), currliab:g('currliab0'),
@@ -274,7 +317,6 @@ async function saveAssessment() {
     document.getElementById('formTitle').textContent = 'Edit — ' + data.orgName;
     const url = new URL(window.location); url.searchParams.set('id', data.id); window.history.replaceState({}, '', url);
 
-    // Upload any staged files now that we have a confirmed editingId
     const pending = typeof stagedFiles !== 'undefined' ? stagedFiles.filter(f => f.status === 'pending') : [];
     if (pending.length) {
       saveBtn.textContent = 'Uploading files...';
@@ -321,6 +363,15 @@ async function generateSummary() {
   const docMap = { 'doc_990':'Form 990', 'doc_audit':'Audited Financials', 'doc_bs':'Balance Sheet', 'doc_is':'Income Statement', 'doc_cf':'Cash Flow Statement', 'doc_budget':'Board Budget', 'doc_minutes':'Board Minutes', 'doc_strategic':'Strategic Plan' };
   const docs = Object.keys(docMap).filter(id => document.getElementById(id)?.checked).map(id => docMap[id]).join(', ') || 'none';
 
+  const toprevCategory = getToprevCategory();
+  const toprevCategoryLabels = {
+    institutional: 'a single institutional grant or contract (genuine concentration risk — if this funder/contract ends, this revenue is lost)',
+    major_donor: 'a single major individual donor or family foundation gift (relationship-based concentration risk, though often more durable than institutional contracts)',
+    broad_base: 'an aggregate of contributions from a broad base of individual donors (NOT concentration risk — this reflects community support and funding flexibility, even though it represents a large share of revenue)'
+  };
+  const toprevContext = toprevCategoryLabels[toprevCategory] || toprevCategoryLabels.broad_base;
+  const toprevReason = document.getElementById('toprevCategoryReason')?.textContent?.trim();
+
   const prompt = `Write a professional 3-paragraph nonprofit financial assessment as a formal grant reviewer narrative.
 
 ORGANIZATION: ${org} | FISCAL YEAR: ${fy} | HEALTH SCORE: ${score}/100
@@ -328,12 +379,15 @@ Revenue: ${fmt(rev)} | Expenses: ${fmt(exp)} | Surplus/Deficit: ${fmt(surplus)} 
 Cash: ${fmt(cash)} (${mc} months) | Assets: ${fmt(assets)} | Liabilities: ${fmt(liab)} | Net Assets: ${fmt(netassets)}
 Program Expense Ratio: ${pct(prog,exp)} | Fundraising Efficiency: ${pct(fund,contrib)}
 Revenue Concentration: ${pct(toprev,rev)} | Debt to Assets: ${pct(liab,assets)}
+
+IMPORTANT — Largest Revenue Source Context: The largest single revenue source (${pct(toprev,rev)} of total revenue) is ${toprevContext}.${toprevReason ? ' Additional context: ' + toprevReason : ''} Frame your discussion of revenue concentration accordingly — do NOT describe a broad donor base as a risk or recommend declining funding on that basis. A broad, stable base of individual donors should be described as a strength (durable donor pool, funding flexibility, no restrictive funder strings), even when it represents a large percentage of total revenue.
+
 Primary Data Source: ${sourceContext}${sourceNotes ? ' | Source Notes: ' + sourceNotes : ''}
 Documents Reviewed: ${docs} | Recommendation: ${rec}
 Reviewer notes: ${notes} | Follow-up questions: ${qs}
 
 Paragraph 1: Overall financial health and strengths with specific numbers.
-Paragraph 2: Key risks and concerns referencing specific ratios.
+Paragraph 2: Key risks and concerns referencing specific ratios. Apply the revenue source context above correctly.
 Paragraph 3: Clear recommendation and next steps. If data source reliability is lower (internal statements only or mixed), note appropriate caveats about confidence in the figures.`;
 
   const btn = document.getElementById('aiBtn');
@@ -378,6 +432,16 @@ function populateForm(d) {
     const el = document.getElementById('sourceNotes');
     if (el) el.value = d.sourceNotes;
   }
+
+  if (d.toprevCategory) {
+    const el = document.getElementById('toprevCategory');
+    if (el) el.value = d.toprevCategory;
+  }
+  if (d.toprevCategoryReason) {
+    const el = document.getElementById('toprevCategoryReason');
+    if (el) el.textContent = d.toprevCategoryReason;
+  }
+  updateToprevCategoryUI();
 
   if (d.aiNarrative) {
     document.getElementById('aiResult').style.display = 'block';
