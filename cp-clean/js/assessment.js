@@ -1,6 +1,19 @@
 // assessment.js — Clear Philanthropy
 
 let editingId = null;
+let formDirty = false;
+let formSaving = false;
+
+// ── Dirty tracking ───────────────────────────────────────────────────────────
+function markDirty() { formDirty = true; }
+function markClean() { formDirty = false; }
+
+window.addEventListener('beforeunload', e => {
+  if (formDirty && !formSaving) {
+    e.preventDefault();
+    e.returnValue = 'You have unsaved changes. Leave without saving?';
+  }
+});
 
 window.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
@@ -15,6 +28,14 @@ window.addEventListener('DOMContentLoaded', () => {
     populateFromExtraction();
   }
   recalc();
+
+  // Hook dirty tracking onto all inputs, selects, textareas
+  setTimeout(() => {
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      el.addEventListener('input', markDirty);
+      el.addEventListener('change', markDirty);
+    });
+  }, 500); // slight delay so populateForm doesn't immediately mark dirty on load
 });
 
 async function loadFromDB(id) {
@@ -78,7 +99,6 @@ function populateFromExtraction() {
     }
   });
 
-  // Largest Single Revenue Source category — set dropdown + show reasoning
   const toprevMeta = metrics.toprev;
   if (toprevMeta?.category) {
     const catEl = document.getElementById('toprevCategory');
@@ -90,7 +110,6 @@ function populateFromExtraction() {
     updateToprevCategoryUI();
   }
 
-  // Pre-check "Documents Received" based on detected doc types
   const docCheckMap = { audited: 'doc_audit', '990': 'doc_990' };
   (data.documents || []).forEach(d => {
     const checkboxId = docCheckMap[d.docType];
@@ -102,6 +121,7 @@ function populateFromExtraction() {
 
   recalc();
   if (typeof formatAllFields === 'function') formatAllFields();
+  markDirty(); // extraction populated fields — reviewer needs to save
 }
 
 function setFieldValue(elId, value) {
@@ -112,12 +132,9 @@ function setFieldValue(elId, value) {
 }
 
 // g() is overridden by currency.js to handle formatted values
-// This version is a fallback only
 function g(id) { return parseFloat(document.getElementById(id)?.value) || 0; }
 
 // ── Revenue concentration category ──────────────────────────────────────────
-// "institutional" / "major_donor" = genuine concentration risk
-// "broad_base" = large aggregate of individual donors — not concentration risk
 function getToprevCategory() {
   return document.getElementById('toprevCategory')?.value || 'broad_base';
 }
@@ -141,7 +158,7 @@ function updateToprevCategoryUI() {
 
 function rateBadge(k, v) {
   if (k === 'rc') {
-    if (!isConcentrationRisk()) return 'g'; // broad donor base — not penalized
+    if (!isConcentrationRisk()) return 'g';
     return v<=40?'g':v<=60?'m':'p';
   }
   return { om: v>=7?'g':v>=0?'m':'p', cr: v>=1.5?'g':v>=1?'m':'p', mc: v>=3?'g':v>=1.5?'m':'p', da: v<=40?'g':v<=65?'m':'p', pe: v>=65?'g':v>=55?'m':'p', fe: v<=20?'g':v<=35?'m':'p', na: v>=0.25?'g':v>=0.1?'m':'p' }[k] || 'm';
@@ -258,7 +275,7 @@ function updateTrends() {
   }).join('');
 }
 
-// ── Save (with file upload built in) ────────────────────────────────────────
+// ── Save ────────────────────────────────────────────────────────────────────
 async function saveAssessment() {
   const required = [
     { id: 'orgName', label: 'Organization Name' },
@@ -311,9 +328,11 @@ async function saveAssessment() {
   const savedMsg = document.getElementById('savedMsg');
   const errorMsg = document.getElementById('errorMsg');
 
+  formSaving = true;
   try {
     await DB.saveAssessment(data);
     editingId = data.id;
+    markClean();
     document.getElementById('formTitle').textContent = 'Edit — ' + data.orgName;
     const url = new URL(window.location); url.searchParams.set('id', data.id); window.history.replaceState({}, '', url);
 
@@ -329,6 +348,7 @@ async function saveAssessment() {
   } catch(e) {
     errorMsg.textContent = 'Save failed: ' + e.message; errorMsg.style.display = 'inline';
   } finally {
+    formSaving = false;
     saveBtn.textContent = 'Save Assessment';
     saveBtn.disabled = false;
   }
@@ -390,7 +410,7 @@ Paragraph 1: Overall financial health and strengths with specific numbers.
 Paragraph 2: Key risks and concerns referencing specific ratios. Apply the revenue source context above correctly.
 Paragraph 3: Summarize the overall financial picture and surface anything the funder may want to explore further (e.g., questions worth asking, areas to watch, or context that could inform their decision). If data source reliability is lower (internal statements only or mixed), note appropriate caveats about confidence in the figures.
 
-IMPORTANT: Do NOT make a funding recommendation or state/imply whether this organization should or should not receive funding (e.g., do not say things like "recommend funding," "not selected for funding," "should be declined," or similar). CP's role is to surface what the financial data shows — the funding decision belongs entirely to the reviewer/funder, who has context (priorities, portfolio, strategic fit) this assessment does not have. A financially strong organization with low need for general operating support is not a basis for declining funding — funders often specifically seek out well-run organizations. Stick to describing the financial picture, not prescribing an outcome.`;
+IMPORTANT: Do NOT make a funding recommendation or state/imply whether this organization should or should not receive funding. CP's role is to surface what the financial data shows — the funding decision belongs entirely to the reviewer/funder. Stick to describing the financial picture, not prescribing an outcome.`;
 
   const btn = document.getElementById('aiBtn');
   const resultDiv = document.getElementById('aiResult');
@@ -408,6 +428,7 @@ IMPORTANT: Do NOT make a funding recommendation or state/imply whether this orga
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     textDiv.textContent = data.result;
+    markDirty(); // narrative generated — prompt to save
   } catch(e) {
     textDiv.textContent = 'Error: ' + e.message;
   }
@@ -458,6 +479,8 @@ function populateForm(d) {
   recalc();
   if (typeof formatAllFields === 'function') formatAllFields();
   loadExistingFiles(d.id);
+  // Mark clean after load completes — form is in sync with saved state
+  setTimeout(markClean, 600);
 }
 
 async function loadExistingFiles(assessmentId) {
@@ -467,7 +490,6 @@ async function loadExistingFiles(assessmentId) {
     if (!token) { console.warn('No auth token for file list'); return; }
 
     const files = await DB.listFiles(assessmentId);
-    console.log('loadExistingFiles result:', files);
     const list = document.getElementById('fileList');
     if (!files || !files.length) return;
 
