@@ -400,15 +400,24 @@ Cash: ${fmt(cash)} (${mc} months) | Assets: ${fmt(assets)} | Liabilities: ${fmt(
 Program Expense Ratio: ${pct(prog,exp)} | Fundraising Efficiency: ${pct(fund,contrib)}
 Revenue Concentration: ${pct(toprev,rev)} | Debt to Assets: ${pct(liab,assets)}
 
-IMPORTANT — Largest Revenue Source Context: The largest single revenue source (${pct(toprev,rev)} of total revenue) is ${toprevContext}.${toprevReason ? ' Additional context: ' + toprevReason : ''} Frame your discussion of revenue concentration accordingly — do NOT describe a broad donor base as a risk or recommend declining funding on that basis. A broad, stable base of individual donors should be described as a strength (durable donor pool, funding flexibility, no restrictive funder strings), even when it represents a large percentage of total revenue.
+LARGEST REVENUE SOURCE CONTEXT: The largest single revenue source (${pct(toprev,rev)} of total revenue) is ${toprevContext}.${toprevReason ? ' Additional context: ' + toprevReason : ''}
+- If category is broad_base: Do NOT flag this as a risk. Describe it as a notable finding that warrants further inquiry into the composition and stability of the donor base. Good follow-up questions include: Is this broad base stable year-over-year? Are there documented donor retention rates? Is giving growing, flat, or declining? Frame this as due diligence, not concern.
+- If category is institutional or major_donor: Flag as genuine concentration risk and explain what would happen if that source ended.
 
-Primary Data Source: ${sourceContext}${sourceNotes ? ' | Source Notes: ' + sourceNotes : ''}
+PRIMARY DATA SOURCE GUIDANCE: ${sourceContext}${sourceNotes ? ' | Source Notes: ' + sourceNotes : ''}
+- If source is internal statements or cash-basis only with no balance sheet: NEVER say "the organization carries no liabilities" or similar. Instead say the full liability picture is unknown because no balance sheet was provided, and surface any known obligations mentioned in the documents (e.g., loans, outstanding payables).
+- If no balance sheet is available, do not state or imply balance sheet figures as fact.
+
+PROGRAM EXPENSE RATIO GUIDANCE: If the program expense ratio is based on estimated or allocated figures (especially from internal statements without functional expense breakdown), use language like "appears program-focused" or "estimated program expense ratio" — do not state it as a precise verified figure. Note that salaries, rent, and utilities are often mixed-use and without a formal functional allocation the ratio is an approximation.
+
+FUNDRAISING EFFICIENCY GUIDANCE: A low fundraising expense ratio (e.g., 7%) means the organization spent a small amount to raise each dollar of contributed revenue — this is GOOD. Do not say "generates X dollars per $100 spent" (that is backwards). Instead say something like "spent approximately X cents to raise each dollar of contributed revenue" or "fundraising costs represent X% of total contributions received." Note if this ratio is likely understated because only direct event costs are captured and staff time is not allocated.
+
 Documents Reviewed: ${docs} | Recommendation: ${rec}
 Reviewer notes: ${notes} | Follow-up questions: ${qs}
 
-Paragraph 1: Overall financial health and strengths with specific numbers.
-Paragraph 2: Key risks and concerns referencing specific ratios. Apply the revenue source context above correctly.
-Paragraph 3: Summarize the overall financial picture and surface anything the funder may want to explore further (e.g., questions worth asking, areas to watch, or context that could inform their decision). If data source reliability is lower (internal statements only or mixed), note appropriate caveats about confidence in the figures.
+Paragraph 1: Overall financial health and strengths with specific numbers. Use hedged language where data confidence is limited.
+Paragraph 2: Key risks and concerns referencing specific ratios. Apply all guidance above correctly — liabilities, fundraising efficiency direction, program ratio confidence, and revenue concentration framing.
+Paragraph 3: Summarize the overall financial picture and surface the most important questions the funder should ask before making a decision. Be specific about what additional documents or information would meaningfully improve confidence in the assessment.
 
 IMPORTANT: Do NOT make a funding recommendation or state/imply whether this organization should or should not receive funding. CP's role is to surface what the financial data shows — the funding decision belongs entirely to the reviewer/funder. Stick to describing the financial picture, not prescribing an outcome.`;
 
