@@ -192,6 +192,47 @@
     background: #1A6EB5;
     border-radius: 50%;
   }
+
+  /* ── Submit loading overlay ── */
+  .submit-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(11,37,69,0.85);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .submit-overlay.active { display: flex; }
+  .submit-spinner {
+    width: 44px;
+    height: 44px;
+    border: 4px solid rgba(255,255,255,0.2);
+    border-top-color: #4DA6E8;
+    border-radius: 50%;
+    animation: submit-spin 0.8s linear infinite;
+  }
+  @keyframes submit-spin {
+    to { transform: rotate(360deg); }
+  }
+  .submit-overlay-text {
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Manrope', sans-serif;
+    text-align: center;
+    max-width: 320px;
+    line-height: 1.6;
+  }
+  .submit-overlay-sub {
+    color: rgba(255,255,255,0.55);
+    font-size: 12.5px;
+    font-family: 'Manrope', sans-serif;
+    text-align: center;
+    max-width: 320px;
+  }
 </style>
 </head>
 <body>
@@ -243,7 +284,7 @@
     <!-- Path choice -->
     <div class="path-choice-card">
       <div class="path-choice-title">How would you like to provide your financial information?</div>
-      <div class="path-choice-sub">If you have your Form 990, audited financial statements, or recent financial statements on hand, uploading them is the fastest option — we'll pull the figures directly from your documents. If you don't have these readily available, you can enter the numbers yourself.</div>
+      <div class="path-choice-sub">If you have your Form 990, audited financial statements, or recent financial statements on hand, uploading them is the fastest option. If you don't have these readily available, you can enter the numbers yourself.</div>
       <div class="path-options">
         <div class="path-option" id="pathUpload" onclick="selectPath('upload')">
           <div class="path-option-title">
@@ -251,7 +292,7 @@
             I have documents to upload
             <span class="path-option-badge">Faster</span>
           </div>
-          <div class="path-option-desc">Upload your Form 990, audited financials, or recent statements. We'll extract the figures for you.</div>
+          <div class="path-option-desc">Upload your Form 990, audited financials, or recent statements. Our team will review them.</div>
         </div>
         <div class="path-option" id="pathManual" onclick="selectPath('manual')">
           <div class="path-option-title">
@@ -282,7 +323,6 @@
           <div class="upload-hint">Form 990, audited financials, etc. — up to 5 files, 10MB each</div>
         </div>
         <div class="file-list" id="fileListDocs"></div>
-        <div id="extractStatus" style="display:none;margin-top:12px;font-size:13px;color:#1A6EB5;background:#F0F6FF;border:1px solid #BFDBFE;border-radius:8px;padding:10px 12px"></div>
       </div>
     </div>
 
@@ -530,6 +570,13 @@
   </div>
 </main>
 
+<!-- Submit loading overlay -->
+<div class="submit-overlay" id="submitOverlay">
+  <div class="submit-spinner"></div>
+  <div class="submit-overlay-text" id="submitOverlayText">Submitting your report...</div>
+  <div class="submit-overlay-sub">This usually takes just a few seconds.</div>
+</div>
+
 <script src="js/auth.js"></script>
 <script src="js/db.js"></script>
 <script>
@@ -577,7 +624,7 @@
       path === 'upload' ? 'Submit Documents' : 'Submit Financial Report';
   }
 
-  // ── Document upload (extraction path) ──────────────────────────────────────
+  // ── Document upload (upload path) ──────────────────────────────────────────
   let docFiles = [];
 
   function fileIcon() {
@@ -691,19 +738,13 @@
     }
   }
 
-  // ── Extraction call (reuses Cloudflare Worker /extract endpoint) ──────────
-  async function runIntakeExtraction() {
-    const formData = new FormData();
-    docFiles.forEach(f => formData.append('files', f));
-
-    const res = await fetch('https://calm-forest-dfc5.shanefleming125.workers.dev/extract', {
-      method: 'POST',
-      body: formData
-    });
-
-    const data = await res.json();
-    if (!res.ok || data.error) throw new Error(data.error || 'Extraction failed');
-    return data;
+  // ── Loading overlay ─────────────────────────────────────────────────────────
+  function showOverlay(text) {
+    document.getElementById('submitOverlayText').textContent = text;
+    document.getElementById('submitOverlay').classList.add('active');
+  }
+  function hideOverlay() {
+    document.getElementById('submitOverlay').classList.remove('active');
   }
 
   // ── Submit ──────────────────────────────────────────────────────────────────
@@ -776,47 +817,26 @@
         sourceNotes: 'Submitted via self-report (manual entry)'
       });
     } else {
-      // Upload path — placeholder financial fields until extraction runs / reviewer confirms
+      // Upload path — financial fields left blank/zero; reviewer runs auto-fill from
+      // the uploaded documents on the dashboard.
       Object.assign(data, {
         rev: 0, exp: 0, assets: 0, liab: 0, cash: 0,
         currassets: 0, currliab: 0,
         prog: 0, mgmt: 0, fund: 0, contrib: 0, toprev: 0,
         rev1: 0, rev2: 0, exp1: 0, exp2: 0, cash1: 0, cash2: 0,
-        sourceNotes: 'Submitted via self-report (documents uploaded — pending extraction review)'
+        sourceNotes: 'Submitted via self-report (documents uploaded — pending review)'
       });
     }
 
     try {
-      submitBtn.textContent = 'Submitting...';
+      showOverlay('Saving your submission...');
       await DB.saveAssessment(data);
 
-      // Upload files
       if (selectedPath === 'upload') {
-        submitBtn.textContent = 'Uploading documents...';
+        showOverlay('Uploading documents...');
         await uploadDocFiles(assessmentId);
-
-        // Run extraction and store raw results for the reviewer (does not affect score/riskLevel)
-        try {
-          submitBtn.textContent = 'Reading documents...';
-          document.getElementById('extractStatus').style.display = 'block';
-          document.getElementById('extractStatus').textContent = 'Reading your documents — this may take a moment...';
-
-          const extracted = await runIntakeExtraction();
-          data.extractedData = extracted;
-
-          // Pull org info if we don't already have it well-formed, and merge org details
-          if (extracted.orgInfo) {
-            if (!data.ein && extracted.orgInfo.ein) data.ein = extracted.orgInfo.ein;
-          }
-
-          await DB.saveAssessment(data);
-          document.getElementById('extractStatus').textContent = '✓ Documents processed. Our team will review the extracted figures.';
-        } catch(extractErr) {
-          console.warn('Extraction failed:', extractErr.message);
-          document.getElementById('extractStatus').textContent = 'Documents uploaded. Our team will review them directly.';
-        }
       } else if (stagedFiles.length) {
-        submitBtn.textContent = 'Uploading documents...';
+        showOverlay('Uploading documents...');
         await uploadStagedFiles(assessmentId);
       }
 
@@ -830,12 +850,13 @@
         ? `${fileCount} file${fileCount === 1 ? '' : 's'}`
         : 'None';
 
+      hideOverlay();
       document.getElementById('formView').style.display = 'none';
       document.getElementById('successView').style.display = 'block';
     } catch(e) {
+      hideOverlay();
       errorEl.textContent = 'Submission failed. Please try again.';
       errorEl.style.display = 'block';
-      submitBtn.textContent = selectedPath === 'upload' ? 'Submit Documents' : 'Submit Financial Report';
       submitBtn.disabled = false;
     }
   }
