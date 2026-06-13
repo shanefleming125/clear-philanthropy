@@ -90,7 +90,6 @@ async function exportToPDF() {
     doc.text(`Page ${page}`, PW - M, PH - 3.5, { align: 'right' });
   };
 
-  // ── Pagination: ensure space, else new page ──
   const ensureSpace = (neededH) => {
     if (y + neededH > CONTENT_BOTTOM) {
       drawFooter();
@@ -101,7 +100,6 @@ async function exportToPDF() {
     }
   };
 
-  // ── Section label — pass minContentH to guarantee label isn't orphaned ──
   const sectionLabel = (label, minContentH = 0) => {
     ensureSpace(11 + minContentH);
     fill(M, y, W, 7, BLUE, 1);
@@ -186,41 +184,58 @@ async function exportToPDF() {
   drawHeader();
   y = CONTENT_TOP;
 
-  // ── Hero: Org name + score ──
-  const heroH = 32;
+  // ── Hero block: org name wraps if needed, score right-docked ──
+  const scoreBlockW = 52;
+  const nameBlockW = W - scoreBlockW - 6;
+
+  // Measure org name — wrap if needed
+  sf('bold', 15, NAVY);
+  const nameLines = doc.splitTextToSize(orgName, nameBlockW - 8);
+  const nameLineH = 7;
+  const nameBlockH = Math.max(nameLines.length * nameLineH + 14, 30);
+  const heroH = nameBlockH + 4;
+
   fillBox(M, y, W, heroH, LIGHT, BORDER, 2);
 
-  sf('bold', 17, NAVY);
-  doc.text(orgName, M + 6, y + 12);
+  // Org name (left side, wrapping)
+  sf('bold', 15, NAVY);
+  nameLines.forEach((line, i) => {
+    doc.text(line, M + 6, y + 10 + i * nameLineH);
+  });
 
+  // Meta row below org name
+  const metaY = y + 10 + nameLines.length * nameLineH + 3;
   const metaParts = [];
   if (ein) metaParts.push(`EIN: ${ein}`);
   if (fyEnd) metaParts.push(`FY End: ${fyEnd}`);
   if (reviewer) metaParts.push(`Reviewer: ${reviewer}`);
   if (revDate) metaParts.push(`Date: ${revDate}`);
-  sf('normal', 8.5, MUTED);
-  doc.text(metaParts.join('   ·   '), M + 6, y + 19);
+  sf('normal', 7.5, MUTED);
+  // Wrap meta if needed
+  const metaStr = metaParts.join('   ·   ');
+  const metaLines = doc.splitTextToSize(metaStr, nameBlockW - 8);
+  metaLines.forEach((line, i) => {
+    doc.text(line, M + 6, metaY + i * 4.5);
+  });
 
-  // Health score — right side
-  const scoreBlockX = M + W - 60;
+  // Score block (right side)
+  const scoreX = M + W - scoreBlockW;
+  sf('bold', 7, MUTED);
+  doc.text('HEALTH SCORE', scoreX + scoreBlockW / 2, y + 8, { align: 'center' });
 
-  sf('bold', 7.5, MUTED);
-  doc.text('HEALTH SCORE', scoreBlockX + 30, y + 9, { align: 'center' });
-
-  sf('bold', 30, scoreColor);
+  sf('bold', 28, scoreColor);
   const scoreW = doc.getTextWidth(score);
-  const denomW = 9;
-  const totalScoreW = scoreW + denomW;
-  const scoreX = scoreBlockX + 30 - totalScoreW / 2;
-  doc.text(score, scoreX, y + 21);
-  sf('normal', 9, MUTED);
-  doc.text('/100', scoreX + scoreW + 1, y + 19);
+  const denomW = 8;
+  const totalSW = scoreW + denomW;
+  const sX = scoreX + scoreBlockW / 2 - totalSW / 2;
+  doc.text(score, sX, y + 20);
+  sf('normal', 8, MUTED);
+  doc.text('/100', sX + scoreW + 1, y + 18);
 
   if (risk) {
-    const riskText = risk;
-    sf('bold', 8);
-    const rtw = doc.getTextWidth(riskText) + 8;
-    pill(scoreBlockX + 30 - rtw/2 + 4, y + 27, riskText, riskStyle.bg, riskStyle.fg);
+    sf('bold', 7.5);
+    const rtw = doc.getTextWidth(risk) + 8;
+    pill(scoreX + scoreBlockW / 2 - rtw / 2 + 4, y + 26, risk, riskStyle.bg, riskStyle.fg);
   }
 
   y += heroH + 6;
@@ -270,10 +285,9 @@ async function exportToPDF() {
 
   ratios.forEach(({ label, value, rating, formula }, i) => {
     const col = i % 2;
-    const row = Math.floor(i / 2);
     if (col === 0) ensureSpace(cardH + 3);
     const cx = M + col * (cardW + cardGap);
-    const cy = y + row * (cardH + 3);
+    const cy = y;
 
     fillBox(cx, cy, cardW, cardH, WHITE, BORDER, 1.5);
 
@@ -291,8 +305,13 @@ async function exportToPDF() {
       const rtw = doc.getTextWidth(rating) + 6;
       pill(cx + cardW - rtw - 4, cy + 15.5, rating, rs.bg, rs.fg);
     }
+
+    // Advance y after every second card (end of row)
+    if (col === 1 || i === ratios.length - 1) {
+      y += cardH + 3;
+    }
   });
-  y += Math.ceil(ratios.length / 2) * (cardH + 3) + 4;
+  y += 2;
 
   // ════════════════════════════════
   // Financial Health Indicators
@@ -313,7 +332,7 @@ async function exportToPDF() {
   }
 
   // ════════════════════════════════
-  // Recommendation — prominent block
+  // Recommendation
   // ════════════════════════════════
   if (rec) {
     const recStyles = {
@@ -354,30 +373,28 @@ async function exportToPDF() {
   // ════════════════════════════════
   if (impression) {
     sectionLabel('Overall Impression', 14);
-    sf('normal', 9, TEXT);
-    const impLines = doc.splitTextToSize(impression, W - 8);
+    const impLines = doc.splitTextToSize(impression, W - 4);
     const lineH = 5;
     impLines.forEach(line => {
       ensureSpace(lineH + 2);
       sf('normal', 9, TEXT);
-      doc.text(line, M + 4, y + lineH - 1);
+      doc.text(line, M, y + lineH - 1);
       y += lineH;
     });
     y += 4;
   }
 
   // ════════════════════════════════
-  // Key Questions for Follow-Up
+  // Key Questions
   // ════════════════════════════════
   if (questions) {
     sectionLabel('Key Questions for Follow-Up', 14);
-    sf('normal', 9, TEXT);
-    const qLines = doc.splitTextToSize(questions, W - 8);
+    const qLines = doc.splitTextToSize(questions, W - 4);
     const lineH = 5;
     qLines.forEach(line => {
       ensureSpace(lineH + 2);
       sf('normal', 9, TEXT);
-      doc.text(line, M + 4, y + lineH - 1);
+      doc.text(line, M, y + lineH - 1);
       y += lineH;
     });
     y += 4;
@@ -388,7 +405,6 @@ async function exportToPDF() {
   // ════════════════════════════════
   if (hasAI) {
     sectionLabel('Assessment Narrative', 14);
-    sf('normal', 9.5, TEXT);
     const cleanAI = aiText.replace(/#{1,6}\s+/g, '').replace(/\*\*(.+?)\*\*/g, '$1').trim();
     const paragraphs = cleanAI.split('\n').filter(p => p.trim());
     const lineH = 5.5;
@@ -404,7 +420,7 @@ async function exportToPDF() {
     });
   }
 
-  // ── Final footer on last page ──
+  // ── Final footer ──
   drawFooter();
 
   // ── Re-stamp page numbers with total count ──
@@ -412,7 +428,6 @@ async function exportToPDF() {
   if (totalPages > 1) {
     for (let p = 1; p <= totalPages; p++) {
       doc.setPage(p);
-      // Redraw the full footer bar to fully cover old text, then stamp corrected page count
       fill(0, PH - FOOTER_H, PW, FOOTER_H, NAVY);
       sf('normal', 6.5, [160,196,232]);
       doc.text('Clear Philanthropy  ·  clearphilanthropy.com', M, PH - 3.5);
@@ -421,7 +436,7 @@ async function exportToPDF() {
   }
 
   // ── Save ──
-  const fname = `${orgName.replace(/[^a-z0-9]/gi, '_')}_Assessment_${new Date().toISOString().split('T')[0]}.pdf`;
+  const fname = `${orgName.replace(/[^a-z0-9]/gi, '_').slice(0, 50)}_Assessment_${new Date().toISOString().split('T')[0]}.pdf`;
   doc.save(fname);
   if (btn) { btn.textContent = 'Download PDF Report'; btn.disabled = false; }
 }
