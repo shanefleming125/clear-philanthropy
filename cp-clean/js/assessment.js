@@ -5,7 +5,11 @@ let editingId = null;
 window.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
-  if (id) loadFromDB(id);
+  if (id) {
+    loadFromDB(id);
+  } else if (params.get('fromExtract')) {
+    populateFromExtraction();
+  }
   recalc();
 });
 
@@ -14,6 +18,75 @@ async function loadFromDB(id) {
     const data = await DB.getAssessment(id);
     if (data) { editingId = id; populateForm(data); }
   } catch(e) { console.error('Load error:', e); }
+}
+
+// ── Extraction (auto-fill from documents) ───────────────────────────────────
+function populateFromExtraction() {
+  const raw = sessionStorage.getItem('cp:extracted');
+  if (!raw) return;
+  sessionStorage.removeItem('cp:extracted');
+
+  let data;
+  try { data = JSON.parse(raw); } catch(e) { return; }
+
+  const metrics = data.metrics || {};
+  const org = data.orgInfo || {};
+
+  if (org.orgName) document.getElementById('orgName').value = org.orgName;
+  if (org.ein) document.getElementById('ein').value = org.ein;
+  if (org.fyEnd) document.getElementById('fyEnd').value = org.fyEnd;
+
+  const docTypes = (data.documents || []).map(d => d.docType);
+  let dataSource = '';
+  if (docTypes.includes('audited')) dataSource = docTypes.length > 1 ? 'mixed' : 'audited';
+  else if (docTypes.includes('reviewed')) dataSource = docTypes.length > 1 ? 'mixed' : 'reviewed';
+  else if (docTypes.includes('990')) dataSource = docTypes.length > 1 ? 'mixed' : '990';
+  else if (docTypes.includes('internal')) dataSource = 'internal';
+  if (dataSource) {
+    const el = document.getElementById('dataSource');
+    if (el) { el.value = dataSource; updateConfidence(); }
+  }
+
+  const notes = [];
+  (data.documents || []).forEach(d => {
+    const label = { audited: 'Audited Financials', reviewed: 'Reviewed Financials', '990': 'Form 990', internal: 'Internal Statements', other: 'Document' }[d.docType] || d.docType;
+    notes.push(`${label}: ${d.filename}${d.fiscalYearsCovered?.length ? ' (FY ' + d.fiscalYearsCovered.join(', ') + ')' : ''}`);
+  });
+  Object.values(metrics).forEach(m => { if (m.note) notes.push(m.note); });
+  if (notes.length) {
+    const el = document.getElementById('sourceNotes');
+    if (el) el.value = notes.join(' · ');
+  }
+
+  const threeYear = ['rev', 'exp', 'cash'];
+  Object.entries(metrics).forEach(([key, m]) => {
+    if (threeYear.includes(key)) {
+      if (m.year0 !== undefined) setFieldValue(key + '0', m.year0);
+      if (m.year1 !== undefined) setFieldValue(key + '1', m.year1);
+      if (m.year2 !== undefined) setFieldValue(key + '2', m.year2);
+    } else {
+      if (m.year0 !== undefined) setFieldValue(key + '0', m.year0);
+    }
+  });
+
+  const docCheckMap = { audited: 'doc_audit', '990': 'doc_990' };
+  (data.documents || []).forEach(d => {
+    const checkboxId = docCheckMap[d.docType];
+    if (checkboxId) {
+      const el = document.getElementById(checkboxId);
+      if (el) el.checked = true;
+    }
+  });
+
+  recalc();
+  if (typeof formatAllFields === 'function') formatAllFields();
+}
+
+function setFieldValue(elId, value) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.value = value;
+  el.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
 // g() is overridden by currency.js to handle formatted values
