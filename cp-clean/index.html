@@ -8,251 +8,46 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect width='44' height='44' rx='10' fill='%231A6EB5'/><circle cx='17' cy='22' r='10' stroke='white' stroke-width='1.8' fill='rgba(255,255,255,0.1)'/><circle cx='27' cy='22' r='10' stroke='rgba(255,255,255,0.5)' stroke-width='1.8' fill='rgba(255,255,255,0.05)'/><path d='M22 13.2C19 16 19 28 22 30.8C25 28 25 16 22 13.2Z' fill='white'/></svg>">
 <style>
   .hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-    padding: 4px;
-    background: none;
-    border: none;
-    flex-shrink: 0;
+    display: none; flex-direction: column; gap: 5px; cursor: pointer;
+    padding: 4px; background: none; border: none; flex-shrink: 0;
   }
-  .hamburger span {
-    display: block;
-    width: 22px;
-    height: 2px;
-    background: rgba(255,255,255,0.8);
-    border-radius: 2px;
-    transition: all 0.25s;
-  }
+  .hamburger span { display: block; width: 22px; height: 2px; background: rgba(255,255,255,0.8); border-radius: 2px; transition: all 0.25s; }
   .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   .hamburger.open span:nth-child(2) { opacity: 0; }
   .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
   .nav-overlay {
-    display: none;
-    position: fixed;
-    top: 56px;
-    left: 0; right: 0; bottom: 0;
-    background: rgba(11,37,69,0.97);
-    backdrop-filter: blur(12px);
-    z-index: 99;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 28px;
-    opacity: 0;
-    transition: opacity 0.25s;
+    display: none; position: fixed; top: 56px; left: 0; right: 0; bottom: 0;
+    background: rgba(11,37,69,0.97); backdrop-filter: blur(12px); z-index: 99;
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 28px; opacity: 0; transition: opacity 0.25s;
   }
   .nav-overlay.open { opacity: 1; }
-
-  .nav-overlay a {
-    font-size: 22px;
-    font-weight: 700;
-    color: white;
-    text-decoration: none;
-    letter-spacing: -0.5px;
-    font-family: 'Manrope', sans-serif;
-  }
+  .nav-overlay a { font-size: 22px; font-weight: 700; color: white; text-decoration: none; letter-spacing: -0.5px; font-family: 'Manrope', sans-serif; }
   .nav-overlay a:hover { color: #4DA6E8; }
-
-  .nav-overlay .overlay-email {
-    font-size: 13px;
-    color: rgba(255,255,255,0.35);
-    font-family: 'Manrope', sans-serif;
-    margin-top: -8px;
-  }
-
-  .nav-overlay .overlay-signout {
-    font-size: 15px;
-    color: rgba(255,255,255,0.55);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 10px;
-    padding: 12px 28px;
-    background: none;
-    font-family: 'Manrope', sans-serif;
-    font-weight: 600;
-    cursor: pointer;
-    transition: color 0.15s, border-color 0.15s;
-  }
-  .nav-overlay .overlay-signout:hover {
-    color: rgba(255,255,255,0.85);
-    border-color: rgba(255,255,255,0.4);
-  }
+  .nav-overlay .overlay-email { font-size: 13px; color: rgba(255,255,255,0.35); font-family: 'Manrope', sans-serif; margin-top: -8px; }
+  .nav-overlay .overlay-signout { font-size: 15px; color: rgba(255,255,255,0.55); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 12px 28px; background: none; font-family: 'Manrope', sans-serif; font-weight: 600; cursor: pointer; transition: color 0.15s, border-color 0.15s; }
+  .nav-overlay .overlay-signout:hover { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.4); }
 
   @media (max-width: 640px) {
     .hamburger { display: flex; }
     .nav-links { display: none !important; }
   }
 
-  /* ── Nav user display ── */
-  .nav-divider {
-    width: 1px;
-    height: 16px;
-    background: rgba(255,255,255,0.15);
-  }
-  .nav-user {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .nav-user-avatar {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: #4DA6E8;
-    color: #0B2545;
-    font-size: 11px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .nav-user-email {
-    color: rgba(255,255,255,0.75) !important;
-    font-size: 13px;
-    font-weight: 500;
-    max-width: 160px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  #navLinks {
-    gap: 10px;
-  }
-  .btn-signout {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: rgba(255,255,255,0.7);
-    font-size: 12px;
-    font-weight: 600;
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 6px;
-    padding: 5px 10px;
-    background: none;
-    font-family: 'Manrope', sans-serif;
-    cursor: pointer;
-    transition: color 0.15s, border-color 0.15s;
-    flex-shrink: 0;
-  }
-  .btn-signout:hover {
-    color: rgba(255,255,255,0.95);
-    border-color: rgba(255,255,255,0.4);
-  }
-  .btn-signout svg {
-    width: 14px;
-    height: 14px;
-  }
+  .nav-divider { width: 1px; height: 16px; background: rgba(255,255,255,0.15); }
+  .nav-user { display: flex; align-items: center; gap: 6px; }
+  .nav-user-avatar { width: 24px; height: 24px; border-radius: 50%; background: #4DA6E8; color: #0B2545; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .nav-user-email { color: rgba(255,255,255,0.75) !important; font-size: 13px; font-weight: 500; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #navLinks { gap: 10px; }
+  .btn-signout { display: flex; align-items: center; gap: 5px; color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 600; border: 1px solid rgba(255,255,255,0.25); border-radius: 6px; padding: 5px 10px; background: none; font-family: 'Manrope', sans-serif; cursor: pointer; transition: color 0.15s, border-color 0.15s; flex-shrink: 0; }
+  .btn-signout:hover { color: rgba(255,255,255,0.95); border-color: rgba(255,255,255,0.4); }
+  .btn-signout svg { width: 14px; height: 14px; }
 
-  /* ── Header button tooltips ── */
-  .tip-target {
-    position: relative;
-  }
-  .tip-target .header-tip {
-    display: none;
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    width: 220px;
-    background: #0B2545;
-    color: #E5E7EB;
-    font-size: 12px;
-    line-height: 1.6;
-    font-weight: 400;
-    border-radius: 8px;
-    padding: 10px 12px;
-    z-index: 50;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    text-align: left;
-  }
-  .tip-target .header-tip::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    right: 16px;
-    width: 10px;
-    height: 10px;
-    background: #0B2545;
-    transform: rotate(45deg);
-    border-radius: 2px;
-  }
-  .tip-target:hover .header-tip {
-    display: block;
-  }
-  @media (max-width: 640px) {
-    .tip-target .header-tip { display: none !important; }
-  }
-
-  /* ── Extraction modal: upload zone + file list (matches assessment.html) ── */
-  .upload-zone {
-    border: 2px dashed #D1D5DB;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-    background: #FAFAFA;
-    position: relative;
-  }
-  .upload-zone:hover, .upload-zone.dragover {
-    border-color: #1A6EB5;
-    background: #F0F6FF;
-  }
-  .upload-zone input[type="file"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-  }
-  .file-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #F9FAFB;
-    border: 1px solid #E5E7EB;
-    border-radius: 6px;
-    padding: 8px 10px;
-    font-size: 12px;
-  }
-  .file-item.uploaded { border-color: #2EAD77; }
-  .file-item-name {
-    flex: 1;
-    font-weight: 500;
-    color: #111827;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .file-item-size { font-size: 11px; color: #9CA3AF; flex-shrink: 0; }
-  .file-item-remove {
-    background: none; border: none; cursor: pointer;
-    color: #9CA3AF; padding: 2px; font-size: 15px; flex-shrink: 0; line-height: 1;
-  }
-  .file-item-remove:hover { color: #EF4444; }
-
-  /* ── Confidence pills (matches assessment.html) ── */
-  .confidence-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    padding: 3px 9px;
-    border-radius: 20px;
-    white-space: nowrap;
-  }
-  .conf-high   { background: rgba(46,173,119,0.18); color: #2EAD77; }
-  .conf-medium { background: rgba(77,166,232,0.18); color: #1A6EB5; }
-  .conf-low    { background: rgba(107,114,128,0.15); color: #6B7280; }
-  .conf-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-  }
+  .tip-target { position: relative; }
+  .tip-target .header-tip { display: none; position: absolute; top: calc(100% + 8px); right: 0; width: 220px; background: #0B2545; color: #E5E7EB; font-size: 12px; line-height: 1.6; font-weight: 400; border-radius: 8px; padding: 10px 12px; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.15); text-align: left; }
+  .tip-target .header-tip::before { content: ''; position: absolute; top: -5px; right: 16px; width: 10px; height: 10px; background: #0B2545; transform: rotate(45deg); border-radius: 2px; }
+  .tip-target:hover .header-tip { display: block; }
+  @media (max-width: 640px) { .tip-target .header-tip { display: none !important; } }
 </style>
 </head>
 <body style="display:none">
@@ -283,7 +78,6 @@
   </button>
 </nav>
 
-<!-- Mobile overlay nav -->
 <div class="nav-overlay" id="navOverlay">
   <a href="/index" onclick="closeNav()">Dashboard</a>
   <a href="/assessment" onclick="closeNav()">+ New Assessment</a>
@@ -300,14 +94,7 @@
     <div style="display:flex;gap:10px;align-items:center;">
       <div class="tip-target">
         <a href="/assessment" class="btn-primary">+ New Assessment</a>
-        <div class="header-tip">Start a new financial health assessment by entering an organization's data yourself.</div>
-      </div>
-      <div class="tip-target">
-        <button class="btn-primary" style="background:#0B2545" onclick="openExtractModal()">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-1px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          Create from Documents
-        </button>
-        <div class="header-tip">Upload a Form 990, audited financials, or internal statements — Claude reads them and pre-fills a new assessment for you to review.</div>
+        <div class="header-tip">Start a new assessment. You can auto-fill from a 990 or audited financials directly on the assessment page.</div>
       </div>
       <div class="tip-target">
         <button class="btn-intake-green" onclick="copyIntakeLink()">
@@ -339,7 +126,7 @@
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#E6F1FB"/><path d="M12 20h16M12 14h16M12 26h10" stroke="#1A6EB5" stroke-width="1.5" stroke-linecap="round"/></svg>
       </div>
       <div class="empty-title">No assessments yet</div>
-      <div class="empty-desc">Click "New Assessment" to get started.</div>
+      <div class="empty-desc">Click "+ New Assessment" to get started. You can upload a 990 or financial statements to auto-fill the form.</div>
       <a href="/assessment" class="btn-primary" style="display:inline-flex;margin-top:1rem">Start your first assessment</a>
     </div>
     <div id="noResults" class="empty-state" style="display:none">
@@ -363,69 +150,8 @@
   </div>
 </main>
 
-<!-- ════════════════ Create from Documents Modal ════════════════ -->
-<div id="extractModal" style="display:none;position:fixed;inset:0;background:rgba(11,37,69,0.5);z-index:200;align-items:center;justify-content:center;padding:1rem">
-  <div style="background:white;border-radius:14px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;padding:1.75rem">
-
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem">
-      <div>
-        <h2 style="font-size:20px;font-weight:800;color:#0B2545;margin:0">Create from Documents</h2>
-        <p style="font-size:13px;color:#6B7280;margin-top:4px">Upload a Form 990, audited financials, or internal statements. Claude will extract the financial data and pre-fill a new assessment for your review.</p>
-      </div>
-      <button onclick="closeExtractModal()" style="background:none;border:none;font-size:22px;color:#9CA3AF;cursor:pointer;line-height:1;padding:0 0 0 12px">×</button>
-    </div>
-
-    <!-- Upload area -->
-    <div id="extractUploadArea">
-      <div class="upload-zone" id="extractUploadZone"
-        ondragover="extractHandleDragOver(event)"
-        ondragleave="extractHandleDragLeave(event)"
-        ondrop="extractHandleDrop(event)"
-        style="padding:1.5rem">
-        <input type="file" id="extractFileInput" multiple accept=".pdf" onchange="extractHandleSelect(event)">
-        <div style="display:flex;align-items:center;gap:10px;justify-content:center">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          <span style="font-size:13px;color:#6B7280">Drop PDFs or <span style="color:#1A6EB5;font-weight:600">browse</span> — up to 5 files, 10MB each</span>
-        </div>
-      </div>
-
-      <div id="extractFileList" style="margin-top:10px;display:flex;flex-direction:column;gap:6px"></div>
-
-      <div id="extractError" style="display:none;margin-top:12px;font-size:13px;color:#EF4444;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:10px 12px"></div>
-
-      <div style="margin-top:1.25rem;display:flex;gap:10px;justify-content:flex-end">
-        <button class="btn-ghost" onclick="closeExtractModal()">Cancel</button>
-        <button class="btn-primary" id="extractRunBtn" onclick="runExtraction()" disabled>Extract Data</button>
-      </div>
-    </div>
-
-    <!-- Results area -->
-    <div id="extractResults" style="display:none">
-      <div style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6B7280;margin-bottom:8px">Detected Organization</div>
-      <div id="extractOrgSummary" style="margin-bottom:1.25rem;font-size:14px"></div>
-
-      <div style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6B7280;margin-bottom:8px">Documents Identified</div>
-      <div id="extractDocsSummary" style="display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem"></div>
-
-      <div style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6B7280;margin-bottom:8px">Extracted Financial Data</div>
-      <div id="extractMetricsTable" style="margin-bottom:1.25rem"></div>
-
-      <div style="font-size:12px;color:#6B7280;margin-bottom:1rem">
-        You'll be able to review and edit every value before saving.
-      </div>
-
-      <div style="display:flex;gap:10px;justify-content:flex-end">
-        <button class="btn-ghost" onclick="closeExtractModal()">Cancel</button>
-        <button class="btn-primary" onclick="useExtractedData()">Use This Data →</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
 <script src="js/auth.js"></script>
 <script src="js/db.js"></script>
-<script src="js/extract.js"></script>
 <script>
   function toggleNav() {
     const btn = document.getElementById('hamburger');
@@ -445,7 +171,6 @@
     document.body.style.overflow = '';
   }
 
-  // Close nav when clicking outside
   document.addEventListener('click', function(e) {
     const overlay = document.getElementById('navOverlay');
     const hamburger = document.getElementById('hamburger');
@@ -454,7 +179,6 @@
     }
   });
 
-  // Auth guard — runs before dashboard.js initializes
   (async () => {
     const session = await AUTH.requireAuth();
     if (!session) return;
@@ -465,7 +189,6 @@
       document.getElementById('overlayEmail').textContent = user.email;
       document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
     }
-    // Now safe to load dashboard
     const s = document.createElement('script');
     s.src = 'js/dashboard.js';
     document.body.appendChild(s);
