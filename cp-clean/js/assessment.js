@@ -21,21 +21,31 @@ window.addEventListener('DOMContentLoaded', () => {
   const fromExtract = params.get('fromExtract');
 
   if (id && fromExtract) {
-    loadFromDB(id).then(() => populateFromExtraction());
+    // Dashboard "Review Extracted Data" path — load record then overlay extraction
+    loadFromDB(id).then(() => {
+      const raw = sessionStorage.getItem('cp:extracted');
+      if (raw) {
+        sessionStorage.removeItem('cp:extracted');
+        try {
+          const data = JSON.parse(raw);
+          // applyExtractedData is defined in assessment.html inline script
+          if (typeof applyExtractedData === 'function') applyExtractedData(data);
+        } catch(e) { console.warn('Could not apply extracted data:', e); }
+      }
+    });
   } else if (id) {
     loadFromDB(id);
-  } else if (fromExtract) {
-    populateFromExtraction();
   }
   recalc();
 
-  // Hook dirty tracking onto all inputs, selects, textareas
+  // Hook dirty tracking onto all inputs after a short delay
+  // (so populateForm on load doesn't immediately trigger dirty)
   setTimeout(() => {
     document.querySelectorAll('input, select, textarea').forEach(el => {
       el.addEventListener('input', markDirty);
       el.addEventListener('change', markDirty);
     });
-  }, 500); // slight delay so populateForm doesn't immediately mark dirty on load
+  }, 500);
 });
 
 async function loadFromDB(id) {
@@ -43,92 +53,6 @@ async function loadFromDB(id) {
     const data = await DB.getAssessment(id);
     if (data) { editingId = id; populateForm(data); }
   } catch(e) { console.error('Load error:', e); }
-}
-
-// ── Extraction (auto-fill from documents) ───────────────────────────────────
-function populateFromExtraction() {
-  const raw = sessionStorage.getItem('cp:extracted');
-  if (!raw) return;
-  sessionStorage.removeItem('cp:extracted');
-
-  let data;
-  try { data = JSON.parse(raw); } catch(e) { return; }
-
-  const metrics = data.metrics || {};
-  const org = data.orgInfo || {};
-
-  if (org.orgName && !document.getElementById('orgName').value) document.getElementById('orgName').value = org.orgName;
-  if (org.ein && !document.getElementById('ein').value) document.getElementById('ein').value = org.ein;
-  if (org.fyEnd && !document.getElementById('fyEnd').value) document.getElementById('fyEnd').value = org.fyEnd;
-
-  const docTypes = (data.documents || []).map(d => d.docType);
-  let dataSource = '';
-  if (docTypes.includes('audited')) dataSource = docTypes.length > 1 ? 'mixed' : 'audited';
-  else if (docTypes.includes('reviewed')) dataSource = docTypes.length > 1 ? 'mixed' : 'reviewed';
-  else if (docTypes.includes('990')) dataSource = docTypes.length > 1 ? 'mixed' : '990';
-  else if (docTypes.includes('internal')) dataSource = 'internal';
-  if (dataSource) {
-    const el = document.getElementById('dataSource');
-    if (el) { el.value = dataSource; updateConfidence(); }
-  }
-
-  const notes = [];
-  (data.documents || []).forEach(d => {
-    const label = { audited: 'Audited Financials', reviewed: 'Reviewed Financials', '990': 'Form 990', internal: 'Internal Statements', other: 'Document' }[d.docType] || d.docType;
-    notes.push(`${label}: ${d.filename}${d.fiscalYearsCovered?.length ? ' (FY ' + d.fiscalYearsCovered.join(', ') + ')' : ''}`);
-  });
-  Object.values(metrics).forEach(m => { if (m.note) notes.push(m.note); });
-  if (notes.length) {
-    const el = document.getElementById('sourceNotes');
-    if (el) {
-      const existing = el.value?.trim();
-      el.value = existing && !existing.startsWith('Submitted via self-report')
-        ? existing + ' · ' + notes.join(' · ')
-        : notes.join(' · ');
-    }
-  }
-
-  const threeYear = ['rev', 'exp', 'cash'];
-  Object.entries(metrics).forEach(([key, m]) => {
-    if (threeYear.includes(key)) {
-      if (m.year0 !== undefined) setFieldValue(key + '0', m.year0);
-      if (m.year1 !== undefined) setFieldValue(key + '1', m.year1);
-      if (m.year2 !== undefined) setFieldValue(key + '2', m.year2);
-    } else {
-      if (m.year0 !== undefined) setFieldValue(key + '0', m.year0);
-    }
-  });
-
-  const toprevMeta = metrics.toprev;
-  if (toprevMeta?.category) {
-    const catEl = document.getElementById('toprevCategory');
-    if (catEl) catEl.value = toprevMeta.category;
-    if (toprevMeta.categoryReason) {
-      const reasonEl = document.getElementById('toprevCategoryReason');
-      if (reasonEl) reasonEl.textContent = toprevMeta.categoryReason;
-    }
-    updateToprevCategoryUI();
-  }
-
-  const docCheckMap = { audited: 'doc_audit', '990': 'doc_990' };
-  (data.documents || []).forEach(d => {
-    const checkboxId = docCheckMap[d.docType];
-    if (checkboxId) {
-      const el = document.getElementById(checkboxId);
-      if (el) el.checked = true;
-    }
-  });
-
-  recalc();
-  if (typeof formatAllFields === 'function') formatAllFields();
-  markDirty(); // extraction populated fields — reviewer needs to save
-}
-
-function setFieldValue(elId, value) {
-  const el = document.getElementById(elId);
-  if (!el) return;
-  el.value = value;
-  el.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
 // g() is overridden by currency.js to handle formatted values
@@ -175,6 +99,13 @@ function setVal(id, val, pct) {
   if (isNaN(val) || !isFinite(val)) { el.textContent = '—'; return null; }
   el.textContent = pct ? val.toFixed(1) + '%' : val.toFixed(2);
   return val;
+}
+
+function setFieldValue(elId, value) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.value = value;
+  el.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
 // ── Tooltip toggle ──────────────────────────────────────────────────────────
@@ -387,7 +318,7 @@ async function generateSummary() {
   const toprevCategoryLabels = {
     institutional: 'a single institutional grant or contract (genuine concentration risk — if this funder/contract ends, this revenue is lost)',
     major_donor: 'a single major individual donor or family foundation gift (relationship-based concentration risk, though often more durable than institutional contracts)',
-    broad_base: 'an aggregate of contributions from a broad base of individual donors (NOT concentration risk — this reflects community support and funding flexibility, even though it represents a large share of revenue)'
+    broad_base: 'an aggregate of contributions from a broad base of individual donors (NOT a single concentrated source — this represents distributed community support)'
   };
   const toprevContext = toprevCategoryLabels[toprevCategory] || toprevCategoryLabels.broad_base;
   const toprevReason = document.getElementById('toprevCategoryReason')?.textContent?.trim();
@@ -437,7 +368,7 @@ IMPORTANT: Do NOT make a funding recommendation or state/imply whether this orga
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     textDiv.textContent = data.result;
-    markDirty(); // narrative generated — prompt to save
+    markDirty();
   } catch(e) {
     textDiv.textContent = 'Error: ' + e.message;
   }
@@ -488,7 +419,6 @@ function populateForm(d) {
   recalc();
   if (typeof formatAllFields === 'function') formatAllFields();
   loadExistingFiles(d.id);
-  // Mark clean after load completes — form is in sync with saved state
   setTimeout(markClean, 600);
 }
 
@@ -496,7 +426,7 @@ async function loadExistingFiles(assessmentId) {
   if (!assessmentId) return;
   try {
     const token = await AUTH.getToken();
-    if (!token) { console.warn('No auth token for file list'); return; }
+    if (!token) return;
 
     const files = await DB.listFiles(assessmentId);
     const list = document.getElementById('fileList');
