@@ -388,7 +388,9 @@ Reviewer notes: ${notes} | Follow-up questions: ${qs}
 
 Paragraph 1: Overall financial health and strengths with specific numbers.
 Paragraph 2: Key risks and concerns referencing specific ratios. Apply the revenue source context above correctly.
-Paragraph 3: Clear recommendation and next steps. If data source reliability is lower (internal statements only or mixed), note appropriate caveats about confidence in the figures.`;
+Paragraph 3: Summarize the overall financial picture and surface anything the funder may want to explore further (e.g., questions worth asking, areas to watch, or context that could inform their decision). If data source reliability is lower (internal statements only or mixed), note appropriate caveats about confidence in the figures.
+
+IMPORTANT: Do NOT make a funding recommendation or state/imply whether this organization should or should not receive funding (e.g., do not say things like "recommend funding," "not selected for funding," "should be declined," or similar). CP's role is to surface what the financial data shows — the funding decision belongs entirely to the reviewer/funder, who has context (priorities, portfolio, strategic fit) this assessment does not have. A financially strong organization with low need for general operating support is not a basis for declining funding — funders often specifically seek out well-run organizations. Stick to describing the financial picture, not prescribing an outcome.`;
 
   const btn = document.getElementById('aiBtn');
   const resultDiv = document.getElementById('aiResult');
