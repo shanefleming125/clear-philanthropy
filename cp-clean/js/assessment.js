@@ -5,9 +5,15 @@ let editingId = null;
 window.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
-  if (id) {
+  const fromExtract = params.get('fromExtract');
+
+  if (id && fromExtract) {
+    // Reviewing a Pending Review record with extracted data ready —
+    // load the existing record first, then overlay extracted values.
+    loadFromDB(id).then(() => populateFromExtraction());
+  } else if (id) {
     loadFromDB(id);
-  } else if (params.get('fromExtract')) {
+  } else if (fromExtract) {
     populateFromExtraction();
   }
   recalc();
@@ -32,9 +38,10 @@ function populateFromExtraction() {
   const metrics = data.metrics || {};
   const org = data.orgInfo || {};
 
-  if (org.orgName) document.getElementById('orgName').value = org.orgName;
-  if (org.ein) document.getElementById('ein').value = org.ein;
-  if (org.fyEnd) document.getElementById('fyEnd').value = org.fyEnd;
+  // Org info — only fill if currently empty (don't overwrite org-submitted info)
+  if (org.orgName && !document.getElementById('orgName').value) document.getElementById('orgName').value = org.orgName;
+  if (org.ein && !document.getElementById('ein').value) document.getElementById('ein').value = org.ein;
+  if (org.fyEnd && !document.getElementById('fyEnd').value) document.getElementById('fyEnd').value = org.fyEnd;
 
   const docTypes = (data.documents || []).map(d => d.docType);
   let dataSource = '';
@@ -55,9 +62,16 @@ function populateFromExtraction() {
   Object.values(metrics).forEach(m => { if (m.note) notes.push(m.note); });
   if (notes.length) {
     const el = document.getElementById('sourceNotes');
-    if (el) el.value = notes.join(' · ');
+    if (el) {
+      const existing = el.value?.trim();
+      el.value = existing && !existing.startsWith('Submitted via self-report')
+        ? existing + ' · ' + notes.join(' · ')
+        : notes.join(' · ');
+    }
   }
 
+  // Extracted financial values overwrite the placeholder zeros from
+  // org-submitted records.
   const threeYear = ['rev', 'exp', 'cash'];
   Object.entries(metrics).forEach(([key, m]) => {
     if (threeYear.includes(key)) {
@@ -69,6 +83,7 @@ function populateFromExtraction() {
     }
   });
 
+  // Pre-check "Documents Received" based on detected doc types
   const docCheckMap = { audited: 'doc_audit', '990': 'doc_990' };
   (data.documents || []).forEach(d => {
     const checkboxId = docCheckMap[d.docType];
