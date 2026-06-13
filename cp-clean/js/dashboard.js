@@ -63,11 +63,38 @@ function renderTable(orgs) {
   const dotCls = { Low: 'dot-low', Moderate: 'dot-mod', High: 'dot-high' };
   const barColor = { Low: '#2EAD77', Moderate: '#D97706', High: '#E8472A' };
 
-  tbody.innerHTML = orgs.map(o => `
+  tbody.innerHTML = orgs.map(o => {
+    const isPending = o.recommendation === 'Pending Review' && o.status === 'submitted';
+    const hasExtraction = !!o.extractedData;
+
+    let actionCell = '';
+    if (o.is_sample) {
+      actionCell = '';
+    } else if (isPending && !hasExtraction) {
+      actionCell = `<button class="action-btn" style="background:#0B2545;color:white;border-color:#0B2545" onclick="event.stopPropagation();runAutoFill('${o.id}', this)">Run Auto-Fill</button>
+        <button class="action-btn" onclick="event.stopPropagation();deleteOrg('${o.id}', this)">Delete</button>`;
+    } else if (isPending && hasExtraction) {
+      actionCell = `<button class="action-btn" style="background:#1A6EB5;color:white;border-color:#1A6EB5" onclick="event.stopPropagation();reviewExtracted('${o.id}')">Review Extracted Data</button>
+        <button class="action-btn" onclick="event.stopPropagation();deleteOrg('${o.id}', this)">Delete</button>`;
+    } else {
+      actionCell = `<button class="action-btn" onclick="event.stopPropagation();deleteOrg('${o.id}', this)">Delete</button>`;
+    }
+
+    const pendingBadge = isPending
+      ? `<span style="font-size:10px;font-weight:700;background:#FEF3C7;color:#B45309;padding:2px 7px;border-radius:10px;vertical-align:middle;margin-left:6px">PENDING REVIEW</span>`
+      : '';
+
+    const autoFillNote = isPending && hasExtraction
+      ? ' · <span style="color:#2EAD77;font-size:11px">Auto-fill ready</span>'
+      : isPending && !hasExtraction && (o.docs?.length || o.sourceNotes?.includes('documents uploaded'))
+        ? ' · <span style="color:#6B7280;font-size:11px">Awaiting auto-fill</span>'
+        : '';
+
+    return `
     <tr onclick="window.location='/assessment?id=${o.id}'" style="cursor:pointer${o.is_sample ? ';opacity:0.85' : ''}">
       <td>
-        <div class="org-name">${o.orgName}${o.is_sample ? ' <span style="font-size:10px;font-weight:700;background:#E6F1FB;color:#1A6EB5;padding:2px 7px;border-radius:10px;vertical-align:middle;">SAMPLE</span>' : ''}</div>
-        <div class="org-fy">${o.fyEnd || ''}${o.status === 'submitted' ? ' · <span style="color:#1A6EB5;font-size:11px">Self-reported</span>' : ''}</div>
+        <div class="org-name">${o.orgName}${o.is_sample ? ' <span style="font-size:10px;font-weight:700;background:#E6F1FB;color:#1A6EB5;padding:2px 7px;border-radius:10px;vertical-align:middle;">SAMPLE</span>' : ''}${pendingBadge}</div>
+        <div class="org-fy">${o.fyEnd || ''}${o.status === 'submitted' ? ' · <span style="color:#1A6EB5;font-size:11px">Self-reported</span>' : ''}${autoFillNote}</div>
       </td>
       <td>
         <div class="score-pill">
@@ -80,8 +107,9 @@ function renderTable(orgs) {
       <td><span class="rec-badge ${recCls[o.recommendation] || 'rec-none'}">${o.recommendation || '—'}</span></td>
       <td style="color:#6B7280">${o.reviewer || o.contactName || '—'}</td>
       <td style="color:#6B7280">${o.reviewDate || (o.created_at || '').split('T')[0] || '—'}</td>
-      <td>${o.is_sample ? '' : `<button class="action-btn" onclick="event.stopPropagation();deleteOrg('${o.id}', this)">Delete</button>`}</td>
-    </tr>`).join('');
+      <td style="white-space:nowrap">${actionCell}</td>
+    </tr>`;
+  }).join('');
 
   // Update sort indicators
   document.querySelectorAll('.org-table th').forEach(th => {
@@ -144,4 +172,46 @@ async function deleteOrg(id, btn) {
 function copyIntakeLink() {
   const url = `${window.location.origin}/intake.html`;
   navigator.clipboard.writeText(url).then(() => alert('Intake link copied!\n\nSend this to the nonprofit:\n' + url));
+}
+
+// ── Auto-fill from already-uploaded documents (Pending Review records) ──────
+async function runAutoFill(id, btn) {
+  const originalText = btn.textContent;
+  btn.textContent = 'Reading documents...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('https://calm-forest-dfc5.shanefleming125.workers.dev/extract-stored', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ assessmentId: id })
+    });
+
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || 'Auto-fill failed');
+
+    // Save extraction results onto the record for the reviewer to use
+    const org = allOrgs.find(o => o.id === id);
+    if (org) {
+      org.extractedData = data;
+      await DB.saveAssessment(org);
+    }
+
+    filterTable();
+  } catch(e) {
+    alert('Auto-fill failed: ' + e.message + '\n\nYou can still open this record and enter data manually.');
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+}
+
+// ── Open an assessment with extracted data pre-applied ──────────────────────
+function reviewExtracted(id) {
+  const org = allOrgs.find(o => o.id === id);
+  if (!org || !org.extractedData) {
+    window.location = `/assessment?id=${id}`;
+    return;
+  }
+  sessionStorage.setItem('cp:extracted', JSON.stringify(org.extractedData));
+  window.location = `/assessment?id=${id}&fromExtract=1`;
 }
