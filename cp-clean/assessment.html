@@ -84,10 +84,7 @@
     user-select: none;
     transition: background 0.15s;
   }
-  .tip-icon:hover, .tip-icon.active {
-    background: #1A6EB5;
-    color: white;
-  }
+  .tip-icon:hover, .tip-icon.active { background: #1A6EB5; color: white; }
   .tip-bubble {
     display: none;
     position: absolute;
@@ -115,38 +112,10 @@
     transform: rotate(45deg);
     border-radius: 2px;
   }
-  .tip-source-row {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-  }
-  .tip-source-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: #9CA3AF;
-    margin-bottom: 2px;
-  }
-  .tip-source-item {
-    display: flex;
-    gap: 6px;
-    align-items: flex-start;
-    font-size: 11px;
-    color: #D1D5DB;
-  }
-  .tip-source-item .tip-badge {
-    flex-shrink: 0;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    padding: 1px 5px;
-    border-radius: 3px;
-    margin-top: 1px;
-  }
+  .tip-source-row { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); }
+  .tip-source-label { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #9CA3AF; margin-bottom: 2px; }
+  .tip-source-item { display: flex; gap: 6px; align-items: flex-start; font-size: 11px; color: #D1D5DB; }
+  .tip-source-item .tip-badge { flex-shrink: 0; font-size: 9px; font-weight: 700; letter-spacing: 0.04em; padding: 1px 5px; border-radius: 3px; margin-top: 1px; }
   .tip-badge.best { background: #2EAD77; color: white; }
   .tip-badge.alt  { background: #4DA6E8; color: white; }
   .tip-badge.last { background: #6B7280; color: white; }
@@ -163,130 +132,144 @@
     gap: 1rem;
     align-items: flex-end;
   }
-  .source-card .field-wrap {
-    margin-bottom: 0;
-    flex: 1 1 220px;
+  .source-card .field-wrap { margin-bottom: 0; flex: 1 1 220px; }
+  .source-card label { font-size: 11.5px; font-weight: 600; color: #374151; margin-bottom: 4px; display: block; }
+  .source-card select, .source-card input[type="text"] {
+    background: white; border: 1px solid #D1D5DB; border-radius: 6px;
+    padding: 7px 10px; font-size: 13px; width: 100%; color: #111827; font-family: inherit;
   }
-  .source-card label {
-    font-size: 11.5px;
-    font-weight: 600;
-    color: #374151;
-    margin-bottom: 4px;
-    display: block;
+  .source-card select:focus, .source-card input[type="text"]:focus {
+    outline: none; border-color: #1A6EB5; box-shadow: 0 0 0 3px rgba(26,110,181,0.12);
   }
-  .source-card select,
-  .source-card input[type="text"] {
-    background: white;
-    border: 1px solid #D1D5DB;
-    border-radius: 6px;
-    padding: 7px 10px;
-    font-size: 13px;
-    width: 100%;
-    color: #111827;
-    font-family: inherit;
-  }
-  .source-card select:focus,
-  .source-card input[type="text"]:focus {
-    outline: none;
-    border-color: #1A6EB5;
-    box-shadow: 0 0 0 3px rgba(26,110,181,0.12);
-  }
-  .source-hint {
-    font-size: 11px;
-    color: #6B7280;
-    margin-top: 3px;
-  }
+  .source-hint { font-size: 11px; color: #6B7280; margin-top: 3px; }
 
   /* ── Confidence indicator ── */
   .confidence-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    padding: 3px 9px;
-    border-radius: 20px;
-    margin-top: 5px;
-    white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em;
+    padding: 3px 9px; border-radius: 20px; margin-top: 5px; white-space: nowrap;
   }
   .conf-high   { background: rgba(46,173,119,0.18); color: #2EAD77; }
   .conf-medium { background: rgba(77,166,232,0.18); color: #1A6EB5; }
   .conf-low    { background: rgba(107,114,128,0.15); color: #6B7280; }
-  .conf-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-  }
+  .conf-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
-  /* ── Nav user display ── */
-  .nav-divider {
-    width: 1px;
-    height: 16px;
-    background: rgba(255,255,255,0.15);
-  }
-  .nav-user {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  /* ── Nav ── */
+  .nav-divider { width: 1px; height: 16px; background: rgba(255,255,255,0.15); }
+  .nav-user { display: flex; align-items: center; gap: 6px; }
   .nav-user-avatar {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: #4DA6E8;
-    color: #0B2545;
-    font-size: 11px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    width: 24px; height: 24px; border-radius: 50%; background: #4DA6E8;
+    color: #0B2545; font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
   .nav-user-email {
-    color: rgba(255,255,255,0.75) !important;
-    font-size: 13px;
-    font-weight: 500;
-    max-width: 160px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    color: rgba(255,255,255,0.75) !important; font-size: 13px; font-weight: 500;
+    max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .btn-signout {
+    display: flex; align-items: center; gap: 5px; color: rgba(255,255,255,0.7);
+    font-size: 12px; font-weight: 600; border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 6px; padding: 5px 10px; background: none;
+    font-family: 'Manrope', sans-serif; cursor: pointer;
+    transition: color 0.15s, border-color 0.15s; flex-shrink: 0;
+  }
+  .btn-signout:hover { color: rgba(255,255,255,0.95); border-color: rgba(255,255,255,0.4); }
+  .btn-signout svg { width: 14px; height: 14px; }
+  #navLinks { gap: 10px; }
+  @media (max-width: 640px) {
+    #navLinks .nav-divider, #navLinks .nav-user, #navLinks .btn-signout { display: none; }
+  }
+
+  /* ── Auto-fill card ── */
+  .autofill-card {
+    background: linear-gradient(135deg, #F0F6FF 0%, #EEF2FF 100%);
+    border: 1.5px solid #BFDBFE;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .autofill-header {
     display: flex;
     align-items: center;
-    gap: 5px;
-    color: rgba(255,255,255,0.7);
-    font-size: 12px;
-    font-weight: 600;
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 6px;
-    padding: 5px 10px;
-    background: none;
-    font-family: 'Manrope', sans-serif;
-    cursor: pointer;
-    transition: color 0.15s, border-color 0.15s;
-    flex-shrink: 0;
-  }
-  .btn-signout:hover {
-    color: rgba(255,255,255,0.95);
-    border-color: rgba(255,255,255,0.4);
-  }
-  .btn-signout svg {
-    width: 14px;
-    height: 14px;
-  }
-  #navLinks {
     gap: 10px;
+    margin-bottom: 0.75rem;
   }
-  @media (max-width: 640px) {
-    #navLinks .nav-divider,
-    #navLinks .nav-user,
-    #navLinks .btn-signout {
-      display: none;
-    }
+  .autofill-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: #1A6EB5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
+  .autofill-title { font-size: 14px; font-weight: 700; color: #0B2545; }
+  .autofill-sub { font-size: 12px; color: #6B7280; margin-top: 1px; }
+  .autofill-upload-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .autofill-zone {
+    flex: 1 1 280px;
+    border: 2px dashed #BFDBFE;
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .autofill-zone:hover, .autofill-zone.dragover { border-color: #1A6EB5; background: #F8FBFF; }
+  .autofill-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .autofill-zone-text { font-size: 13px; color: #6B7280; }
+  .autofill-zone-text span { color: #1A6EB5; font-weight: 600; }
+  .autofill-btn {
+    flex-shrink: 0;
+    background: #0B2545; color: white;
+    border: none; border-radius: 8px;
+    padding: 10px 20px; font-size: 13px; font-weight: 700;
+    cursor: pointer; font-family: 'Manrope', sans-serif;
+    transition: background 0.15s; white-space: nowrap;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .autofill-btn:hover { background: #1A3A6B; }
+  .autofill-btn:disabled { background: #9CA3AF; cursor: not-allowed; }
+  .autofill-file-list { margin-top: 8px; display: flex; flex-direction: column; gap: 5px; }
+  .autofill-file-item {
+    display: flex; align-items: center; gap: 8px;
+    background: white; border: 1px solid #E5E7EB; border-radius: 6px;
+    padding: 6px 10px; font-size: 12px;
+  }
+  .autofill-file-name { flex: 1; font-weight: 500; color: #111827; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .autofill-file-size { font-size: 11px; color: #9CA3AF; flex-shrink: 0; }
+  .autofill-file-remove { background: none; border: none; cursor: pointer; color: #9CA3AF; font-size: 15px; line-height: 1; padding: 0 2px; }
+  .autofill-file-remove:hover { color: #EF4444; }
+  .autofill-status {
+    margin-top: 10px; font-size: 12.5px; border-radius: 8px;
+    padding: 9px 12px; display: none;
+  }
+  .autofill-status.loading { background: #F0F6FF; border: 1px solid #BFDBFE; color: #1A6EB5; }
+  .autofill-status.success { background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534; }
+  .autofill-status.error   { background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; }
+  .autofill-results {
+    margin-top: 10px; display: none;
+    background: white; border: 1px solid #E5E7EB; border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .autofill-results-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .autofill-doc-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600; padding: 3px 8px;
+    border-radius: 6px; background: #F0F6FF; color: #1A6EB5; border: 1px solid #BFDBFE;
+  }
+  .autofill-conf-tag {
+    font-size: 11px; font-weight: 600; padding: 3px 8px;
+    border-radius: 6px;
+  }
+  .conf-tag-high   { background: rgba(46,173,119,0.15); color: #2EAD77; }
+  .conf-tag-medium { background: rgba(77,166,232,0.15); color: #1A6EB5; }
+  .conf-tag-low    { background: rgba(107,114,128,0.12); color: #6B7280; }
 
   /* ── Reviewer Notes section ── */
   .reviewer-grid {
@@ -294,19 +277,8 @@
     grid-template-columns: 1fr 1fr 1fr;
     gap: 1.25rem;
   }
-  @media (max-width: 900px) {
-    .reviewer-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-  @media (max-width: 600px) {
-    .reviewer-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-  .reviewer-grid .field-wrap:last-child {
-    grid-column: span 1;
-  }
+  @media (max-width: 900px) { .reviewer-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .reviewer-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body style="display:none">
@@ -349,6 +321,36 @@
     </div>
   </div>
 
+  <!-- ── Auto-fill from Documents ── -->
+  <div class="autofill-card" id="autofillCard">
+    <div class="autofill-header">
+      <div class="autofill-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      </div>
+      <div>
+        <div class="autofill-title">Auto-fill from Documents</div>
+        <div class="autofill-sub">Upload a Form 990, audited financials, or financial statements — Claude reads them and fills in the fields below.</div>
+      </div>
+    </div>
+
+    <div class="autofill-upload-row">
+      <div class="autofill-zone" id="autofillZone"
+        ondragover="afDragOver(event)" ondragleave="afDragLeave(event)" ondrop="afDrop(event)">
+        <input type="file" id="afFileInput" multiple accept=".pdf" onchange="afFileSelect(event)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <div class="autofill-zone-text">Drop PDFs or <span>browse</span> — up to 5 files, 10MB each</div>
+      </div>
+      <button class="autofill-btn" id="afRunBtn" onclick="runAutoFill()" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Generate
+      </button>
+    </div>
+
+    <div class="autofill-file-list" id="afFileList"></div>
+    <div class="autofill-status" id="afStatus"></div>
+    <div class="autofill-results" id="afResults"></div>
+  </div>
+
   <div class="meta-grid">
     <div class="field-wrap"><label>Organization Name <span class="req">*</span></label><input type="text" id="orgName" placeholder="e.g. Eastside Family Resource Center" required></div>
     <div class="field-wrap"><label>EIN <span class="req">*</span></label><input type="text" id="ein" placeholder="e.g. 12-3456789" required></div>
@@ -384,258 +386,18 @@
       <table class="data-table">
         <thead><tr><th>Metric</th><th>Current Year</th><th>Prior Year</th><th>Two Years Ago</th></tr></thead>
         <tbody>
-
-          <tr>
-            <td>
-              <div class="tip-wrap">
-                Total Revenue
-                <span class="tip-icon" onclick="toggleTip('tip_rev')">?</span>
-                <div class="tip-bubble" id="tip_rev">
-                  <strong>Total Revenue</strong><br>All income received during the fiscal year — grants, donations, program fees, government contracts, investment income, and other sources combined.
-                  <div class="tip-source-row">
-                    <div class="tip-source-label">Where to find it</div>
-                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Activities, Total Revenue line</div>
-                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part VIII, Line 12 (Total Revenue)</div>
-                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Income statement or internal P&amp;L — top-line total</div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td><input type="text" id="rev0" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="rev1" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="rev2" placeholder="$0" oninput="recalc()"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="tip-wrap">
-                Total Expenses
-                <span class="tip-icon" onclick="toggleTip('tip_exp')">?</span>
-                <div class="tip-bubble" id="tip_exp">
-                  <strong>Total Expenses</strong><br>All money spent during the fiscal year across program, management, and fundraising activities.
-                  <div class="tip-source-row">
-                    <div class="tip-source-label">Where to find it</div>
-                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Activities, Total Expenses line</div>
-                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part IX, Line 25 (Total Functional Expenses)</div>
-                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Income statement or internal P&amp;L — total expenses line</div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td><input type="text" id="exp0" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="exp1" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="exp2" placeholder="$0" oninput="recalc()"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="tip-wrap">
-                Total Assets
-                <span class="tip-icon" onclick="toggleTip('tip_assets')">?</span>
-                <div class="tip-bubble" id="tip_assets">
-                  <strong>Total Assets</strong><br>Everything the organization owns or controls — cash, receivables, property, investments, and equipment at year-end.
-                  <div class="tip-source-row">
-                    <div class="tip-source-label">Where to find it</div>
-                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet (Statement of Financial Position), Total Assets</div>
-                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part X, Line 16 (Total Assets)</div>
-                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet — total assets line</div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td><input type="text" id="assets0" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="assets1" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="assets2" placeholder="$0" oninput="recalc()"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="tip-wrap">
-                Total Liabilities
-                <span class="tip-icon" onclick="toggleTip('tip_liab')">?</span>
-                <div class="tip-bubble" id="tip_liab">
-                  <strong>Total Liabilities</strong><br>Everything the organization owes — accounts payable, deferred revenue, loans, and other obligations at year-end.
-                  <div class="tip-source-row">
-                    <div class="tip-source-label">Where to find it</div>
-                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet, Total Liabilities</div>
-                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part X, Line 26 (Total Liabilities)</div>
-                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet — total liabilities line</div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td><input type="text" id="liab0" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="liab1" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="liab2" placeholder="$0" oninput="recalc()"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="tip-wrap">
-                Cash &amp; Cash Equivalents
-                <span class="tip-icon" onclick="toggleTip('tip_cash')">?</span>
-                <div class="tip-bubble" id="tip_cash">
-                  <strong>Cash &amp; Cash Equivalents</strong><br>Immediately accessible funds — checking, savings, money market accounts, and short-term instruments convertible to cash within 90 days.
-                  <div class="tip-source-row">
-                    <div class="tip-source-label">Where to find it</div>
-                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet, Cash and Cash Equivalents (top of asset section)</div>
-                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part X, Line 1 (Cash — non-interest bearing) + Line 2 (Savings and temporary cash investments)</div>
-                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet or bank statements at year-end</div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td><input type="text" id="cash0" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="cash1" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="cash2" placeholder="$0" oninput="recalc()"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="tip-wrap">
-                Current Assets
-                <span class="tip-icon" onclick="toggleTip('tip_currassets')">?</span>
-                <div class="tip-bubble" id="tip_currassets">
-                  <strong>Current Assets</strong><br>Assets expected to be converted to cash within 12 months — includes cash, receivables, prepaid expenses, and short-term investments.
-                  <div class="tip-source-row">
-                    <div class="tip-source-label">Where to find it</div>
-                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet, "Current Assets" subtotal (explicitly labeled)</div>
-                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990 does not label "current assets" — add Part X Lines 1–4 as an estimate (cash + receivables)</div>
-                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet — current assets subtotal, or ask the org directly</div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td><input type="text" id="currassets0" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="currassets1" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="currassets2" placeholder="$0" oninput="recalc()"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="tip-wrap">
-                Current Liabilities
-                <span class="tip-icon" onclick="toggleTip('tip_currliab')">?</span>
-                <div class="tip-bubble" id="tip_currliab">
-                  <strong>Current Liabilities</strong><br>Obligations due within 12 months — accounts payable, accrued expenses, short-term debt, and deferred revenue expected to be earned this year.
-                  <div class="tip-source-row">
-                    <div class="tip-source-label">Where to find it</div>
-                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet, "Current Liabilities" subtotal (explicitly labeled)</div>
-                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990 does not label "current liabilities" — use Part X Lines 17–18 as an estimate (accounts payable + deferred revenue)</div>
-                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet — current liabilities subtotal, or ask the org directly</div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td><input type="text" id="currliab0" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="currliab1" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="currliab2" placeholder="$0" oninput="recalc()"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="tip-wrap">
-                Program Service Expenses
-                <span class="tip-icon" onclick="toggleTip('tip_prog')">?</span>
-                <div class="tip-bubble" id="tip_prog">
-                  <strong>Program Service Expenses</strong><br>Money spent directly delivering the mission — staff, supplies, and overhead tied to programs and services. Excludes management and fundraising costs.
-                  <div class="tip-source-row">
-                    <div class="tip-source-label">Where to find it</div>
-                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Functional Expenses, Program Services column total</div>
-                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part IX, Line 25, Column B (Program Service Expenses)</div>
-                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal expense report — program or direct service costs</div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td><input type="text" id="prog0" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="prog1" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="prog2" placeholder="$0" oninput="recalc()"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="tip-wrap">
-                Management &amp; General Expenses
-                <span class="tip-icon" onclick="toggleTip('tip_mgmt')">?</span>
-                <div class="tip-bubble" id="tip_mgmt">
-                  <strong>Management &amp; General Expenses</strong><br>Overhead costs not tied to programs or fundraising — executive leadership, finance, HR, legal, IT, and general administration.
-                  <div class="tip-source-row">
-                    <div class="tip-source-label">Where to find it</div>
-                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Functional Expenses, Management &amp; General column total</div>
-                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part IX, Line 25, Column C (Management and General)</div>
-                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal expense report — admin or overhead cost category</div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td><input type="text" id="mgmt0" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="mgmt1" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="mgmt2" placeholder="$0" oninput="recalc()"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="tip-wrap">
-                Fundraising Expenses
-                <span class="tip-icon" onclick="toggleTip('tip_fund')">?</span>
-                <div class="tip-bubble" id="tip_fund">
-                  <strong>Fundraising Expenses</strong><br>Costs specifically incurred to solicit donations and grants — events, direct mail, donor stewardship, and development staff time allocated to fundraising.
-                  <div class="tip-source-row">
-                    <div class="tip-source-label">Where to find it</div>
-                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Functional Expenses, Fundraising column total</div>
-                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part IX, Line 25, Column D (Fundraising)</div>
-                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal expense report — development or fundraising cost category</div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td><input type="text" id="fund0" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="fund1" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="fund2" placeholder="$0" oninput="recalc()"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="tip-wrap">
-                Total Contributions (Donations)
-                <span class="tip-icon" onclick="toggleTip('tip_contrib')">?</span>
-                <div class="tip-bubble" id="tip_contrib">
-                  <strong>Total Contributions</strong><br>All philanthropic support received — individual donations, foundation grants, corporate giving, and government grants. Does not include earned revenue like program fees.
-                  <div class="tip-source-row">
-                    <div class="tip-source-label">Where to find it</div>
-                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Activities, Contributions and Grants line (or sum of all contribution types)</div>
-                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part VIII, Line 1h (Total Contributions, Gifts, Grants)</div>
-                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal revenue report — donations and grants received</div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td><input type="text" id="contrib0" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="contrib1" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="contrib2" placeholder="$0" oninput="recalc()"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="tip-wrap">
-                Largest Single Revenue Source
-                <span class="tip-icon" onclick="toggleTip('tip_toprev')">?</span>
-                <div class="tip-bubble" id="tip_toprev">
-                  <strong>Largest Single Revenue Source</strong><br>The single largest revenue line item — one funder, one contract, or one revenue stream. Used to measure concentration risk. If one source disappears, how exposed is the org?
-                  <div class="tip-source-row">
-                    <div class="tip-source-label">Where to find it</div>
-                    <div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Schedule of Grants and Contributions, or notes to financial statements listing major funders</div>
-                    <div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part VIII — scan Lines 1a–1f and other revenue lines to identify the largest single item. Schedule B lists major donors (&gt;$5K) but is not public.</div>
-                    <div class="tip-source-item"><span class="tip-badge last">OTHER</span> Ask the org directly: "What is your largest single source of revenue and how much did it represent last year?"</div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td><input type="text" id="toprev0" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="toprev1" placeholder="$0" oninput="recalc()"></td>
-            <td><input type="text" id="toprev2" placeholder="$0" oninput="recalc()"></td>
-          </tr>
+          <tr><td><div class="tip-wrap">Total Revenue<span class="tip-icon" onclick="toggleTip('tip_rev')">?</span><div class="tip-bubble" id="tip_rev"><strong>Total Revenue</strong><br>All income received during the fiscal year — grants, donations, program fees, government contracts, investment income, and other sources combined.<div class="tip-source-row"><div class="tip-source-label">Where to find it</div><div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Activities, Total Revenue line</div><div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part VIII, Line 12 (Total Revenue)</div><div class="tip-source-item"><span class="tip-badge last">OTHER</span> Income statement or internal P&amp;L — top-line total</div></div></div></div></td><td><input type="text" id="rev0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="rev1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="rev2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td><div class="tip-wrap">Total Expenses<span class="tip-icon" onclick="toggleTip('tip_exp')">?</span><div class="tip-bubble" id="tip_exp"><strong>Total Expenses</strong><br>All money spent during the fiscal year across program, management, and fundraising activities.<div class="tip-source-row"><div class="tip-source-label">Where to find it</div><div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Activities, Total Expenses line</div><div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part IX, Line 25 (Total Functional Expenses)</div><div class="tip-source-item"><span class="tip-badge last">OTHER</span> Income statement or internal P&amp;L — total expenses line</div></div></div></div></td><td><input type="text" id="exp0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="exp1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="exp2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td><div class="tip-wrap">Total Assets<span class="tip-icon" onclick="toggleTip('tip_assets')">?</span><div class="tip-bubble" id="tip_assets"><strong>Total Assets</strong><br>Everything the organization owns or controls — cash, receivables, property, investments, and equipment at year-end.<div class="tip-source-row"><div class="tip-source-label">Where to find it</div><div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet, Total Assets</div><div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part X, Line 16 (Total Assets)</div><div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet — total assets line</div></div></div></div></td><td><input type="text" id="assets0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="assets1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="assets2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td><div class="tip-wrap">Total Liabilities<span class="tip-icon" onclick="toggleTip('tip_liab')">?</span><div class="tip-bubble" id="tip_liab"><strong>Total Liabilities</strong><br>Everything the organization owes — accounts payable, deferred revenue, loans, and other obligations at year-end.<div class="tip-source-row"><div class="tip-source-label">Where to find it</div><div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet, Total Liabilities</div><div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part X, Line 26 (Total Liabilities)</div><div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet — total liabilities line</div></div></div></div></td><td><input type="text" id="liab0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="liab1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="liab2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td><div class="tip-wrap">Cash &amp; Cash Equivalents<span class="tip-icon" onclick="toggleTip('tip_cash')">?</span><div class="tip-bubble" id="tip_cash"><strong>Cash &amp; Cash Equivalents</strong><br>Immediately accessible funds — checking, savings, money market accounts, and short-term instruments convertible to cash within 90 days.<div class="tip-source-row"><div class="tip-source-label">Where to find it</div><div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet, Cash and Cash Equivalents</div><div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part X, Line 1 + Line 2</div><div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet or bank statements at year-end</div></div></div></div></td><td><input type="text" id="cash0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="cash1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="cash2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td><div class="tip-wrap">Current Assets<span class="tip-icon" onclick="toggleTip('tip_currassets')">?</span><div class="tip-bubble" id="tip_currassets"><strong>Current Assets</strong><br>Assets expected to be converted to cash within 12 months — includes cash, receivables, prepaid expenses, and short-term investments.<div class="tip-source-row"><div class="tip-source-label">Where to find it</div><div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet, "Current Assets" subtotal</div><div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990 does not label "current assets" — add Part X Lines 1–4 as an estimate</div><div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet — current assets subtotal</div></div></div></div></td><td><input type="text" id="currassets0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currassets1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currassets2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td><div class="tip-wrap">Current Liabilities<span class="tip-icon" onclick="toggleTip('tip_currliab')">?</span><div class="tip-bubble" id="tip_currliab"><strong>Current Liabilities</strong><br>Obligations due within 12 months — accounts payable, accrued expenses, short-term debt, and deferred revenue.<div class="tip-source-row"><div class="tip-source-label">Where to find it</div><div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Balance Sheet, "Current Liabilities" subtotal</div><div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990 does not label "current liabilities" — use Part X Lines 17–18 as an estimate</div><div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal balance sheet — current liabilities subtotal</div></div></div></div></td><td><input type="text" id="currliab0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currliab1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="currliab2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td><div class="tip-wrap">Program Service Expenses<span class="tip-icon" onclick="toggleTip('tip_prog')">?</span><div class="tip-bubble" id="tip_prog"><strong>Program Service Expenses</strong><br>Money spent directly delivering the mission — staff, supplies, and overhead tied to programs and services.<div class="tip-source-row"><div class="tip-source-label">Where to find it</div><div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Functional Expenses, Program Services column total</div><div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part IX, Line 25, Column B</div><div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal expense report — program or direct service costs</div></div></div></div></td><td><input type="text" id="prog0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="prog1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="prog2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td><div class="tip-wrap">Management &amp; General Expenses<span class="tip-icon" onclick="toggleTip('tip_mgmt')">?</span><div class="tip-bubble" id="tip_mgmt"><strong>Management &amp; General Expenses</strong><br>Overhead costs not tied to programs or fundraising — executive leadership, finance, HR, legal, IT, and general administration.<div class="tip-source-row"><div class="tip-source-label">Where to find it</div><div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Functional Expenses, Management &amp; General column total</div><div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part IX, Line 25, Column C</div><div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal expense report — admin or overhead cost category</div></div></div></div></td><td><input type="text" id="mgmt0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="mgmt1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="mgmt2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td><div class="tip-wrap">Fundraising Expenses<span class="tip-icon" onclick="toggleTip('tip_fund')">?</span><div class="tip-bubble" id="tip_fund"><strong>Fundraising Expenses</strong><br>Costs specifically incurred to solicit donations and grants — events, direct mail, donor stewardship, and development staff time.<div class="tip-source-row"><div class="tip-source-label">Where to find it</div><div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Functional Expenses, Fundraising column total</div><div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part IX, Line 25, Column D</div><div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal expense report — development or fundraising cost category</div></div></div></div></td><td><input type="text" id="fund0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="fund1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="fund2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td><div class="tip-wrap">Total Contributions (Donations)<span class="tip-icon" onclick="toggleTip('tip_contrib')">?</span><div class="tip-bubble" id="tip_contrib"><strong>Total Contributions</strong><br>All philanthropic support received — individual donations, foundation grants, corporate giving, and government grants.<div class="tip-source-row"><div class="tip-source-label">Where to find it</div><div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Statement of Activities, Contributions and Grants line</div><div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part VIII, Line 1h</div><div class="tip-source-item"><span class="tip-badge last">OTHER</span> Internal revenue report — donations and grants received</div></div></div></div></td><td><input type="text" id="contrib0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="contrib1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="contrib2" placeholder="$0" oninput="recalc()"></td></tr>
+          <tr><td><div class="tip-wrap">Largest Single Revenue Source<span class="tip-icon" onclick="toggleTip('tip_toprev')">?</span><div class="tip-bubble" id="tip_toprev"><strong>Largest Single Revenue Source</strong><br>The single largest revenue line item — one funder, one contract, or one revenue stream. Used to measure concentration risk.<div class="tip-source-row"><div class="tip-source-label">Where to find it</div><div class="tip-source-item"><span class="tip-badge best">BEST</span> Audited financials — Schedule of Grants and Contributions, or notes listing major funders</div><div class="tip-source-item"><span class="tip-badge alt">990</span> Form 990, Part VIII — scan Lines 1a–1f to identify the largest single item</div><div class="tip-source-item"><span class="tip-badge last">OTHER</span> Ask the org directly: "What is your largest single source of revenue?"</div></div></div></div></td><td><input type="text" id="toprev0" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="toprev1" placeholder="$0" oninput="recalc()"></td><td><input type="text" id="toprev2" placeholder="$0" oninput="recalc()"></td></tr>
 
           <tr>
             <td colspan="4" style="background:#FAFAFB;border-top:none">
@@ -653,7 +415,7 @@
                 </div>
                 <div style="flex:1 1 280px;position:relative;padding-top:22px">
                   <div class="tip-bubble" id="tip_toprevcat" style="top:auto;left:0">
-                    <strong>Why this matters</strong><br>A large revenue concentration isn't automatically a risk. One government contract or single major gift disappearing would hurt — but a broad base of many individual donors represents community support and gives the organization flexibility. This classification determines whether revenue concentration is treated as a risk factor in the score and narrative.
+                    <strong>Why this matters</strong><br>A large revenue concentration isn't automatically a risk. One government contract or single major gift disappearing would hurt — but a broad base of many individual donors represents community support and gives the organization flexibility.
                   </div>
                   <div id="toprevCategoryHint" style="font-size:12px;color:#6B7280;line-height:1.6"></div>
                   <div id="toprevCategoryReason" style="font-size:11px;color:#9CA3AF;margin-top:4px;font-style:italic"></div>
@@ -661,7 +423,6 @@
               </div>
             </td>
           </tr>
-
         </tbody>
       </table>
     </div>
@@ -696,7 +457,7 @@
     </div>
   </div>
 
-  <!-- Section 5: Documents Received — full width -->
+  <!-- Section 5: Documents Received -->
   <div class="card">
     <div class="sec-title">5. Documents Received</div>
     <div class="docs-grid">
@@ -709,18 +470,12 @@
       <label class="doc-item"><input type="checkbox" id="doc_minutes"> Board Minutes</label>
       <label class="doc-item"><input type="checkbox" id="doc_strategic"> Strategic Plan</label>
     </div>
-
-    <!-- File upload -->
     <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid #E5E7EB">
       <div style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6B7280;margin-bottom:10px">Uploaded Files</div>
       <div class="upload-zone" id="uploadZone"
-        ondragover="handleDragOver(event)"
-        ondragleave="handleDragLeave(event)"
-        ondrop="handleDrop(event)"
+        ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"
         style="padding:1.25rem">
-        <input type="file" id="fileInput" multiple
-          accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png"
-          onchange="handleFileSelect(event)">
+        <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png" onchange="handleFileSelect(event)">
         <div style="display:flex;align-items:center;gap:10px;justify-content:center">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           <span style="font-size:13px;color:#6B7280">Drop files or <span style="color:#1A6EB5;font-weight:600">browse</span> — PDF, Word, Excel, images up to 10MB</span>
@@ -730,7 +485,7 @@
     </div>
   </div>
 
-  <!-- Section 6: Reviewer Notes & Decision — full width, own card -->
+  <!-- Section 6: Reviewer Notes & Decision -->
   <div class="card">
     <div class="sec-title">6. Reviewer Notes &amp; Decision</div>
     <div class="reviewer-grid">
@@ -791,13 +546,183 @@
     }
   })();
 
-  // ── File uploads ────────────────────────────────────────────────────────────
+  // ── Auto-fill from documents ────────────────────────────────────────────────
+  let afFiles = [];
+
+  function afFormatBytes(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+    return (b/(1024*1024)).toFixed(1) + ' MB';
+  }
+
+  function afFileSelect(e) { afAddFiles(e.target.files); e.target.value = ''; }
+  function afDragOver(e) { e.preventDefault(); document.getElementById('autofillZone').classList.add('dragover'); }
+  function afDragLeave() { document.getElementById('autofillZone').classList.remove('dragover'); }
+  function afDrop(e) {
+    e.preventDefault();
+    document.getElementById('autofillZone').classList.remove('dragover');
+    afAddFiles(e.dataTransfer.files);
+  }
+
+  function afAddFiles(files) {
+    const max = 10 * 1024 * 1024;
+    Array.from(files).forEach(f => {
+      if (f.type !== 'application/pdf') { alert(`${f.name} — only PDF files are supported.`); return; }
+      if (f.size > max) { alert(`${f.name} exceeds the 10MB limit.`); return; }
+      if (afFiles.length >= 5) { alert('Maximum 5 files.'); return; }
+      if (!afFiles.find(x => x.name === f.name && x.size === f.size)) afFiles.push(f);
+    });
+    afRenderFiles();
+  }
+
+  function afRemoveFile(i) { afFiles.splice(i, 1); afRenderFiles(); }
+
+  function afRenderFiles() {
+    const list = document.getElementById('afFileList');
+    list.innerHTML = afFiles.map((f, i) => `
+      <div class="autofill-file-item">
+        <div class="autofill-file-name">${f.name}</div>
+        <div class="autofill-file-size">${afFormatBytes(f.size)}</div>
+        <button class="autofill-file-remove" onclick="afRemoveFile(${i})">×</button>
+      </div>
+    `).join('');
+    document.getElementById('afRunBtn').disabled = afFiles.length === 0;
+  }
+
+  function afSetStatus(msg, type) {
+    const el = document.getElementById('afStatus');
+    el.textContent = msg;
+    el.className = `autofill-status ${type}`;
+    el.style.display = msg ? 'block' : 'none';
+  }
+
+  async function runAutoFill() {
+    const btn = document.getElementById('afRunBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 0.8s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Reading...';
+    document.getElementById('afResults').style.display = 'none';
+    afSetStatus('Reading your documents — this may take 20–40 seconds for multi-page files...', 'loading');
+
+    try {
+      const formData = new FormData();
+      afFiles.forEach(f => formData.append('files', f));
+      const res = await fetch('https://calm-forest-dfc5.shanefleming125.workers.dev/extract', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || 'Extraction failed');
+
+      // Apply extracted data to form
+      applyExtractedData(data);
+
+      // Show results summary
+      showAfResults(data);
+      afSetStatus('✓ Fields populated from your documents. Review and edit before saving.', 'success');
+    } catch(e) {
+      afSetStatus('Error: ' + e.message + '. You can enter data manually below.', 'error');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Generate';
+    }
+  }
+
+  function applyExtractedData(data) {
+    const metrics = data.metrics || {};
+    const org = data.orgInfo || {};
+
+    // Org info — only fill if currently empty
+    if (org.orgName && !document.getElementById('orgName').value) document.getElementById('orgName').value = org.orgName;
+    if (org.ein && !document.getElementById('ein').value) document.getElementById('ein').value = org.ein;
+    if (org.fyEnd && !document.getElementById('fyEnd').value) document.getElementById('fyEnd').value = org.fyEnd;
+
+    // Primary Data Source
+    const docTypes = (data.documents || []).map(d => d.docType);
+    let dataSource = '';
+    if (docTypes.includes('audited')) dataSource = docTypes.length > 1 ? 'mixed' : 'audited';
+    else if (docTypes.includes('reviewed')) dataSource = docTypes.length > 1 ? 'mixed' : 'reviewed';
+    else if (docTypes.includes('990')) dataSource = docTypes.length > 1 ? 'mixed' : '990';
+    else if (docTypes.includes('internal')) dataSource = 'internal';
+    if (dataSource) {
+      const el = document.getElementById('dataSource');
+      if (el) { el.value = dataSource; updateConfidence(); }
+    }
+
+    // Source notes
+    const notes = [];
+    (data.documents || []).forEach(d => {
+      const label = { audited:'Audited Financials', reviewed:'Reviewed Financials', '990':'Form 990', internal:'Internal Statements', other:'Document' }[d.docType] || d.docType;
+      notes.push(`${label}: ${d.filename}${d.fiscalYearsCovered?.length ? ' (FY ' + d.fiscalYearsCovered.join(', ') + ')' : ''}`);
+    });
+    Object.values(metrics).forEach(m => { if (m.note) notes.push(m.note); });
+    if (notes.length) {
+      const el = document.getElementById('sourceNotes');
+      if (el) el.value = notes.join(' · ');
+    }
+
+    // Financial metrics
+    const threeYear = ['rev','exp','cash'];
+    Object.entries(metrics).forEach(([key, m]) => {
+      if (threeYear.includes(key)) {
+        if (m.year0 !== undefined) setFieldValue(key + '0', m.year0);
+        if (m.year1 !== undefined) setFieldValue(key + '1', m.year1);
+        if (m.year2 !== undefined) setFieldValue(key + '2', m.year2);
+      } else {
+        if (m.year0 !== undefined) setFieldValue(key + '0', m.year0);
+      }
+    });
+
+    // Revenue source category
+    const toprevMeta = metrics.toprev;
+    if (toprevMeta?.category) {
+      const catEl = document.getElementById('toprevCategory');
+      if (catEl) catEl.value = toprevMeta.category;
+      if (toprevMeta.categoryReason) {
+        const reasonEl = document.getElementById('toprevCategoryReason');
+        if (reasonEl) reasonEl.textContent = toprevMeta.categoryReason;
+      }
+      updateToprevCategoryUI();
+    }
+
+    // Pre-check documents received
+    const docCheckMap = { audited:'doc_audit', '990':'doc_990' };
+    (data.documents || []).forEach(d => {
+      const id = docCheckMap[d.docType];
+      if (id) { const el = document.getElementById(id); if (el) el.checked = true; }
+    });
+
+    recalc();
+    if (typeof formatAllFields === 'function') formatAllFields();
+    markDirty();
+  }
+
+  function showAfResults(data) {
+    const docs = data.documents || [];
+    const confMap = { high:'conf-tag-high', medium:'conf-tag-medium', low:'conf-tag-low' };
+    const confLabelMap = { high:'High Confidence', medium:'Medium Confidence', low:'Lower Confidence' };
+    const docTypeMap = { audited:'Audited Financials', reviewed:'Reviewed Financials', '990':'Form 990', internal:'Internal Statements', other:'Document' };
+
+    const overallConf = docs.some(d => d.docType === 'audited') ? 'high'
+      : docs.some(d => d.docType === 'reviewed' || d.docType === '990') ? 'medium' : 'low';
+
+    const resultsEl = document.getElementById('afResults');
+    resultsEl.style.display = 'block';
+    resultsEl.innerHTML = `
+      <div class="autofill-results-row">
+        <span style="font-size:12px;font-weight:600;color:#374151">Documents read:</span>
+        ${docs.map(d => `<span class="autofill-doc-tag">${docTypeMap[d.docType] || d.docType}</span>`).join('')}
+        <span class="autofill-conf-tag ${confMap[overallConf]}">${confLabelMap[overallConf]}</span>
+      </div>
+    `;
+  }
+
+  // ── Standard file uploads (Section 5) ──────────────────────────────────────
   let stagedFiles = [];
 
-  function formatBytes(bytes) {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  function formatBytes(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+    return (b/(1024*1024)).toFixed(1) + ' MB';
   }
 
   function handleFileSelect(e) { addFiles(e.target.files); e.target.value = ''; }
@@ -810,17 +735,17 @@
   }
 
   function addFiles(files) {
-    const maxSize = 10 * 1024 * 1024;
-    Array.from(files).forEach(file => {
-      if (file.size > maxSize) { alert(`${file.name} exceeds the 10MB limit.`); return; }
-      if (!stagedFiles.find(f => f.name === file.name && f.file.size === file.size)) {
-        stagedFiles.push({ file, name: file.name, status: 'pending' });
+    const max = 10 * 1024 * 1024;
+    Array.from(files).forEach(f => {
+      if (f.size > max) { alert(`${f.name} exceeds the 10MB limit.`); return; }
+      if (!stagedFiles.find(x => x.name === f.name && x.file.size === f.size)) {
+        stagedFiles.push({ file: f, name: f.name, status: 'pending' });
       }
     });
     renderFileList();
   }
 
-  function removeFile(index) { stagedFiles.splice(index, 1); renderFileList(); }
+  function removeFile(i) { stagedFiles.splice(i, 1); renderFileList(); }
 
   function renderFileList() {
     const list = document.getElementById('fileList');
@@ -839,12 +764,8 @@
     if (!assessmentId) return;
     for (let i = 0; i < stagedFiles.length; i++) {
       if (stagedFiles[i].status !== 'pending') continue;
-      try {
-        await DB.uploadFile(assessmentId, stagedFiles[i].file);
-        stagedFiles[i].status = 'done';
-      } catch(e) {
-        stagedFiles[i].status = 'error';
-      }
+      try { await DB.uploadFile(assessmentId, stagedFiles[i].file); stagedFiles[i].status = 'done'; }
+      catch(e) { stagedFiles[i].status = 'error'; }
       renderFileList();
     }
   }
@@ -858,5 +779,8 @@
     }
   });
 </script>
+<style>
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
 </body>
 </html>
