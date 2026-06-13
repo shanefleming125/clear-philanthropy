@@ -616,7 +616,30 @@
             <td><input type="text" id="toprev1" placeholder="$0" oninput="recalc()"></td>
             <td><input type="text" id="toprev2" placeholder="$0" oninput="recalc()"></td>
           </tr>
-
+<tr>
+            <td colspan="4" style="background:#FAFAFB;border-top:none">
+              <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-start;padding:0.5rem 0">
+                <div class="field-wrap" style="flex:0 0 260px;margin-bottom:0">
+                  <label style="font-size:11.5px;font-weight:600;color:#374151;margin-bottom:4px;display:block">
+                    Nature of Largest Revenue Source
+                    <span class="tip-icon" onclick="toggleTip('tip_toprevcat')" style="margin-left:4px">?</span>
+                  </label>
+                  <select id="toprevCategory" onchange="updateToprevCategoryUI()" style="background:white;border:1px solid #D1D5DB;border-radius:6px;padding:7px 10px;font-size:13px;width:100%;color:#111827;font-family:inherit">
+                    <option value="broad_base">Broad base of individual donors</option>
+                    <option value="major_donor">Single major donor / family foundation</option>
+                    <option value="institutional">Single institutional grant or contract</option>
+                  </select>
+                </div>
+                <div style="flex:1 1 280px;position:relative;padding-top:22px">
+                  <div class="tip-bubble" id="tip_toprevcat" style="top:auto;left:0">
+                    <strong>Why this matters</strong><br>A large revenue concentration isn't automatically a risk. One government contract or single major gift disappearing would hurt — but a broad base of many individual donors represents community support and gives the organization flexibility. This classification determines whether revenue concentration is treated as a risk factor in the score and narrative.
+                  </div>
+                  <div id="toprevCategoryHint" style="font-size:12px;color:#6B7280;line-height:1.6"></div>
+                  <div id="toprevCategoryReason" style="font-size:11px;color:#9CA3AF;margin-top:4px;font-style:italic"></div>
+                </div>
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
