@@ -107,6 +107,91 @@
   .file-status.done { color: #2EAD77; }
   .file-status.error { color: #EF4444; }
   .file-status.pending { color: #9CA3AF; }
+
+  /* ── Path choice ── */
+  .path-choice-card {
+    background: #F0F6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .path-choice-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0B2545;
+    margin-bottom: 6px;
+  }
+  .path-choice-sub {
+    font-size: 13px;
+    color: #374151;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+  .path-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .path-option {
+    flex: 1;
+    min-width: 220px;
+    background: white;
+    border: 2px solid #D1D5DB;
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    text-align: left;
+  }
+  .path-option:hover { border-color: #4DA6E8; }
+  .path-option.selected {
+    border-color: #1A6EB5;
+    box-shadow: 0 0 0 3px rgba(26,110,181,0.12);
+  }
+  .path-option-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .path-option-desc {
+    font-size: 12px;
+    color: #6B7280;
+    line-height: 1.5;
+  }
+  .path-option-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: #2EAD77;
+    color: white;
+    border-radius: 4px;
+    padding: 2px 7px;
+  }
+  .path-radio {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #D1D5DB;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-block;
+    position: relative;
+  }
+  .path-option.selected .path-radio {
+    border-color: #1A6EB5;
+  }
+  .path-option.selected .path-radio::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: #1A6EB5;
+    border-radius: 50%;
+  }
 </style>
 </head>
 <body>
@@ -123,7 +208,7 @@
   <div id="formView">
     <div style="text-align:center;padding:2rem 0 1.5rem">
       <div style="font-size:22px;font-weight:800;color:#111827;margin-bottom:8px">Financial Self-Report</div>
-      <div style="font-size:14px;color:#6B7280;max-width:480px;margin:0 auto">Please fill out your organization's financial information below. This helps us assess your financial health as part of our review process. If you're unsure about a field, tap the <strong>?</strong> icon for guidance.</div>
+      <div style="font-size:14px;color:#6B7280;max-width:480px;margin:0 auto">Please provide some basic information about your organization, then choose how you'd like to share your financial details below.</div>
     </div>
 
     <div class="card">
@@ -155,203 +240,255 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="sec-title">Financial Data — Current Year</div>
-      <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">Enter figures from your most recent completed fiscal year. All amounts in USD. Tap <strong>?</strong> next to any field if you need help finding the number.</p>
-      <div class="meta-grid">
-
-        <div class="field-wrap">
-          <div class="field-label-row">
-            <label>Total Revenue <span class="req">*</span></label>
-            <div style="position:relative;display:inline-block;">
-              <span class="tip-icon" onclick="toggleTip('tip_rev')">?</span>
-              <div class="tip-bubble" id="tip_rev">All money your organization received during the year — grants, donations, program fees, government funding, and any other income. This is your top-line total.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part VIII Line 12, or the top of your income statement labeled "Total Revenue."</div></div>
-            </div>
+    <!-- Path choice -->
+    <div class="path-choice-card">
+      <div class="path-choice-title">How would you like to provide your financial information?</div>
+      <div class="path-choice-sub">If you have your Form 990, audited financial statements, or recent financial statements on hand, uploading them is the fastest option — we'll pull the figures directly from your documents. If you don't have these readily available, you can enter the numbers yourself.</div>
+      <div class="path-options">
+        <div class="path-option" id="pathUpload" onclick="selectPath('upload')">
+          <div class="path-option-title">
+            <span class="path-radio"></span>
+            I have documents to upload
+            <span class="path-option-badge">Faster</span>
           </div>
-          <input type="number" id="rev0" placeholder="0">
+          <div class="path-option-desc">Upload your Form 990, audited financials, or recent statements. We'll extract the figures for you.</div>
         </div>
-
-        <div class="field-wrap">
-          <div class="field-label-row">
-            <label>Total Expenses <span class="req">*</span></label>
-            <div style="position:relative;display:inline-block;">
-              <span class="tip-icon" onclick="toggleTip('tip_exp')">?</span>
-              <div class="tip-bubble" id="tip_exp">Everything your organization spent during the year — staff, programs, rent, administration, and all other costs combined.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25, or the bottom of your income statement labeled "Total Expenses."</div></div>
-            </div>
+        <div class="path-option" id="pathManual" onclick="selectPath('manual')">
+          <div class="path-option-title">
+            <span class="path-radio"></span>
+            I'll enter figures manually
           </div>
-          <input type="number" id="exp0" placeholder="0">
+          <div class="path-option-desc">Don't have documents ready? Enter your financial figures directly, with guidance for each field.</div>
         </div>
-
-        <div class="field-wrap">
-          <div class="field-label-row">
-            <label>Total Assets</label>
-            <div style="position:relative;display:inline-block;">
-              <span class="tip-icon" onclick="toggleTip('tip_assets')">?</span>
-              <div class="tip-bubble" id="tip_assets">Everything your organization owns — cash, bank accounts, investments, equipment, and property, as of your fiscal year end.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part X Line 16, or your balance sheet labeled "Total Assets."</div></div>
-            </div>
-          </div>
-          <input type="number" id="assets0" placeholder="0">
-        </div>
-
-        <div class="field-wrap">
-          <div class="field-label-row">
-            <label>Total Liabilities</label>
-            <div style="position:relative;display:inline-block;">
-              <span class="tip-icon" onclick="toggleTip('tip_liab')">?</span>
-              <div class="tip-bubble" id="tip_liab">Everything your organization owes — unpaid bills, loans, deferred revenue, and any other obligations as of your fiscal year end.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part X Line 26, or your balance sheet labeled "Total Liabilities."</div></div>
-            </div>
-          </div>
-          <input type="number" id="liab0" placeholder="0">
-        </div>
-
-        <div class="field-wrap">
-          <div class="field-label-row">
-            <label>Cash &amp; Cash Equivalents</label>
-            <div style="position:relative;display:inline-block;">
-              <span class="tip-icon" onclick="toggleTip('tip_cash')">?</span>
-              <div class="tip-bubble" id="tip_cash">Money your organization can access immediately — checking accounts, savings accounts, and money market funds. Does not include investments or receivables.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part X Lines 1–2, or the top of your balance sheet under "Cash and Cash Equivalents."</div></div>
-            </div>
-          </div>
-          <input type="number" id="cash0" placeholder="0">
-        </div>
-
-        <div class="field-wrap">
-          <div class="field-label-row">
-            <label>Current Assets</label>
-            <div style="position:relative;display:inline-block;">
-              <span class="tip-icon" onclick="toggleTip('tip_currassets')">?</span>
-              <div class="tip-bubble" id="tip_currassets">Assets you expect to convert to cash within the next 12 months — includes cash, money owed to you (receivables), and prepaid expenses. If you're not sure, use your cash figure as an estimate.<div class="tip-where"><strong>Where to find it:</strong> Your audited balance sheet under "Current Assets." The Form 990 doesn't label these separately.</div></div>
-            </div>
-          </div>
-          <input type="number" id="currassets0" placeholder="0">
-        </div>
-
-        <div class="field-wrap">
-          <div class="field-label-row">
-            <label>Current Liabilities</label>
-            <div style="position:relative;display:inline-block;">
-              <span class="tip-icon" onclick="toggleTip('tip_currliab')">?</span>
-              <div class="tip-bubble" id="tip_currliab">Bills and obligations due within the next 12 months — accounts payable, accrued payroll, and short-term debt. If you're unsure, use your accounts payable figure as an estimate.<div class="tip-where"><strong>Where to find it:</strong> Your audited balance sheet under "Current Liabilities." The Form 990 doesn't label these separately.</div></div>
-            </div>
-          </div>
-          <input type="number" id="currliab0" placeholder="0">
-        </div>
-
-        <div class="field-wrap">
-          <div class="field-label-row">
-            <label>Program Service Expenses</label>
-            <div style="position:relative;display:inline-block;">
-              <span class="tip-icon" onclick="toggleTip('tip_prog')">?</span>
-              <div class="tip-bubble" id="tip_prog">Money spent directly delivering your programs and services — staff time, supplies, and costs tied to your mission. Does not include admin or fundraising.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25 Column B, or your income statement under "Program Expenses."</div></div>
-            </div>
-          </div>
-          <input type="number" id="prog0" placeholder="0">
-        </div>
-
-        <div class="field-wrap">
-          <div class="field-label-row">
-            <label>Management &amp; General Expenses</label>
-            <div style="position:relative;display:inline-block;">
-              <span class="tip-icon" onclick="toggleTip('tip_mgmt')">?</span>
-              <div class="tip-bubble" id="tip_mgmt">Overhead costs that keep the organization running — executive staff, finance, HR, IT, and general administration. Not directly tied to programs.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25 Column C, or your income statement under "Management and General."</div></div>
-            </div>
-          </div>
-          <input type="number" id="mgmt0" placeholder="0">
-        </div>
-
-        <div class="field-wrap">
-          <div class="field-label-row">
-            <label>Fundraising Expenses</label>
-            <div style="position:relative;display:inline-block;">
-              <span class="tip-icon" onclick="toggleTip('tip_fund')">?</span>
-              <div class="tip-bubble" id="tip_fund">Money spent raising money — events, mailings, grant writing staff time, and donor outreach. If your organization does no formal fundraising, enter 0.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25 Column D, or your income statement under "Fundraising Expenses."</div></div>
-            </div>
-          </div>
-          <input type="number" id="fund0" placeholder="0">
-        </div>
-
-        <div class="field-wrap">
-          <div class="field-label-row">
-            <label>Total Contributions (Donations)</label>
-            <div style="position:relative;display:inline-block;">
-              <span class="tip-icon" onclick="toggleTip('tip_contrib')">?</span>
-              <div class="tip-bubble" id="tip_contrib">All philanthropic support received — individual donations, foundation grants, corporate gifts, and government grants. Does not include earned revenue like program fees or service contracts.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part VIII Line 1h, or your income statement under "Contributions and Grants."</div></div>
-            </div>
-          </div>
-          <input type="number" id="contrib0" placeholder="0">
-        </div>
-
-        <div class="field-wrap">
-          <div class="field-label-row">
-            <label>Largest Single Revenue Source</label>
-            <div style="position:relative;display:inline-block;">
-              <span class="tip-icon" onclick="toggleTip('tip_toprev')">?</span>
-              <div class="tip-bubble" id="tip_toprev">The single largest source of revenue in the year — one funder, one government contract, or one revenue stream. For example, if your biggest grant was $150,000 from a foundation, enter that amount.<div class="tip-where"><strong>Where to find it:</strong> Review your revenue sources and identify the largest single one. You may need to look at your grant records or income statement line by line.</div></div>
-            </div>
-          </div>
-          <input type="number" id="toprev0" placeholder="0">
-        </div>
-
       </div>
     </div>
 
-    <div class="card">
-      <div class="sec-title">Prior Years (Optional But Helpful)</div>
-      <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">If you have last year's figures available, please include them. This helps us identify trends over time.</p>
-      <div style="margin-bottom:1rem">
-        <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:8px">Prior Year</div>
+    <!-- Upload path -->
+    <div id="uploadPathSection" style="display:none">
+      <div class="card">
+        <div class="sec-title">Upload Financial Documents</div>
+        <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">Upload your Form 990, audited or reviewed financial statements, or recent internal financial statements (PDF only). You can upload more than one document — for example, a 990 and an audit covering different years.</p>
+        <div class="upload-zone" id="uploadZoneDocs"
+          ondragover="handleDragOverDocs(event)"
+          ondragleave="handleDragLeaveDocs(event)"
+          ondrop="handleDropDocs(event)">
+          <input type="file" id="fileInputDocs" multiple
+            accept=".pdf"
+            onchange="handleFileSelectDocs(event)">
+          <div class="upload-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <div class="upload-label">Drop PDFs here or <span style="color:#1A6EB5">browse</span></div>
+          <div class="upload-hint">Form 990, audited financials, etc. — up to 5 files, 10MB each</div>
+        </div>
+        <div class="file-list" id="fileListDocs"></div>
+        <div id="extractStatus" style="display:none;margin-top:12px;font-size:13px;color:#1A6EB5;background:#F0F6FF;border:1px solid #BFDBFE;border-radius:8px;padding:10px 12px"></div>
+      </div>
+    </div>
+
+    <!-- Manual path -->
+    <div id="manualPathSection" style="display:none">
+      <div class="card">
+        <div class="sec-title">Financial Data — Current Year</div>
+        <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">Enter figures from your most recent completed fiscal year. All amounts in USD. Tap <strong>?</strong> next to any field if you need help finding the number.</p>
         <div class="meta-grid">
-          <div class="field-wrap"><label>Total Revenue</label><input type="number" id="rev1" placeholder="0"></div>
-          <div class="field-wrap"><label>Total Expenses</label><input type="number" id="exp1" placeholder="0"></div>
-          <div class="field-wrap"><label>Cash &amp; Equivalents</label><input type="number" id="cash1" placeholder="0"></div>
+
+          <div class="field-wrap">
+            <div class="field-label-row">
+              <label>Total Revenue <span class="req">*</span></label>
+              <div style="position:relative;display:inline-block;">
+                <span class="tip-icon" onclick="toggleTip('tip_rev')">?</span>
+                <div class="tip-bubble" id="tip_rev">All money your organization received during the year — grants, donations, program fees, government funding, and any other income. This is your top-line total.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part VIII Line 12, or the top of your income statement labeled "Total Revenue."</div></div>
+              </div>
+            </div>
+            <input type="number" id="rev0" placeholder="0">
+          </div>
+
+          <div class="field-wrap">
+            <div class="field-label-row">
+              <label>Total Expenses <span class="req">*</span></label>
+              <div style="position:relative;display:inline-block;">
+                <span class="tip-icon" onclick="toggleTip('tip_exp')">?</span>
+                <div class="tip-bubble" id="tip_exp">Everything your organization spent during the year — staff, programs, rent, administration, and all other costs combined.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25, or the bottom of your income statement labeled "Total Expenses."</div></div>
+              </div>
+            </div>
+            <input type="number" id="exp0" placeholder="0">
+          </div>
+
+          <div class="field-wrap">
+            <div class="field-label-row">
+              <label>Total Assets</label>
+              <div style="position:relative;display:inline-block;">
+                <span class="tip-icon" onclick="toggleTip('tip_assets')">?</span>
+                <div class="tip-bubble" id="tip_assets">Everything your organization owns — cash, bank accounts, investments, equipment, and property, as of your fiscal year end.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part X Line 16, or your balance sheet labeled "Total Assets."</div></div>
+              </div>
+            </div>
+            <input type="number" id="assets0" placeholder="0">
+          </div>
+
+          <div class="field-wrap">
+            <div class="field-label-row">
+              <label>Total Liabilities</label>
+              <div style="position:relative;display:inline-block;">
+                <span class="tip-icon" onclick="toggleTip('tip_liab')">?</span>
+                <div class="tip-bubble" id="tip_liab">Everything your organization owes — unpaid bills, loans, deferred revenue, and any other obligations as of your fiscal year end.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part X Line 26, or your balance sheet labeled "Total Liabilities."</div></div>
+              </div>
+            </div>
+            <input type="number" id="liab0" placeholder="0">
+          </div>
+
+          <div class="field-wrap">
+            <div class="field-label-row">
+              <label>Cash &amp; Cash Equivalents</label>
+              <div style="position:relative;display:inline-block;">
+                <span class="tip-icon" onclick="toggleTip('tip_cash')">?</span>
+                <div class="tip-bubble" id="tip_cash">Money your organization can access immediately — checking accounts, savings accounts, and money market funds. Does not include investments or receivables.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part X Lines 1–2, or the top of your balance sheet under "Cash and Cash Equivalents."</div></div>
+              </div>
+            </div>
+            <input type="number" id="cash0" placeholder="0">
+          </div>
+
+          <div class="field-wrap">
+            <div class="field-label-row">
+              <label>Current Assets</label>
+              <div style="position:relative;display:inline-block;">
+                <span class="tip-icon" onclick="toggleTip('tip_currassets')">?</span>
+                <div class="tip-bubble" id="tip_currassets">Assets you expect to convert to cash within the next 12 months — includes cash, money owed to you (receivables), and prepaid expenses. If you're not sure, use your cash figure as an estimate.<div class="tip-where"><strong>Where to find it:</strong> Your audited balance sheet under "Current Assets." The Form 990 doesn't label these separately.</div></div>
+              </div>
+            </div>
+            <input type="number" id="currassets0" placeholder="0">
+          </div>
+
+          <div class="field-wrap">
+            <div class="field-label-row">
+              <label>Current Liabilities</label>
+              <div style="position:relative;display:inline-block;">
+                <span class="tip-icon" onclick="toggleTip('tip_currliab')">?</span>
+                <div class="tip-bubble" id="tip_currliab">Bills and obligations due within the next 12 months — accounts payable, accrued payroll, and short-term debt. If you're unsure, use your accounts payable figure as an estimate.<div class="tip-where"><strong>Where to find it:</strong> Your audited balance sheet under "Current Liabilities." The Form 990 doesn't label these separately.</div></div>
+              </div>
+            </div>
+            <input type="number" id="currliab0" placeholder="0">
+          </div>
+
+          <div class="field-wrap">
+            <div class="field-label-row">
+              <label>Program Service Expenses</label>
+              <div style="position:relative;display:inline-block;">
+                <span class="tip-icon" onclick="toggleTip('tip_prog')">?</span>
+                <div class="tip-bubble" id="tip_prog">Money spent directly delivering your programs and services — staff time, supplies, and costs tied to your mission. Does not include admin or fundraising.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25 Column B, or your income statement under "Program Expenses."</div></div>
+              </div>
+            </div>
+            <input type="number" id="prog0" placeholder="0">
+          </div>
+
+          <div class="field-wrap">
+            <div class="field-label-row">
+              <label>Management &amp; General Expenses</label>
+              <div style="position:relative;display:inline-block;">
+                <span class="tip-icon" onclick="toggleTip('tip_mgmt')">?</span>
+                <div class="tip-bubble" id="tip_mgmt">Overhead costs that keep the organization running — executive staff, finance, HR, IT, and general administration. Not directly tied to programs.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25 Column C, or your income statement under "Management and General."</div></div>
+              </div>
+            </div>
+            <input type="number" id="mgmt0" placeholder="0">
+          </div>
+
+          <div class="field-wrap">
+            <div class="field-label-row">
+              <label>Fundraising Expenses</label>
+              <div style="position:relative;display:inline-block;">
+                <span class="tip-icon" onclick="toggleTip('tip_fund')">?</span>
+                <div class="tip-bubble" id="tip_fund">Money spent raising money — events, mailings, grant writing staff time, and donor outreach. If your organization does no formal fundraising, enter 0.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25 Column D, or your income statement under "Fundraising Expenses."</div></div>
+              </div>
+            </div>
+            <input type="number" id="fund0" placeholder="0">
+          </div>
+
+          <div class="field-wrap">
+            <div class="field-label-row">
+              <label>Total Contributions (Donations)</label>
+              <div style="position:relative;display:inline-block;">
+                <span class="tip-icon" onclick="toggleTip('tip_contrib')">?</span>
+                <div class="tip-bubble" id="tip_contrib">All philanthropic support received — individual donations, foundation grants, corporate gifts, and government grants. Does not include earned revenue like program fees or service contracts.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part VIII Line 1h, or your income statement under "Contributions and Grants."</div></div>
+              </div>
+            </div>
+            <input type="number" id="contrib0" placeholder="0">
+          </div>
+
+          <div class="field-wrap">
+            <div class="field-label-row">
+              <label>Largest Single Revenue Source</label>
+              <div style="position:relative;display:inline-block;">
+                <span class="tip-icon" onclick="toggleTip('tip_toprev')">?</span>
+                <div class="tip-bubble" id="tip_toprev">The single largest source of revenue in the year — one funder, one government contract, or one revenue stream. For example, if your biggest grant was $150,000 from a foundation, enter that amount.<div class="tip-where"><strong>Where to find it:</strong> Review your revenue sources and identify the largest single one. You may need to look at your grant records or income statement line by line.</div></div>
+              </div>
+            </div>
+            <input type="number" id="toprev0" placeholder="0">
+          </div>
+
         </div>
       </div>
-      <div>
-        <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:8px">Two Years Ago</div>
-        <div class="meta-grid">
-          <div class="field-wrap"><label>Total Revenue</label><input type="number" id="rev2" placeholder="0"></div>
-          <div class="field-wrap"><label>Total Expenses</label><input type="number" id="exp2" placeholder="0"></div>
-          <div class="field-wrap"><label>Cash &amp; Equivalents</label><input type="number" id="cash2" placeholder="0"></div>
+
+      <div class="card">
+        <div class="sec-title">Prior Years (Optional But Helpful)</div>
+        <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">If you have last year's figures available, please include them. This helps us identify trends over time.</p>
+        <div style="margin-bottom:1rem">
+          <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:8px">Prior Year</div>
+          <div class="meta-grid">
+            <div class="field-wrap"><label>Total Revenue</label><input type="number" id="rev1" placeholder="0"></div>
+            <div class="field-wrap"><label>Total Expenses</label><input type="number" id="exp1" placeholder="0"></div>
+            <div class="field-wrap"><label>Cash &amp; Equivalents</label><input type="number" id="cash1" placeholder="0"></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:8px">Two Years Ago</div>
+          <div class="meta-grid">
+            <div class="field-wrap"><label>Total Revenue</label><input type="number" id="rev2" placeholder="0"></div>
+            <div class="field-wrap"><label>Total Expenses</label><input type="number" id="exp2" placeholder="0"></div>
+            <div class="field-wrap"><label>Cash &amp; Equivalents</label><input type="number" id="cash2" placeholder="0"></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="sec-title">Documents Available</div>
-      <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">Check all documents you can provide if requested.</p>
-      <div class="docs-grid">
-        <label class="doc-item"><input type="checkbox" id="doc_990"> Form 990</label>
-        <label class="doc-item"><input type="checkbox" id="doc_audit"> Audited Financials</label>
-        <label class="doc-item"><input type="checkbox" id="doc_bs"> Balance Sheet</label>
-        <label class="doc-item"><input type="checkbox" id="doc_is"> Income Statement</label>
-        <label class="doc-item"><input type="checkbox" id="doc_cf"> Cash Flow Statement</label>
-        <label class="doc-item"><input type="checkbox" id="doc_budget"> Board Approved Budget</label>
-        <label class="doc-item"><input type="checkbox" id="doc_minutes"> Board Minutes</label>
-        <label class="doc-item"><input type="checkbox" id="doc_strategic"> Strategic Plan</label>
-      </div>
-    </div>
-
-    <!-- Document Upload -->
-    <div class="card">
-      <div class="sec-title">Upload Documents</div>
-      <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">Upload any financial documents you have available — Form 990, audited financials, balance sheet, strategic plan, or other relevant files. Accepted formats: PDF, Word, Excel, and images.</p>
-      <div class="upload-zone" id="uploadZone"
-        ondragover="handleDragOver(event)"
-        ondragleave="handleDragLeave(event)"
-        ondrop="handleDrop(event)">
-        <input type="file" id="fileInput" multiple
-          accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png"
-          onchange="handleFileSelect(event)">
-        <div class="upload-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    <!-- Documents Available + optional upload (shown for both paths once a path is chosen) -->
+    <div id="docsAvailableSection" style="display:none">
+      <div class="card">
+        <div class="sec-title">Documents Available</div>
+        <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">Check all documents you can provide if requested.</p>
+        <div class="docs-grid">
+          <label class="doc-item"><input type="checkbox" id="doc_990"> Form 990</label>
+          <label class="doc-item"><input type="checkbox" id="doc_audit"> Audited Financials</label>
+          <label class="doc-item"><input type="checkbox" id="doc_bs"> Balance Sheet</label>
+          <label class="doc-item"><input type="checkbox" id="doc_is"> Income Statement</label>
+          <label class="doc-item"><input type="checkbox" id="doc_cf"> Cash Flow Statement</label>
+          <label class="doc-item"><input type="checkbox" id="doc_budget"> Board Approved Budget</label>
+          <label class="doc-item"><input type="checkbox" id="doc_minutes"> Board Minutes</label>
+          <label class="doc-item"><input type="checkbox" id="doc_strategic"> Strategic Plan</label>
         </div>
-        <div class="upload-label">Drop files here or <span style="color:#1A6EB5">browse</span></div>
-        <div class="upload-hint">PDF, Word, Excel, images — up to 10MB per file</div>
       </div>
-      <div class="file-list" id="fileList"></div>
+
+      <!-- Additional/general document upload — shown on manual path as an optional extra -->
+      <div class="card" id="manualUploadCard" style="display:none">
+        <div class="sec-title">Upload Supporting Documents <span style="font-weight:400;color:#9CA3AF;font-size:12px;text-transform:none;letter-spacing:0">(optional)</span></div>
+        <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">If you'd like to attach any documents — Form 990, financial statements, board materials, etc. — you can do so here.</p>
+        <div class="upload-zone" id="uploadZone"
+          ondragover="handleDragOver(event)"
+          ondragleave="handleDragLeave(event)"
+          ondrop="handleDrop(event)">
+          <input type="file" id="fileInput" multiple
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png"
+            onchange="handleFileSelect(event)">
+          <div class="upload-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <div class="upload-label">Drop files here or <span style="color:#1A6EB5">browse</span></div>
+          <div class="upload-hint">PDF, Word, Excel, images — up to 10MB per file</div>
+        </div>
+        <div class="file-list" id="fileList"></div>
+      </div>
     </div>
 
-    <div style="text-align:center;padding:1rem 0 2rem">
+    <div id="submitSection" style="text-align:center;padding:1rem 0 2rem;display:none">
       <button class="btn-primary" style="padding:12px 32px;font-size:15px" onclick="submitIntake()" id="submitBtn">Submit Financial Report</button>
       <div class="error-msg" id="errorMsg" style="margin-top:10px;display:block;text-align:center"></div>
     </div>
@@ -421,8 +558,31 @@
     }
   });
 
-  // ── File upload ──────────────────────────────────────────────────────────────
-  let stagedFiles = [];
+  // ── Path choice ─────────────────────────────────────────────────────────────
+  let selectedPath = null;
+
+  function selectPath(path) {
+    selectedPath = path;
+    document.getElementById('pathUpload').classList.toggle('selected', path === 'upload');
+    document.getElementById('pathManual').classList.toggle('selected', path === 'manual');
+
+    document.getElementById('uploadPathSection').style.display = path === 'upload' ? '' : 'none';
+    document.getElementById('manualPathSection').style.display = path === 'manual' ? '' : 'none';
+    document.getElementById('manualUploadCard').style.display = path === 'manual' ? '' : 'none';
+
+    document.getElementById('docsAvailableSection').style.display = '';
+    document.getElementById('submitSection').style.display = '';
+
+    document.getElementById('submitBtn').textContent =
+      path === 'upload' ? 'Submit Documents' : 'Submit Financial Report';
+  }
+
+  // ── Document upload (extraction path) ──────────────────────────────────────
+  let docFiles = [];
+
+  function fileIcon() {
+    return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
+  }
 
   function formatBytes(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -430,9 +590,43 @@
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
 
-  function fileIcon() {
-    return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
+  function renderDocFileList() {
+    const list = document.getElementById('fileListDocs');
+    list.innerHTML = docFiles.map((f, i) => `
+      <div class="file-item">
+        <div class="file-item-icon">${fileIcon()}</div>
+        <div class="file-item-name">${f.name}</div>
+        <div class="file-item-size">${formatBytes(f.size)}</div>
+        <button class="file-item-remove" onclick="removeDocFile(${i})" title="Remove">×</button>
+      </div>
+    `).join('');
   }
+
+  function addDocFiles(files) {
+    const maxSize = 10 * 1024 * 1024;
+    Array.from(files).forEach(file => {
+      if (file.type !== 'application/pdf') { alert(`${file.name} — only PDF files are supported here.`); return; }
+      if (file.size > maxSize) { alert(`${file.name} exceeds the 10MB limit.`); return; }
+      if (docFiles.length >= 5) { alert('Maximum 5 files.'); return; }
+      if (!docFiles.find(f => f.name === file.name && f.size === file.size)) {
+        docFiles.push(file);
+      }
+    });
+    renderDocFileList();
+  }
+
+  function removeDocFile(index) { docFiles.splice(index, 1); renderDocFileList(); }
+  function handleFileSelectDocs(e) { addDocFiles(e.target.files); e.target.value = ''; }
+  function handleDragOverDocs(e) { e.preventDefault(); document.getElementById('uploadZoneDocs').classList.add('dragover'); }
+  function handleDragLeaveDocs(e) { document.getElementById('uploadZoneDocs').classList.remove('dragover'); }
+  function handleDropDocs(e) {
+    e.preventDefault();
+    document.getElementById('uploadZoneDocs').classList.remove('dragover');
+    addDocFiles(e.dataTransfer.files);
+  }
+
+  // ── General supporting document upload (manual path) ──────────────────────
+  let stagedFiles = [];
 
   function renderFileList() {
     const list = document.getElementById('fileList');
@@ -487,6 +681,32 @@
     }
   }
 
+  async function uploadDocFiles(assessmentId) {
+    for (const file of docFiles) {
+      try {
+        await DB.uploadFile(assessmentId, file);
+      } catch(e) {
+        console.error('Upload failed for', file.name, e.message);
+      }
+    }
+  }
+
+  // ── Extraction call (reuses Cloudflare Worker /extract endpoint) ──────────
+  async function runIntakeExtraction() {
+    const formData = new FormData();
+    docFiles.forEach(f => formData.append('files', f));
+
+    const res = await fetch('https://calm-forest-dfc5.shanefleming125.workers.dev/extract', {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || 'Extraction failed');
+    return data;
+  }
+
+  // ── Submit ──────────────────────────────────────────────────────────────────
   async function submitIntake() {
     const orgName = document.getElementById('orgName').value.trim();
     const ein = document.getElementById('ein').value.trim();
@@ -502,9 +722,31 @@
       return;
     }
 
-    submitBtn.textContent = 'Submitting...';
+    if (!selectedPath) {
+      errorEl.textContent = 'Please choose how you\'d like to provide your financial information.';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    if (selectedPath === 'upload' && docFiles.length === 0) {
+      errorEl.textContent = 'Please upload at least one document, or choose "I\'ll enter figures manually."';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    if (selectedPath === 'manual') {
+      const rev0 = parseFloat(document.getElementById('rev0')?.value);
+      const exp0 = parseFloat(document.getElementById('exp0')?.value);
+      if (!rev0 || !exp0) {
+        errorEl.textContent = 'Please enter at least Total Revenue and Total Expenses.';
+        errorEl.style.display = 'block';
+        return;
+      }
+    }
+
     submitBtn.disabled = true;
     errorEl.textContent = '';
+    errorEl.style.display = 'none';
 
     const g = id => parseFloat(document.getElementById(id)?.value) || 0;
     const docs = ['doc_990','doc_audit','doc_bs','doc_is','doc_cf','doc_budget','doc_minutes','doc_strategic']
@@ -516,10 +758,6 @@
       id: assessmentId,
       orgName, ein, fyEnd, contactName, contactEmail,
       status: 'submitted',
-      rev: g('rev0'), exp: g('exp0'), assets: g('assets0'), liab: g('liab0'), cash: g('cash0'),
-      currassets: g('currassets0'), currliab: g('currliab0'),
-      prog: g('prog0'), mgmt: g('mgmt0'), fund: g('fund0'), contrib: g('contrib0'), toprev: g('toprev0'),
-      rev1: g('rev1'), rev2: g('rev2'), exp1: g('exp1'), exp2: g('exp2'), cash1: g('cash1'), cash2: g('cash2'),
       docs,
       score: 0,
       riskLevel: 'Pending',
@@ -528,9 +766,56 @@
       savedAt: new Date().toISOString()
     };
 
+    if (selectedPath === 'manual') {
+      Object.assign(data, {
+        rev: g('rev0'), exp: g('exp0'), assets: g('assets0'), liab: g('liab0'), cash: g('cash0'),
+        currassets: g('currassets0'), currliab: g('currliab0'),
+        prog: g('prog0'), mgmt: g('mgmt0'), fund: g('fund0'), contrib: g('contrib0'), toprev: g('toprev0'),
+        rev1: g('rev1'), rev2: g('rev2'), exp1: g('exp1'), exp2: g('exp2'), cash1: g('cash1'), cash2: g('cash2'),
+        dataSource: 'internal',
+        sourceNotes: 'Submitted via self-report (manual entry)'
+      });
+    } else {
+      // Upload path — placeholder financial fields until extraction runs / reviewer confirms
+      Object.assign(data, {
+        rev: 0, exp: 0, assets: 0, liab: 0, cash: 0,
+        currassets: 0, currliab: 0,
+        prog: 0, mgmt: 0, fund: 0, contrib: 0, toprev: 0,
+        rev1: 0, rev2: 0, exp1: 0, exp2: 0, cash1: 0, cash2: 0,
+        sourceNotes: 'Submitted via self-report (documents uploaded — pending extraction review)'
+      });
+    }
+
     try {
+      submitBtn.textContent = 'Submitting...';
       await DB.saveAssessment(data);
-      if (stagedFiles.length) {
+
+      // Upload files
+      if (selectedPath === 'upload') {
+        submitBtn.textContent = 'Uploading documents...';
+        await uploadDocFiles(assessmentId);
+
+        // Run extraction and store raw results for the reviewer (does not affect score/riskLevel)
+        try {
+          submitBtn.textContent = 'Reading documents...';
+          document.getElementById('extractStatus').style.display = 'block';
+          document.getElementById('extractStatus').textContent = 'Reading your documents — this may take a moment...';
+
+          const extracted = await runIntakeExtraction();
+          data.extractedData = extracted;
+
+          // Pull org info if we don't already have it well-formed, and merge org details
+          if (extracted.orgInfo) {
+            if (!data.ein && extracted.orgInfo.ein) data.ein = extracted.orgInfo.ein;
+          }
+
+          await DB.saveAssessment(data);
+          document.getElementById('extractStatus').textContent = '✓ Documents processed. Our team will review the extracted figures.';
+        } catch(extractErr) {
+          console.warn('Extraction failed:', extractErr.message);
+          document.getElementById('extractStatus').textContent = 'Documents uploaded. Our team will review them directly.';
+        }
+      } else if (stagedFiles.length) {
         submitBtn.textContent = 'Uploading documents...';
         await uploadStagedFiles(assessmentId);
       }
@@ -538,7 +823,9 @@
       // Populate submission summary
       document.getElementById('summaryOrgName').textContent = orgName;
       document.getElementById('summaryFyEnd').textContent = fyEnd;
-      const fileCount = stagedFiles.filter(f => f.status === 'done').length;
+      const fileCount = selectedPath === 'upload'
+        ? docFiles.length
+        : stagedFiles.filter(f => f.status === 'done').length;
       document.getElementById('summaryFileCount').textContent = fileCount > 0
         ? `${fileCount} file${fileCount === 1 ? '' : 's'}`
         : 'None';
@@ -548,7 +835,7 @@
     } catch(e) {
       errorEl.textContent = 'Submission failed. Please try again.';
       errorEl.style.display = 'block';
-      submitBtn.textContent = 'Submit Financial Report';
+      submitBtn.textContent = selectedPath === 'upload' ? 'Submit Documents' : 'Submit Financial Report';
       submitBtn.disabled = false;
     }
   }
