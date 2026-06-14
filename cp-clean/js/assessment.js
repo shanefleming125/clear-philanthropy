@@ -344,7 +344,7 @@ Reviewer notes: ${notes} | Follow-up questions: ${qs}
 
 Paragraph 1: Overall financial health and strengths with specific numbers. Use hedged language where data confidence is limited.
 Paragraph 2: Key risks and concerns referencing specific ratios. Apply all guidance above correctly — liabilities, fundraising efficiency direction, program ratio confidence, and revenue concentration framing.
-Paragraph 3: Summarize the overall financial picture and surface the most important questions the funder should ask before making a decision. Be specific about what additional documents or information would meaningfully improve confidence in the assessment.
+Paragraph 3: Summarize the overall financial picture and surface the most important areas worth exploring further before a funding decision is made. Frame these as areas a reviewer would benefit from understanding more deeply — not as demands or prerequisites. Use language like "a reviewer would benefit from understanding...", "key areas worth exploring further include...", or "additional context that would strengthen confidence in this assessment includes..." Do not use language like "the reviewer should request" or "before advancing a decision, the reviewer must obtain." Be specific about what additional context or documents would meaningfully improve confidence, but keep the tone collaborative and inquisitive, not prescriptive.
 
 IMPORTANT: Do NOT make a funding recommendation or state/imply whether this organization should or should not receive funding. CP's role is to surface what the financial data shows — the funding decision belongs entirely to the reviewer/funder. Stick to describing the financial picture, not prescribing an outcome.`;
 
