@@ -64,7 +64,6 @@ body {
 .nav-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
 .nav-link.active { background: rgba(255,255,255,0.22); color: #fff; font-weight: 700; }
 
-/* Intake link button in nav */
 .btn-intake {
   background: transparent;
   border: none;
@@ -82,7 +81,6 @@ body {
 }
 .btn-intake:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
-/* Green intake button — force identical rendering to btn-primary */
 .btn-intake-green {
   background: var(--green);
   border: none;
@@ -111,7 +109,6 @@ body {
   box-sizing: border-box;
 }
 
-/* User email pill in nav */
 .nav-user-email {
   font-size: 11px;
   color: rgba(255,255,255,0.4);
@@ -209,8 +206,6 @@ body {
   box-shadow: 0 0 0 3px rgba(26,110,181,0.1);
 }
 .textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
-
-/* Required field indicator */
 .field-wrap label .req { color: var(--red); margin-left: 2px; }
 
 /* DATA TABLE */
@@ -410,74 +405,11 @@ body {
 .empty-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
 .empty-desc { font-size: 13px; color: var(--text-secondary); }
 
-/* RESPONSIVE — mobile */
-@media (max-width: 768px) {
-  .topbar { padding: 0 0.75rem; height: 52px; }
-  .logo-text { font-size: 13px; }
-  .nav-links { gap: 2px; }
-  .nav-link { font-size: 11px; padding: 5px 8px; }
-  .btn-intake { display: none; }
-  /* Hide email on mobile — too cramped */
-  .nav-user-email { display: none !important; }
-  .container { padding: 1rem 0.75rem 3rem; }
-  .page-header { flex-direction: column; gap: 0.75rem; }
-  .page-header h1 { font-size: 17px; }
-  .stats-row { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
-  .stat-val { font-size: 22px; }
-
-  .card { padding: 0.75rem; }
-  .org-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .org-table th:nth-child(5),
-  .org-table td:nth-child(5),
-  .org-table th:nth-child(6),
-  .org-table td:nth-child(6),
-  .org-table th:nth-child(7),
-  .org-table td:nth-child(7),
-  .org-table th:nth-child(8),
-  .org-table td:nth-child(8) { display: none; }
-  .org-table th { font-size: 10px; padding: 8px 6px; white-space: nowrap; }
-  .org-table td { padding: 10px 6px; font-size: 12px; }
-  .org-name { font-size: 13px; }
-  .rec-badge { font-size: 10px; padding: 2px 7px; }
-
-  .form-header-bar { flex-direction: column; gap: 0.75rem; padding: 1rem; }
-  .form-header-bar h1 { font-size: 15px; }
-  .score-big { font-size: 28px; }
-  .meta-grid { grid-template-columns: 1fr 1fr; }
-  .two-col { grid-template-columns: 1fr; }
-  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .data-table { min-width: 500px; }
-  .data-table th, .data-table td { padding: 5px 6px; font-size: 12px; }
-  .data-table input[type=text] { min-width: 80px; font-size: 12px; }
-  .form-actions { flex-direction: column; align-items: stretch; }
-  .form-actions .btn-save,
-  .form-actions .btn-ai,
-  .form-actions .btn-ghost { width: 100%; justify-content: center; padding: 12px; }
-  .docs-grid { grid-template-columns: 1fr; }
-}
-
-@media print {
-  .topbar, .form-actions, .btn-save, .btn-ai, .btn-ghost { display: none !important; }
-  .card { break-inside: avoid; border: 1px solid #ddd; }
-  body { background: white; }
-}
-
-/* Mobile table - hide less important columns */
-@media (max-width: 768px) {
-  .org-table th:nth-child(3),
-  .org-table td:nth-child(3) { display: none !important; }
-  .org-table th:nth-child(5),
-  .org-table td:nth-child(5) { display: none !important; }
-  .org-table th:nth-child(6),
-  .org-table td:nth-child(6) { display: none !important; }
-  .org-table th:nth-child(7),
-  .org-table td:nth-child(7) { display: none !important; }
-  /* ══════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════
    MOBILE DASHBOARD CARD LAYOUT
-   Append this block to the end of style.css
    ══════════════════════════════════════════════════════════ */
 
-/* Mobile card list — hidden on desktop */
+/* Mobile card list — hidden on desktop by default */
 #orgMobileList { display: none; }
 
 .org-mobile-card {
@@ -520,20 +452,43 @@ body {
   padding: 5px 12px;
 }
 
+/* RESPONSIVE — tablet */
+@media (max-width: 768px) {
+  .topbar { padding: 0 0.75rem; height: 52px; }
+  .logo-text { font-size: 13px; }
+  .nav-links { gap: 2px; }
+  .nav-link { font-size: 11px; padding: 5px 8px; }
+  .btn-intake { display: none; }
+  .nav-user-email { display: none !important; }
+  .container { padding: 1rem 0.75rem 3rem; }
+  .stats-row { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
+  .stat-val { font-size: 22px; }
+  .card { padding: 0.75rem; }
+  .form-header-bar { flex-direction: column; gap: 0.75rem; padding: 1rem; }
+  .form-header-bar h1 { font-size: 15px; }
+  .score-big { font-size: 28px; }
+  .meta-grid { grid-template-columns: 1fr 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .data-table { min-width: 500px; }
+  .data-table th, .data-table td { padding: 5px 6px; font-size: 12px; }
+  .data-table input[type=text] { min-width: 80px; font-size: 12px; }
+  .form-actions { flex-direction: column; align-items: stretch; }
+  .form-actions .btn-save,
+  .form-actions .btn-ai,
+  .form-actions .btn-ghost { width: 100%; justify-content: center; padding: 12px; }
+  .docs-grid { grid-template-columns: 1fr; }
+}
+
+/* RESPONSIVE — mobile: switch to card layout */
 @media (max-width: 640px) {
   /* Show mobile cards, hide desktop table */
   #orgMobileList { display: block; }
   #orgTable { display: none !important; }
 
-  /* Page header stacks on mobile */
-  .page-header {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  .page-header > div:last-child {
-    width: 100%;
-    flex-wrap: wrap;
-  }
+  /* Page header stacks */
+  .page-header { flex-direction: column; gap: 0.75rem; }
+  .page-header > div:last-child { width: 100%; flex-wrap: wrap; }
   .page-header .btn-primary,
   .page-header .btn-intake-green {
     flex: 1;
@@ -542,14 +497,16 @@ body {
     padding: 0 10px;
   }
 
-  /* Stats 2-col on mobile */
+  /* Stats 2-col */
   .stats-row { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .stat-val { font-size: 22px; }
+  .stat-val { font-size: 20px; }
 
   /* Search full width */
   .search-wrap { max-width: 100%; }
-
-  /* Remove card padding on mobile list wrapper */
-  .card:has(#orgMobileList) { padding: 0.75rem 0.75rem; }
 }
+
+@media print {
+  .topbar, .form-actions, .btn-save, .btn-ai, .btn-ghost { display: none !important; }
+  .card { break-inside: avoid; border: 1px solid #ddd; }
+  body { background: white; }
 }
