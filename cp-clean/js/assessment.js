@@ -493,4 +493,4 @@ async function deleteFile(path, filename) {
   } catch(e) {
     alert('Could not delete file. Please try again.');
   }
-}
+
