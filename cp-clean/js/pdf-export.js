@@ -344,25 +344,41 @@ async function exportToPDF() {
   ].filter(r => r.dir !== null && r.vals[0] !== '—');
 
   if (trendRows.length >= 2) {
+    // Only show if we have at least 2 years of data for most metrics
+    const hasTwoYears = trendRows.filter(r => r.vals[0] !== '—' && r.vals[1] !== '—').length >= 2;
+    if (!hasTwoYears) {
+      // Skip trends section entirely — not enough data to be meaningful
+    } else {
     sectionLabel('Financial Trends');
+
+    // Determine how many year columns to show
+    const hasThreeYears = trendRows.some(r => r.vals[2] !== '—');
 
     // Get fiscal year labels from fyEnd
     const fyYear = fyEnd ? parseInt(fyEnd.split('/').pop()) : new Date().getFullYear();
-    const yrLabels = [`FY ${fyYear}`, `FY ${fyYear-1}`, `FY ${fyYear-2}`];
+    const yrLabels = hasThreeYears
+      ? [`FY ${fyYear}`, `FY ${fyYear-1}`, `FY ${fyYear-2}`]
+      : [`FY ${fyYear}`, `FY ${fyYear-1}`];
 
-    const colW = [W * 0.34, W * 0.2, W * 0.2, W * 0.2, W * 0.06];
-    const colX = [M, M + colW[0], M + colW[0]+colW[1], M + colW[0]+colW[1]+colW[2], M + colW[0]+colW[1]+colW[2]+colW[3]];
+    const colW = hasThreeYears
+      ? [W * 0.34, W * 0.2, W * 0.2, W * 0.2, W * 0.06]
+      : [W * 0.44, W * 0.25, W * 0.25, W * 0.06];
+    const colX = colW.reduce((acc, w, i) => {
+      acc.push(i === 0 ? M : acc[i-1] + colW[i-1]);
+      return acc;
+    }, []);
+
     const rowH = 9;
+    ensureSpace(rowH * (trendRows.length + 1) + 6);
 
     // Header row
-    ensureSpace(rowH * (trendRows.length + 1) + 6);
     fill(M, y, W, rowH, NAVY, 1);
     sf('bold', 7, WHITE);
     doc.text('Metric', colX[0] + 3, y + 6);
     doc.text(yrLabels[0], colX[1] + colW[1]/2, y + 6, { align: 'center' });
     doc.text(yrLabels[1], colX[2] + colW[2]/2, y + 6, { align: 'center' });
-    doc.text(yrLabels[2], colX[3] + colW[3]/2, y + 6, { align: 'center' });
-    doc.text('Trend', colX[4] + colW[4]/2, y + 6, { align: 'center' });
+    if (hasThreeYears) doc.text(yrLabels[2], colX[3] + colW[3]/2, y + 6, { align: 'center' });
+    doc.text('Trend', colX[hasThreeYears ? 4 : 3] + colW[hasThreeYears ? 4 : 3]/2, y + 6, { align: 'center' });
     y += rowH;
 
     trendRows.forEach((row, i) => {
@@ -374,24 +390,26 @@ async function exportToPDF() {
       doc.text(row.label, colX[0] + 3, y + 6);
 
       sf('bold', 8, TEXT);
-      doc.text(row.vals[0], colX[1] + colW[1]/2, y + 6, { align: 'center' });
+      doc.text(row.vals[0] !== '—' ? row.vals[0] : '—', colX[1] + colW[1]/2, y + 6, { align: 'center' });
 
       sf('normal', 8, MUTED);
       doc.text(row.vals[1] !== '—' ? row.vals[1] : '—', colX[2] + colW[2]/2, y + 6, { align: 'center' });
-      doc.text(row.vals[2] !== '—' ? row.vals[2] : '—', colX[3] + colW[3]/2, y + 6, { align: 'center' });
+      if (hasThreeYears) doc.text(row.vals[2] !== '—' ? row.vals[2] : '—', colX[3] + colW[3]/2, y + 6, { align: 'center' });
 
-      // Trend arrow with color
+      // Trend arrow
       const arrowMap = { up:'↑', down:'↓', mixed:'↔', flat:'→' };
       const arrow = arrowMap[row.dir] || '—';
       const isGood = (row.goodUp && row.dir === 'up') || (!row.goodUp && row.dir === 'down');
       const isBad  = (row.goodUp && row.dir === 'down') || (!row.goodUp && row.dir === 'up');
       const arrowColor = isGood ? GREEN : isBad ? RED : MUTED;
       sf('bold', 10, arrowColor);
-      doc.text(arrow, colX[4] + colW[4]/2, y + 6.5, { align: 'center' });
+      const arrowColIdx = hasThreeYears ? 4 : 3;
+      doc.text(arrow, colX[arrowColIdx] + colW[arrowColIdx]/2, y + 6.5, { align: 'center' });
 
       y += rowH;
     });
     y += 5;
+    } // end hasTwoYears block
   }
   if (flags.length) {
     sectionLabel('Financial Health Indicators');
