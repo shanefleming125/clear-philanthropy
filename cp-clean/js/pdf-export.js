@@ -316,7 +316,10 @@ async function exportToPDF() {
   // ════════════════════════════════
   // Financial Trends (3-year)
   // ════════════════════════════════
-  const gv = id => parseFloat(document.getElementById(id)?.value) || 0;
+  const gv = id => {
+    const raw = document.getElementById(id)?.value || '';
+    return parseFloat(raw.replace(/[$,\s]/g, '')) || 0;
+  };
   const rv  = [gv('rev0'),  gv('rev1'),  gv('rev2')];
   const ex  = [gv('exp0'),  gv('exp1'),  gv('exp2')];
   const ca  = [gv('cash0'), gv('cash1'), gv('cash2')];
