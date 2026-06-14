@@ -7,78 +7,6 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect width='44' height='44' rx='10' fill='%231A6EB5'/><circle cx='17' cy='22' r='10' stroke='white' stroke-width='1.8' fill='rgba(255,255,255,0.1)'/><circle cx='27' cy='22' r='10' stroke='rgba(255,255,255,0.5)' stroke-width='1.8' fill='rgba(255,255,255,0.05)'/><path d='M22 13.2C19 16 19 28 22 30.8C25 28 25 16 22 13.2Z' fill='white'/></svg>">
 <style>
-  /* ── Tooltips ── */
-  .tip-wrap {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .tip-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #D1D5DB;
-    color: #374151;
-    font-size: 9px;
-    font-weight: 700;
-    cursor: pointer;
-    flex-shrink: 0;
-    line-height: 1;
-    user-select: none;
-    transition: background 0.15s;
-  }
-  .tip-icon:hover, .tip-icon.active { background: #1A6EB5; color: white; }
-  .tip-bubble {
-    display: none;
-    position: absolute;
-    left: 0;
-    top: calc(100% + 6px);
-    width: 260px;
-    background: #0B2545;
-    color: #E5E7EB;
-    font-size: 12px;
-    line-height: 1.6;
-    border-radius: 8px;
-    padding: 12px 14px;
-    z-index: 100;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-    font-weight: 400;
-  }
-  .tip-bubble.active { display: block; }
-  .tip-bubble::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: 12px;
-    width: 10px;
-    height: 10px;
-    background: #0B2545;
-    transform: rotate(45deg);
-    border-radius: 2px;
-  }
-  .tip-where {
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    font-size: 11px;
-    color: #9CA3AF;
-  }
-  .tip-where strong { color: #D1D5DB; }
-
-  .field-wrap { position: relative; }
-  .field-label-row {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 4px;
-  }
-  .field-label-row label {
-    margin-bottom: 0;
-  }
-
   /* ── File upload ── */
   .upload-zone {
     border: 2px dashed #D1D5DB;
@@ -92,8 +20,8 @@
   }
   .upload-zone:hover, .upload-zone.dragover { border-color: #1A6EB5; background: #F0F6FF; }
   .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-  .upload-icon { width: 40px; height: 40px; background: #E6F1FB; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
-  .upload-label { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 4px; }
+  .upload-icon { width: 48px; height: 48px; background: #E6F1FB; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+  .upload-label { font-size: 15px; font-weight: 600; color: #111827; margin-bottom: 4px; }
   .upload-hint { font-size: 12px; color: #9CA3AF; }
   .file-list { margin-top: 1rem; display: flex; flex-direction: column; gap: 8px; }
   .file-item { display: flex; align-items: center; gap: 10px; background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; padding: 10px 12px; font-size: 13px; }
@@ -102,137 +30,80 @@
   .file-item-size { font-size: 11px; color: #9CA3AF; flex-shrink: 0; }
   .file-item-remove { background: none; border: none; cursor: pointer; color: #9CA3AF; padding: 2px; line-height: 1; flex-shrink: 0; font-size: 16px; }
   .file-item-remove:hover { color: #EF4444; }
-  .file-item.uploaded { border-color: #2EAD77; }
   .file-status { font-size: 11px; flex-shrink: 0; font-weight: 600; }
   .file-status.done { color: #2EAD77; }
   .file-status.error { color: #EF4444; }
-  .file-status.pending { color: #9CA3AF; }
-
-  /* ── Path choice ── */
-  .path-choice-card {
-    background: #F0F6FF;
-    border: 1px solid #BFDBFE;
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  .path-choice-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: #0B2545;
-    margin-bottom: 6px;
-  }
-  .path-choice-sub {
-    font-size: 13px;
-    color: #374151;
-    margin-bottom: 1rem;
-    line-height: 1.6;
-  }
-  .path-options {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .path-option {
-    flex: 1;
-    min-width: 220px;
-    background: white;
-    border: 2px solid #D1D5DB;
-    border-radius: 10px;
-    padding: 1rem 1.1rem;
-    cursor: pointer;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    text-align: left;
-  }
-  .path-option:hover { border-color: #4DA6E8; }
-  .path-option.selected {
-    border-color: #1A6EB5;
-    box-shadow: 0 0 0 3px rgba(26,110,181,0.12);
-  }
-  .path-option-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: #111827;
-    margin-bottom: 4px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .path-option-desc {
-    font-size: 12px;
-    color: #6B7280;
-    line-height: 1.5;
-  }
-  .path-option-badge {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    background: #2EAD77;
-    color: white;
-    border-radius: 4px;
-    padding: 2px 7px;
-  }
-  .path-radio {
-    width: 16px;
-    height: 16px;
-    border: 2px solid #D1D5DB;
-    border-radius: 50%;
-    flex-shrink: 0;
-    display: inline-block;
-    position: relative;
-  }
-  .path-option.selected .path-radio {
-    border-color: #1A6EB5;
-  }
-  .path-option.selected .path-radio::after {
-    content: '';
-    position: absolute;
-    inset: 3px;
-    background: #1A6EB5;
-    border-radius: 50%;
-  }
 
   /* ── Submit loading overlay ── */
   .submit-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(11,37,69,0.85);
-    z-index: 300;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 1.25rem;
+    display: none; position: fixed; inset: 0;
+    background: rgba(11,37,69,0.85); z-index: 300;
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 1.25rem;
   }
   .submit-overlay.active { display: flex; }
   .submit-spinner {
-    width: 44px;
-    height: 44px;
+    width: 44px; height: 44px;
     border: 4px solid rgba(255,255,255,0.2);
     border-top-color: #4DA6E8;
     border-radius: 50%;
     animation: submit-spin 0.8s linear infinite;
   }
-  @keyframes submit-spin {
-    to { transform: rotate(360deg); }
+  @keyframes submit-spin { to { transform: rotate(360deg); } }
+  .submit-overlay-text { color: white; font-size: 15px; font-weight: 600; font-family: 'Manrope', sans-serif; text-align: center; max-width: 320px; line-height: 1.6; }
+  .submit-overlay-sub { color: rgba(255,255,255,0.55); font-size: 12.5px; font-family: 'Manrope', sans-serif; text-align: center; }
+
+  /* ── Steps indicator ── */
+  .steps-row {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2rem;
   }
-  .submit-overlay-text {
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    font-family: 'Manrope', sans-serif;
+  .step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
     text-align: center;
-    max-width: 320px;
-    line-height: 1.6;
   }
-  .submit-overlay-sub {
-    color: rgba(255,255,255,0.55);
-    font-size: 12.5px;
-    font-family: 'Manrope', sans-serif;
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: #E5E7EB;
+    z-index: 0;
+  }
+  .step-circle {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #E5E7EB; color: #9CA3AF;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; z-index: 1; flex-shrink: 0;
+    margin-bottom: 6px;
+  }
+  .step.active .step-circle { background: #1A6EB5; color: white; }
+  .step.done .step-circle { background: #2EAD77; color: white; }
+  .step-label { font-size: 11px; color: #9CA3AF; font-weight: 600; }
+  .step.active .step-label { color: #1A6EB5; }
+  .step.done .step-label { color: #2EAD77; }
+
+  /* ── Manual entry toggle ── */
+  .manual-toggle {
     text-align: center;
-    max-width: 320px;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #E5E7EB;
   }
+  .manual-toggle-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 13px; color: #6B7280; font-family: 'Manrope', sans-serif;
+    text-decoration: underline; padding: 0;
+  }
+  .manual-toggle-btn:hover { color: #374151; }
 </style>
 </head>
 <body>
@@ -245,327 +116,144 @@
   </a>
 </nav>
 
-<main class="container" style="max-width:680px">
+<main class="container" style="max-width:600px">
   <div id="formView">
+
     <div style="text-align:center;padding:2rem 0 1.5rem">
-      <div style="font-size:22px;font-weight:800;color:#111827;margin-bottom:8px">Financial Self-Report</div>
-      <div style="font-size:14px;color:#6B7280;max-width:480px;margin:0 auto">Please provide some basic information about your organization, then choose how you'd like to share your financial details below.</div>
-    </div>
-
-    <div class="card">
-      <div class="sec-title">Organization Information</div>
-      <div class="meta-grid">
-        <div class="field-wrap"><label>Organization Name <span class="req">*</span></label><input type="text" id="orgName" placeholder="Legal name of your organization" required></div>
-        <div class="field-wrap">
-          <div class="field-label-row">
-            <label>EIN <span class="req">*</span></label>
-            <div style="position:relative;display:inline-block;">
-              <span class="tip-icon" onclick="toggleTip('tip_ein')">?</span>
-              <div class="tip-bubble" id="tip_ein">Your Employer Identification Number — a 9-digit number assigned by the IRS, formatted as XX-XXXXXXX. You can find it on your Form 990, tax filings, or IRS determination letter.</div>
-            </div>
-          </div>
-          <input type="text" id="ein" placeholder="e.g. 12-3456789" required>
-        </div>
-        <div class="field-wrap">
-          <div class="field-label-row">
-            <label>Fiscal Year End <span class="req">*</span></label>
-            <div style="position:relative;display:inline-block;">
-              <span class="tip-icon" onclick="toggleTip('tip_fye')">?</span>
-              <div class="tip-bubble" id="tip_fye">The last day of your organization's financial year. Many nonprofits use December 31, but yours may differ. Check your Form 990 or ask your bookkeeper if unsure.</div>
-            </div>
-          </div>
-          <input type="text" id="fyEnd" placeholder="e.g. 12/31/2023" required>
-        </div>
-        <div class="field-wrap"><label>Contact Name <span class="req">*</span></label><input type="text" id="contactName" placeholder="Person completing this form" required></div>
-        <div class="field-wrap"><label>Contact Email <span class="req">*</span></label><input type="email" id="contactEmail" placeholder="email@organization.org" required></div>
+      <div style="font-size:23px;font-weight:800;color:#111827;margin-bottom:8px">Submit Your Financial Documents</div>
+      <div style="font-size:14px;color:#6B7280;max-width:460px;margin:0 auto;line-height:1.7">
+        Tell us a bit about your organization, then upload your financial documents — a Form 990, audited financials, or recent financial statements. Our team takes it from there.
       </div>
     </div>
 
-    <!-- Path choice -->
-    <div class="path-choice-card">
-      <div class="path-choice-title">How would you like to provide your financial information?</div>
-      <div class="path-choice-sub">If you have your Form 990, audited financial statements, or recent financial statements on hand, uploading them is the fastest option. If you don't have these readily available, you can enter the numbers yourself.</div>
-      <div class="path-options">
-        <div class="path-option" id="pathUpload" onclick="selectPath('upload')">
-          <div class="path-option-title">
-            <span class="path-radio"></span>
-            I have documents to upload
-            <span class="path-option-badge">Faster</span>
-          </div>
-          <div class="path-option-desc">Upload your Form 990, audited financials, or recent statements. Our team will review them.</div>
-        </div>
-        <div class="path-option" id="pathManual" onclick="selectPath('manual')">
-          <div class="path-option-title">
-            <span class="path-radio"></span>
-            I'll enter figures manually
-          </div>
-          <div class="path-option-desc">Don't have documents ready? Enter your financial figures directly, with guidance for each field.</div>
-        </div>
+    <!-- Step indicator -->
+    <div class="steps-row">
+      <div class="step active" id="step1">
+        <div class="step-circle">1</div>
+        <div class="step-label">Your Info</div>
+      </div>
+      <div class="step" id="step2">
+        <div class="step-circle">2</div>
+        <div class="step-label">Upload Docs</div>
+      </div>
+      <div class="step" id="step3">
+        <div class="step-circle">3</div>
+        <div class="step-label">Submit</div>
       </div>
     </div>
 
-    <!-- Upload path -->
-    <div id="uploadPathSection" style="display:none">
+    <!-- Step 1: Org info -->
+    <div id="stepView1">
+      <div class="card">
+        <div class="sec-title">About Your Organization</div>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="field-wrap">
+            <label>Organization Name <span class="req">*</span></label>
+            <input type="text" id="orgName" placeholder="Legal name of your organization" required>
+          </div>
+          <div class="field-wrap">
+            <label>Your Name <span class="req">*</span></label>
+            <input type="text" id="contactName" placeholder="First and last name" required>
+          </div>
+          <div class="field-wrap">
+            <label>Your Email <span class="req">*</span></label>
+            <input type="email" id="contactEmail" placeholder="email@organization.org" required>
+          </div>
+        </div>
+        <div style="margin-top:1.5rem;display:flex;justify-content:flex-end">
+          <button class="btn-primary" onclick="goToStep2()" style="padding:10px 28px">Continue →</button>
+        </div>
+        <div class="error-msg" id="step1Error" style="margin-top:10px;display:none;text-align:center"></div>
+      </div>
+    </div>
+
+    <!-- Step 2: Upload -->
+    <div id="stepView2" style="display:none">
       <div class="card">
         <div class="sec-title">Upload Financial Documents</div>
-        <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">Upload your Form 990, audited or reviewed financial statements, or recent internal financial statements (PDF only). You can upload more than one document — for example, a 990 and an audit covering different years.</p>
-        <div class="upload-zone" id="uploadZoneDocs"
-          ondragover="handleDragOverDocs(event)"
-          ondragleave="handleDragLeaveDocs(event)"
-          ondrop="handleDropDocs(event)">
-          <input type="file" id="fileInputDocs" multiple
-            accept=".pdf"
-            onchange="handleFileSelectDocs(event)">
-          <div class="upload-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          </div>
-          <div class="upload-label">Drop PDFs here or <span style="color:#1A6EB5">browse</span></div>
-          <div class="upload-hint">Form 990, audited financials, etc. — up to 5 files, 10MB each</div>
-        </div>
-        <div class="file-list" id="fileListDocs"></div>
-      </div>
-    </div>
+        <p style="font-size:13px;color:#6B7280;margin-bottom:1.25rem;line-height:1.7">
+          Upload your most recent Form 990, audited financial statements, or other financial documents (PDF only). You can upload multiple files — for example, a 990 and an audit from different years.
+        </p>
 
-    <!-- Manual path -->
-    <div id="manualPathSection" style="display:none">
-      <div class="card">
-        <div class="sec-title">Financial Data — Current Year</div>
-        <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">Enter figures from your most recent completed fiscal year. All amounts in USD. Tap <strong>?</strong> next to any field if you need help finding the number.</p>
-        <div class="meta-grid">
-
-          <div class="field-wrap">
-            <div class="field-label-row">
-              <label>Total Revenue <span class="req">*</span></label>
-              <div style="position:relative;display:inline-block;">
-                <span class="tip-icon" onclick="toggleTip('tip_rev')">?</span>
-                <div class="tip-bubble" id="tip_rev">All money your organization received during the year — grants, donations, program fees, government funding, and any other income. This is your top-line total.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part VIII Line 12, or the top of your income statement labeled "Total Revenue."</div></div>
-              </div>
-            </div>
-            <input type="number" id="rev0" placeholder="0">
-          </div>
-
-          <div class="field-wrap">
-            <div class="field-label-row">
-              <label>Total Expenses <span class="req">*</span></label>
-              <div style="position:relative;display:inline-block;">
-                <span class="tip-icon" onclick="toggleTip('tip_exp')">?</span>
-                <div class="tip-bubble" id="tip_exp">Everything your organization spent during the year — staff, programs, rent, administration, and all other costs combined.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25, or the bottom of your income statement labeled "Total Expenses."</div></div>
-              </div>
-            </div>
-            <input type="number" id="exp0" placeholder="0">
-          </div>
-
-          <div class="field-wrap">
-            <div class="field-label-row">
-              <label>Total Assets</label>
-              <div style="position:relative;display:inline-block;">
-                <span class="tip-icon" onclick="toggleTip('tip_assets')">?</span>
-                <div class="tip-bubble" id="tip_assets">Everything your organization owns — cash, bank accounts, investments, equipment, and property, as of your fiscal year end.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part X Line 16, or your balance sheet labeled "Total Assets."</div></div>
-              </div>
-            </div>
-            <input type="number" id="assets0" placeholder="0">
-          </div>
-
-          <div class="field-wrap">
-            <div class="field-label-row">
-              <label>Total Liabilities</label>
-              <div style="position:relative;display:inline-block;">
-                <span class="tip-icon" onclick="toggleTip('tip_liab')">?</span>
-                <div class="tip-bubble" id="tip_liab">Everything your organization owes — unpaid bills, loans, deferred revenue, and any other obligations as of your fiscal year end.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part X Line 26, or your balance sheet labeled "Total Liabilities."</div></div>
-              </div>
-            </div>
-            <input type="number" id="liab0" placeholder="0">
-          </div>
-
-          <div class="field-wrap">
-            <div class="field-label-row">
-              <label>Cash &amp; Cash Equivalents</label>
-              <div style="position:relative;display:inline-block;">
-                <span class="tip-icon" onclick="toggleTip('tip_cash')">?</span>
-                <div class="tip-bubble" id="tip_cash">Money your organization can access immediately — checking accounts, savings accounts, and money market funds. Does not include investments or receivables.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part X Lines 1–2, or the top of your balance sheet under "Cash and Cash Equivalents."</div></div>
-              </div>
-            </div>
-            <input type="number" id="cash0" placeholder="0">
-          </div>
-
-          <div class="field-wrap">
-            <div class="field-label-row">
-              <label>Current Assets</label>
-              <div style="position:relative;display:inline-block;">
-                <span class="tip-icon" onclick="toggleTip('tip_currassets')">?</span>
-                <div class="tip-bubble" id="tip_currassets">Assets you expect to convert to cash within the next 12 months — includes cash, money owed to you (receivables), and prepaid expenses. If you're not sure, use your cash figure as an estimate.<div class="tip-where"><strong>Where to find it:</strong> Your audited balance sheet under "Current Assets." The Form 990 doesn't label these separately.</div></div>
-              </div>
-            </div>
-            <input type="number" id="currassets0" placeholder="0">
-          </div>
-
-          <div class="field-wrap">
-            <div class="field-label-row">
-              <label>Current Liabilities</label>
-              <div style="position:relative;display:inline-block;">
-                <span class="tip-icon" onclick="toggleTip('tip_currliab')">?</span>
-                <div class="tip-bubble" id="tip_currliab">Bills and obligations due within the next 12 months — accounts payable, accrued payroll, and short-term debt. If you're unsure, use your accounts payable figure as an estimate.<div class="tip-where"><strong>Where to find it:</strong> Your audited balance sheet under "Current Liabilities." The Form 990 doesn't label these separately.</div></div>
-              </div>
-            </div>
-            <input type="number" id="currliab0" placeholder="0">
-          </div>
-
-          <div class="field-wrap">
-            <div class="field-label-row">
-              <label>Program Service Expenses</label>
-              <div style="position:relative;display:inline-block;">
-                <span class="tip-icon" onclick="toggleTip('tip_prog')">?</span>
-                <div class="tip-bubble" id="tip_prog">Money spent directly delivering your programs and services — staff time, supplies, and costs tied to your mission. Does not include admin or fundraising.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25 Column B, or your income statement under "Program Expenses."</div></div>
-              </div>
-            </div>
-            <input type="number" id="prog0" placeholder="0">
-          </div>
-
-          <div class="field-wrap">
-            <div class="field-label-row">
-              <label>Management &amp; General Expenses</label>
-              <div style="position:relative;display:inline-block;">
-                <span class="tip-icon" onclick="toggleTip('tip_mgmt')">?</span>
-                <div class="tip-bubble" id="tip_mgmt">Overhead costs that keep the organization running — executive staff, finance, HR, IT, and general administration. Not directly tied to programs.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25 Column C, or your income statement under "Management and General."</div></div>
-              </div>
-            </div>
-            <input type="number" id="mgmt0" placeholder="0">
-          </div>
-
-          <div class="field-wrap">
-            <div class="field-label-row">
-              <label>Fundraising Expenses</label>
-              <div style="position:relative;display:inline-block;">
-                <span class="tip-icon" onclick="toggleTip('tip_fund')">?</span>
-                <div class="tip-bubble" id="tip_fund">Money spent raising money — events, mailings, grant writing staff time, and donor outreach. If your organization does no formal fundraising, enter 0.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part IX Line 25 Column D, or your income statement under "Fundraising Expenses."</div></div>
-              </div>
-            </div>
-            <input type="number" id="fund0" placeholder="0">
-          </div>
-
-          <div class="field-wrap">
-            <div class="field-label-row">
-              <label>Total Contributions (Donations)</label>
-              <div style="position:relative;display:inline-block;">
-                <span class="tip-icon" onclick="toggleTip('tip_contrib')">?</span>
-                <div class="tip-bubble" id="tip_contrib">All philanthropic support received — individual donations, foundation grants, corporate gifts, and government grants. Does not include earned revenue like program fees or service contracts.<div class="tip-where"><strong>Where to find it:</strong> Form 990 Part VIII Line 1h, or your income statement under "Contributions and Grants."</div></div>
-              </div>
-            </div>
-            <input type="number" id="contrib0" placeholder="0">
-          </div>
-
-          <div class="field-wrap">
-            <div class="field-label-row">
-              <label>Largest Single Revenue Source</label>
-              <div style="position:relative;display:inline-block;">
-                <span class="tip-icon" onclick="toggleTip('tip_toprev')">?</span>
-                <div class="tip-bubble" id="tip_toprev">The single largest source of revenue in the year — one funder, one government contract, or one revenue stream. For example, if your biggest grant was $150,000 from a foundation, enter that amount.<div class="tip-where"><strong>Where to find it:</strong> Review your revenue sources and identify the largest single one. You may need to look at your grant records or income statement line by line.</div></div>
-              </div>
-            </div>
-            <input type="number" id="toprev0" placeholder="0">
-          </div>
-
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="sec-title">Prior Years (Optional But Helpful)</div>
-        <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">If you have last year's figures available, please include them. This helps us identify trends over time.</p>
-        <div style="margin-bottom:1rem">
-          <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:8px">Prior Year</div>
-          <div class="meta-grid">
-            <div class="field-wrap"><label>Total Revenue</label><input type="number" id="rev1" placeholder="0"></div>
-            <div class="field-wrap"><label>Total Expenses</label><input type="number" id="exp1" placeholder="0"></div>
-            <div class="field-wrap"><label>Cash &amp; Equivalents</label><input type="number" id="cash1" placeholder="0"></div>
-          </div>
-        </div>
-        <div>
-          <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:8px">Two Years Ago</div>
-          <div class="meta-grid">
-            <div class="field-wrap"><label>Total Revenue</label><input type="number" id="rev2" placeholder="0"></div>
-            <div class="field-wrap"><label>Total Expenses</label><input type="number" id="exp2" placeholder="0"></div>
-            <div class="field-wrap"><label>Cash &amp; Equivalents</label><input type="number" id="cash2" placeholder="0"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Documents Available + optional upload (shown for both paths once a path is chosen) -->
-    <div id="docsAvailableSection" style="display:none">
-      <div class="card">
-        <div class="sec-title">Documents Available</div>
-        <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">Check all documents you can provide if requested.</p>
-        <div class="docs-grid">
-          <label class="doc-item"><input type="checkbox" id="doc_990"> Form 990</label>
-          <label class="doc-item"><input type="checkbox" id="doc_audit"> Audited Financials</label>
-          <label class="doc-item"><input type="checkbox" id="doc_bs"> Balance Sheet</label>
-          <label class="doc-item"><input type="checkbox" id="doc_is"> Income Statement</label>
-          <label class="doc-item"><input type="checkbox" id="doc_cf"> Cash Flow Statement</label>
-          <label class="doc-item"><input type="checkbox" id="doc_budget"> Board Approved Budget</label>
-          <label class="doc-item"><input type="checkbox" id="doc_minutes"> Board Minutes</label>
-          <label class="doc-item"><input type="checkbox" id="doc_strategic"> Strategic Plan</label>
-        </div>
-      </div>
-
-      <!-- Additional/general document upload — shown on manual path as an optional extra -->
-      <div class="card" id="manualUploadCard" style="display:none">
-        <div class="sec-title">Upload Supporting Documents <span style="font-weight:400;color:#9CA3AF;font-size:12px;text-transform:none;letter-spacing:0">(optional)</span></div>
-        <p style="font-size:12px;color:#6B7280;margin-bottom:1rem">If you'd like to attach any documents — Form 990, financial statements, board materials, etc. — you can do so here.</p>
         <div class="upload-zone" id="uploadZone"
           ondragover="handleDragOver(event)"
           ondragleave="handleDragLeave(event)"
           ondrop="handleDrop(event)">
-          <input type="file" id="fileInput" multiple
-            accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png"
-            onchange="handleFileSelect(event)">
+          <input type="file" id="fileInput" multiple accept=".pdf" onchange="handleFileSelect(event)">
           <div class="upload-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           </div>
-          <div class="upload-label">Drop files here or <span style="color:#1A6EB5">browse</span></div>
-          <div class="upload-hint">PDF, Word, Excel, images — up to 10MB per file</div>
+          <div class="upload-label">Drop PDFs here or <span style="color:#1A6EB5">browse</span></div>
+          <div class="upload-hint">Form 990, audited financials, financial statements — up to 5 files, 10MB each</div>
         </div>
+
         <div class="file-list" id="fileList"></div>
+
+        <div class="manual-toggle">
+          <button class="manual-toggle-btn" onclick="toggleManual()">
+            Don't have documents? Enter financial data manually instead
+          </button>
+        </div>
+
+        <div id="manualSection" style="display:none;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid #E5E7EB">
+          <div style="font-size:13px;font-weight:600;color:#374151;margin-bottom:1rem">Manual Entry <span style="font-weight:400;color:#9CA3AF;font-size:12px">— enter what you have, skip what you don't</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="field-wrap"><label style="font-size:12px">EIN</label><input type="text" id="ein" placeholder="e.g. 12-3456789"></div>
+            <div class="field-wrap"><label style="font-size:12px">Fiscal Year End</label><input type="text" id="fyEnd" placeholder="e.g. 12/31/2023"></div>
+            <div class="field-wrap"><label style="font-size:12px">Total Revenue</label><input type="number" id="rev0" placeholder="0"></div>
+            <div class="field-wrap"><label style="font-size:12px">Total Expenses</label><input type="number" id="exp0" placeholder="0"></div>
+            <div class="field-wrap"><label style="font-size:12px">Total Assets</label><input type="number" id="assets0" placeholder="0"></div>
+            <div class="field-wrap"><label style="font-size:12px">Total Liabilities</label><input type="number" id="liab0" placeholder="0"></div>
+            <div class="field-wrap"><label style="font-size:12px">Cash &amp; Equivalents</label><input type="number" id="cash0" placeholder="0"></div>
+            <div class="field-wrap"><label style="font-size:12px">Program Expenses</label><input type="number" id="prog0" placeholder="0"></div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem;display:flex;gap:10px;justify-content:space-between">
+          <button class="btn-ghost" onclick="goToStep1()">← Back</button>
+          <button class="btn-primary" onclick="submitIntake()" id="submitBtn" style="padding:10px 28px">Submit →</button>
+        </div>
+        <div class="error-msg" id="step2Error" style="margin-top:10px;display:none;text-align:center"></div>
       </div>
     </div>
 
-    <div id="submitSection" style="text-align:center;padding:1rem 0 2rem;display:none">
-      <button class="btn-primary" style="padding:12px 32px;font-size:15px" onclick="submitIntake()" id="submitBtn">Submit Financial Report</button>
-      <div class="error-msg" id="errorMsg" style="margin-top:10px;display:block;text-align:center"></div>
-    </div>
-  </div>
+  </div><!-- /formView -->
 
+  <!-- Success view -->
   <div id="successView" style="display:none;text-align:center;padding:3rem 2rem">
     <div style="width:64px;height:64px;background:#E8F5F0;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M5 14L11 20L23 8" stroke="#2EAD77" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
-    <div style="font-size:22px;font-weight:800;color:#111827;margin-bottom:8px">Report Submitted!</div>
-    <div style="font-size:14px;color:#6B7280;max-width:440px;margin:0 auto 28px">Thank you. Your financial information has been received and will be reviewed by the Clear Philanthropy team.</div>
+    <div style="font-size:22px;font-weight:800;color:#111827;margin-bottom:8px">Submitted!</div>
+    <div style="font-size:14px;color:#6B7280;max-width:420px;margin:0 auto 28px;line-height:1.7">
+      Thank you. Your information has been received and will be reviewed by the Clear Philanthropy team.
+    </div>
 
-    <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:1.25rem 1.5rem;max-width:440px;margin:0 auto 24px;text-align:left">
+    <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:1.25rem 1.5rem;max-width:420px;margin:0 auto 24px;text-align:left">
       <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#9CA3AF;margin-bottom:10px">Submission Summary</div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid #E5E7EB;">
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid #E5E7EB">
         <span style="color:#6B7280">Organization</span>
         <span style="font-weight:600;color:#111827" id="summaryOrgName">—</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid #E5E7EB;">
-        <span style="color:#6B7280">Fiscal Year End</span>
-        <span style="font-weight:600;color:#111827" id="summaryFyEnd">—</span>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid #E5E7EB">
+        <span style="color:#6B7280">Contact</span>
+        <span style="font-weight:600;color:#111827" id="summaryContact">—</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;">
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px">
         <span style="color:#6B7280">Documents Uploaded</span>
         <span style="font-weight:600;color:#111827" id="summaryFileCount">—</span>
       </div>
     </div>
 
-    <div style="background:#F0F6FF;border:1px solid #BFDBFE;border-radius:10px;padding:1.25rem 1.5rem;max-width:440px;margin:0 auto 24px;text-align:left">
+    <div style="background:#F0F6FF;border:1px solid #BFDBFE;border-radius:10px;padding:1.25rem 1.5rem;max-width:420px;margin:0 auto 24px;text-align:left">
       <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#1A6EB5;margin-bottom:8px">What Happens Next</div>
       <div style="font-size:13px;color:#374151;line-height:1.7">
-        The Clear Philanthropy team will review your submission as part of our assessment process. If we need any additional information or clarification, we'll reach out using the contact email you provided.
+        The Clear Philanthropy team will review your submission. If we need anything additional, we'll reach out at the email address you provided.
       </div>
     </div>
 
-    <div style="font-size:12px;color:#9CA3AF;max-width:440px;margin:0 auto">
-      Questions about your submission? Contact us at <a href="mailto:hello@clearphilanthropy.com" style="color:#1A6EB5;font-weight:600;text-decoration:none">hello@clearphilanthropy.com</a>
+    <div style="font-size:12px;color:#9CA3AF;max-width:420px;margin:0 auto">
+      Questions? Contact us at <a href="mailto:hello@clearphilanthropy.com" style="color:#1A6EB5;font-weight:600;text-decoration:none">hello@clearphilanthropy.com</a>
     </div>
   </div>
 </main>
@@ -573,7 +261,7 @@
 <!-- Submit loading overlay -->
 <div class="submit-overlay" id="submitOverlay">
   <div class="submit-spinner"></div>
-  <div class="submit-overlay-text" id="submitOverlayText">Submitting your report...</div>
+  <div class="submit-overlay-text" id="submitOverlayText">Submitting...</div>
   <div class="submit-overlay-sub">This usually takes just a few seconds.</div>
 </div>
 
@@ -581,164 +269,101 @@
 <script src="js/db.js"></script>
 <script>
 
-  // ── Tooltip toggle ──────────────────────────────────────────────────────────
-  function toggleTip(id) {
-    const bubble = document.getElementById(id);
-    const icon = bubble.previousElementSibling;
-    const isOpen = bubble.classList.contains('active');
-    document.querySelectorAll('.tip-bubble.active').forEach(b => {
-      b.classList.remove('active');
-      b.previousElementSibling?.classList.remove('active');
+  let stagedFiles = [];
+  let showingManual = false;
+
+  // ── Step navigation ──────────────────────────────────────────────────────────
+  function setStep(n) {
+    [1,2,3].forEach(i => {
+      const s = document.getElementById('step' + i);
+      s.classList.remove('active','done');
+      if (i < n) s.classList.add('done');
+      else if (i === n) s.classList.add('active');
+      // Update step circle for done steps
+      const circle = s.querySelector('.step-circle');
+      if (i < n) circle.innerHTML = '✓';
+      else circle.innerHTML = i;
     });
-    if (!isOpen) {
-      bubble.classList.add('active');
-      icon?.classList.add('active');
-    }
+    document.getElementById('stepView1').style.display = n === 1 ? '' : 'none';
+    document.getElementById('stepView2').style.display = n === 2 ? '' : 'none';
   }
 
-  document.addEventListener('click', function(e) {
-    if (!e.target.classList.contains('tip-icon')) {
-      document.querySelectorAll('.tip-bubble.active').forEach(b => {
-        b.classList.remove('active');
-        b.previousElementSibling?.classList.remove('active');
-      });
+  function goToStep1() { setStep(1); }
+
+  function goToStep2() {
+    const orgName = document.getElementById('orgName').value.trim();
+    const contactName = document.getElementById('contactName').value.trim();
+    const contactEmail = document.getElementById('contactEmail').value.trim();
+    const errEl = document.getElementById('step1Error');
+
+    if (!orgName || !contactName || !contactEmail) {
+      errEl.textContent = 'Please fill in all fields.';
+      errEl.style.display = 'block';
+      return;
     }
-  });
-
-  // ── Path choice ─────────────────────────────────────────────────────────────
-  let selectedPath = null;
-
-  function selectPath(path) {
-    selectedPath = path;
-    document.getElementById('pathUpload').classList.toggle('selected', path === 'upload');
-    document.getElementById('pathManual').classList.toggle('selected', path === 'manual');
-
-    document.getElementById('uploadPathSection').style.display = path === 'upload' ? '' : 'none';
-    document.getElementById('manualPathSection').style.display = path === 'manual' ? '' : 'none';
-    document.getElementById('manualUploadCard').style.display = path === 'manual' ? '' : 'none';
-
-    document.getElementById('docsAvailableSection').style.display = '';
-    document.getElementById('submitSection').style.display = '';
-
-    document.getElementById('submitBtn').textContent =
-      path === 'upload' ? 'Submit Documents' : 'Submit Financial Report';
+    if (!contactEmail.includes('@')) {
+      errEl.textContent = 'Please enter a valid email address.';
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+    setStep(2);
   }
 
-  // ── Document upload (upload path) ──────────────────────────────────────────
-  let docFiles = [];
+  function toggleManual() {
+    showingManual = !showingManual;
+    document.getElementById('manualSection').style.display = showingManual ? '' : 'none';
+    document.querySelector('.manual-toggle-btn').textContent = showingManual
+      ? 'Hide manual entry'
+      : "Don't have documents? Enter financial data manually instead";
+  }
 
+  // ── File upload ──────────────────────────────────────────────────────────────
   function fileIcon() {
     return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
   }
 
-  function formatBytes(bytes) {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  function formatBytes(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+    return (b/(1024*1024)).toFixed(1) + ' MB';
   }
-
-  function renderDocFileList() {
-    const list = document.getElementById('fileListDocs');
-    list.innerHTML = docFiles.map((f, i) => `
-      <div class="file-item">
-        <div class="file-item-icon">${fileIcon()}</div>
-        <div class="file-item-name">${f.name}</div>
-        <div class="file-item-size">${formatBytes(f.size)}</div>
-        <button class="file-item-remove" onclick="removeDocFile(${i})" title="Remove">×</button>
-      </div>
-    `).join('');
-  }
-
-  function addDocFiles(files) {
-    const maxSize = 10 * 1024 * 1024;
-    Array.from(files).forEach(file => {
-      if (file.type !== 'application/pdf') { alert(`${file.name} — only PDF files are supported here.`); return; }
-      if (file.size > maxSize) { alert(`${file.name} exceeds the 10MB limit.`); return; }
-      if (docFiles.length >= 5) { alert('Maximum 5 files.'); return; }
-      if (!docFiles.find(f => f.name === file.name && f.size === file.size)) {
-        docFiles.push(file);
-      }
-    });
-    renderDocFileList();
-  }
-
-  function removeDocFile(index) { docFiles.splice(index, 1); renderDocFileList(); }
-  function handleFileSelectDocs(e) { addDocFiles(e.target.files); e.target.value = ''; }
-  function handleDragOverDocs(e) { e.preventDefault(); document.getElementById('uploadZoneDocs').classList.add('dragover'); }
-  function handleDragLeaveDocs(e) { document.getElementById('uploadZoneDocs').classList.remove('dragover'); }
-  function handleDropDocs(e) {
-    e.preventDefault();
-    document.getElementById('uploadZoneDocs').classList.remove('dragover');
-    addDocFiles(e.dataTransfer.files);
-  }
-
-  // ── General supporting document upload (manual path) ──────────────────────
-  let stagedFiles = [];
 
   function renderFileList() {
     const list = document.getElementById('fileList');
     if (!stagedFiles.length) { list.innerHTML = ''; return; }
     list.innerHTML = stagedFiles.map((f, i) => `
-      <div class="file-item ${f.status}" id="file-item-${i}">
+      <div class="file-item">
         <div class="file-item-icon">${fileIcon()}</div>
         <div class="file-item-name">${f.name}</div>
-        <div class="file-item-size">${formatBytes(f.file.size)}</div>
-        <div class="file-status ${f.status === 'pending' ? 'pending' : f.status === 'done' ? 'done' : 'error'}">
-          ${f.status === 'pending' ? 'Ready' : f.status === 'done' ? '✓ Uploaded' : '✗ Failed'}
-        </div>
-        ${f.status === 'pending' ? `<button class="file-item-remove" onclick="removeFile(${i})" title="Remove">×</button>` : ''}
+        <div class="file-item-size">${formatBytes(f.size)}</div>
+        <button class="file-item-remove" onclick="removeFile(${i})">×</button>
       </div>
     `).join('');
   }
 
   function addFiles(files) {
-    const maxSize = 10 * 1024 * 1024;
-    Array.from(files).forEach(file => {
-      if (file.size > maxSize) { alert(`${file.name} is too large. Maximum file size is 10MB.`); return; }
-      if (!stagedFiles.find(f => f.name === file.name && f.file.size === file.size)) {
-        stagedFiles.push({ file, name: file.name, status: 'pending' });
-      }
+    const max = 10 * 1024 * 1024;
+    Array.from(files).forEach(f => {
+      if (f.type !== 'application/pdf') { alert(`${f.name} — only PDF files are supported.`); return; }
+      if (f.size > max) { alert(`${f.name} exceeds the 10MB limit.`); return; }
+      if (stagedFiles.length >= 5) { alert('Maximum 5 files.'); return; }
+      if (!stagedFiles.find(x => x.name === f.name && x.size === f.size)) stagedFiles.push(f);
     });
     renderFileList();
   }
 
-  function removeFile(index) { stagedFiles.splice(index, 1); renderFileList(); }
+  function removeFile(i) { stagedFiles.splice(i, 1); renderFileList(); }
   function handleFileSelect(e) { addFiles(e.target.files); e.target.value = ''; }
   function handleDragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('dragover'); }
-  function handleDragLeave(e) { document.getElementById('uploadZone').classList.remove('dragover'); }
+  function handleDragLeave() { document.getElementById('uploadZone').classList.remove('dragover'); }
   function handleDrop(e) {
     e.preventDefault();
     document.getElementById('uploadZone').classList.remove('dragover');
     addFiles(e.dataTransfer.files);
   }
 
-  async function uploadStagedFiles(assessmentId) {
-    const pending = stagedFiles.filter(f => f.status === 'pending');
-    if (!pending.length) return;
-    for (let i = 0; i < stagedFiles.length; i++) {
-      if (stagedFiles[i].status !== 'pending') continue;
-      try {
-        await DB.uploadFile(assessmentId, stagedFiles[i].file);
-        stagedFiles[i].status = 'done';
-      } catch(e) {
-        stagedFiles[i].status = 'error';
-        console.error('Upload failed for', stagedFiles[i].name, e.message);
-      }
-      renderFileList();
-    }
-  }
-
-  async function uploadDocFiles(assessmentId) {
-    for (const file of docFiles) {
-      try {
-        await DB.uploadFile(assessmentId, file);
-      } catch(e) {
-        console.error('Upload failed for', file.name, e.message);
-      }
-    }
-  }
-
-  // ── Loading overlay ─────────────────────────────────────────────────────────
+  // ── Loading overlay ──────────────────────────────────────────────────────────
   function showOverlay(text) {
     document.getElementById('submitOverlayText').textContent = text;
     document.getElementById('submitOverlay').classList.add('active');
@@ -747,84 +372,57 @@
     document.getElementById('submitOverlay').classList.remove('active');
   }
 
-  // ── Submit ──────────────────────────────────────────────────────────────────
+  // ── Submit ───────────────────────────────────────────────────────────────────
   async function submitIntake() {
     const orgName = document.getElementById('orgName').value.trim();
-    const ein = document.getElementById('ein').value.trim();
-    const fyEnd = document.getElementById('fyEnd').value.trim();
     const contactName = document.getElementById('contactName').value.trim();
     const contactEmail = document.getElementById('contactEmail').value.trim();
-    const errorEl = document.getElementById('errorMsg');
+    const errEl = document.getElementById('step2Error');
     const submitBtn = document.getElementById('submitBtn');
 
-    if (!orgName || !ein || !fyEnd || !contactName || !contactEmail) {
-      errorEl.textContent = 'Please fill in all required fields.';
-      errorEl.style.display = 'block';
-      return;
-    }
+    // Require at least docs OR some manual data
+    const hasFiles = stagedFiles.length > 0;
+    const hasManual = showingManual && (
+      parseFloat(document.getElementById('rev0')?.value) > 0 ||
+      parseFloat(document.getElementById('exp0')?.value) > 0
+    );
 
-    if (!selectedPath) {
-      errorEl.textContent = 'Please choose how you\'d like to provide your financial information.';
-      errorEl.style.display = 'block';
+    if (!hasFiles && !hasManual) {
+      errEl.textContent = 'Please upload at least one document, or use manual entry to provide some financial figures.';
+      errEl.style.display = 'block';
       return;
-    }
-
-    if (selectedPath === 'upload' && docFiles.length === 0) {
-      errorEl.textContent = 'Please upload at least one document, or choose "I\'ll enter figures manually."';
-      errorEl.style.display = 'block';
-      return;
-    }
-
-    if (selectedPath === 'manual') {
-      const rev0 = parseFloat(document.getElementById('rev0')?.value);
-      const exp0 = parseFloat(document.getElementById('exp0')?.value);
-      if (!rev0 || !exp0) {
-        errorEl.textContent = 'Please enter at least Total Revenue and Total Expenses.';
-        errorEl.style.display = 'block';
-        return;
-      }
     }
 
     submitBtn.disabled = true;
-    errorEl.textContent = '';
-    errorEl.style.display = 'none';
-
-    const g = id => parseFloat(document.getElementById(id)?.value) || 0;
-    const docs = ['doc_990','doc_audit','doc_bs','doc_is','doc_cf','doc_budget','doc_minutes','doc_strategic']
-      .filter(id => document.getElementById(id)?.checked);
+    errEl.style.display = 'none';
 
     const assessmentId = 'intake_' + Date.now();
 
+    const g = id => parseFloat(document.getElementById(id)?.value) || 0;
+
     const data = {
       id: assessmentId,
-      orgName, ein, fyEnd, contactName, contactEmail,
+      orgName, contactName, contactEmail,
       status: 'submitted',
-      docs,
-      score: 0,
-      riskLevel: 'Pending',
       recommendation: 'Pending Review',
+      riskLevel: 'Pending',
+      score: 0,
+      docs: [],
       created_at: new Date().toISOString(),
-      savedAt: new Date().toISOString()
+      savedAt: new Date().toISOString(),
+      sourceNotes: hasFiles
+        ? 'Submitted via self-report (documents uploaded — pending review)'
+        : 'Submitted via self-report (manual entry)'
     };
 
-    if (selectedPath === 'manual') {
+    // If manual data provided, include it
+    if (showingManual) {
       Object.assign(data, {
-        rev: g('rev0'), exp: g('exp0'), assets: g('assets0'), liab: g('liab0'), cash: g('cash0'),
-        currassets: g('currassets0'), currliab: g('currliab0'),
-        prog: g('prog0'), mgmt: g('mgmt0'), fund: g('fund0'), contrib: g('contrib0'), toprev: g('toprev0'),
-        rev1: g('rev1'), rev2: g('rev2'), exp1: g('exp1'), exp2: g('exp2'), cash1: g('cash1'), cash2: g('cash2'),
-        dataSource: 'internal',
-        sourceNotes: 'Submitted via self-report (manual entry)'
-      });
-    } else {
-      // Upload path — financial fields left blank/zero; reviewer runs auto-fill from
-      // the uploaded documents on the dashboard.
-      Object.assign(data, {
-        rev: 0, exp: 0, assets: 0, liab: 0, cash: 0,
-        currassets: 0, currliab: 0,
-        prog: 0, mgmt: 0, fund: 0, contrib: 0, toprev: 0,
-        rev1: 0, rev2: 0, exp1: 0, exp2: 0, cash1: 0, cash2: 0,
-        sourceNotes: 'Submitted via self-report (documents uploaded — pending review)'
+        ein: document.getElementById('ein')?.value || '',
+        fyEnd: document.getElementById('fyEnd')?.value || '',
+        rev: g('rev0'), exp: g('exp0'), assets: g('assets0'), liab: g('liab0'),
+        cash: g('cash0'), prog: g('prog0'),
+        dataSource: 'internal'
       });
     }
 
@@ -832,31 +430,29 @@
       showOverlay('Saving your submission...');
       await DB.saveAssessment(data);
 
-      if (selectedPath === 'upload') {
+      if (hasFiles) {
         showOverlay('Uploading documents...');
-        await uploadDocFiles(assessmentId);
-      } else if (stagedFiles.length) {
-        showOverlay('Uploading documents...');
-        await uploadStagedFiles(assessmentId);
+        for (const file of stagedFiles) {
+          try { await DB.uploadFile(assessmentId, file); }
+          catch(e) { console.error('Upload failed:', file.name, e.message); }
+        }
       }
 
-      // Populate submission summary
+      // Populate success summary
       document.getElementById('summaryOrgName').textContent = orgName;
-      document.getElementById('summaryFyEnd').textContent = fyEnd;
-      const fileCount = selectedPath === 'upload'
-        ? docFiles.length
-        : stagedFiles.filter(f => f.status === 'done').length;
-      document.getElementById('summaryFileCount').textContent = fileCount > 0
-        ? `${fileCount} file${fileCount === 1 ? '' : 's'}`
-        : 'None';
+      document.getElementById('summaryContact').textContent = contactName;
+      document.getElementById('summaryFileCount').textContent = hasFiles
+        ? `${stagedFiles.length} file${stagedFiles.length === 1 ? '' : 's'}`
+        : 'None (manual entry)';
 
+      setStep(3);
       hideOverlay();
       document.getElementById('formView').style.display = 'none';
       document.getElementById('successView').style.display = 'block';
     } catch(e) {
       hideOverlay();
-      errorEl.textContent = 'Submission failed. Please try again.';
-      errorEl.style.display = 'block';
+      errEl.textContent = 'Submission failed. Please try again.';
+      errEl.style.display = 'block';
       submitBtn.disabled = false;
     }
   }
