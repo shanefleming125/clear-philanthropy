@@ -226,4 +226,54 @@ async deleteFile(path) {
     }
     return results.sort((a, b) => new Date(b.created_at || b.savedAt) - new Date(a.created_at || a.savedAt));
   }
+ /* ════════════════════════════════════════════════════════════════
+   PATCH FOR db.js
+   Add these two functions inside the DB object, before the final
+   closing }; of the DB object.
+   ════════════════════════════════════════════════════════════════ */
+
+  // ── Share token generation ─────────────────────────────────────────────────
+
+  async function generateToken() {
+    const arr = new Uint8Array(24);
+    crypto.getRandomValues(arr);
+    return Array.from(arr).map(b => b.toString(16).padStart(2,'0')).join('');
+  },
+
+  async saveShareToken(assessmentId, token) {
+    // Fetch the current record, add the token, save back
+    try {
+      const data = await this.getAssessment(assessmentId);
+      if (!data) throw new Error('Assessment not found');
+      data.shareToken = token;
+      await this.saveAssessment(data);
+      return token;
+    } catch(e) {
+      console.error('saveShareToken error:', e.message);
+      throw e;
+    }
+  },
+
+  async getAssessmentByToken(token) {
+    // Public fetch — no auth header, just anon key
+    // The assessment record stores shareToken in the data jsonb column
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/assessments?select=data&data->>shareToken=eq.${token}`,
+        {
+          headers: {
+            'apikey': SUPABASE_ANON,
+            'Authorization': `Bearer ${SUPABASE_ANON}`,
+          }
+        }
+      );
+      if (!res.ok) throw new Error('Not found');
+      const rows = await res.json();
+      if (!rows.length) return null;
+      return rows[0]?.data || null;
+    } catch(e) {
+      console.error('getAssessmentByToken error:', e.message);
+      return null;
+    }
+  }, 
 };
