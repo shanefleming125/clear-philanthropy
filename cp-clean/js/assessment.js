@@ -21,14 +21,12 @@ window.addEventListener('DOMContentLoaded', () => {
   const fromExtract = params.get('fromExtract');
 
   if (id && fromExtract) {
-    // Dashboard "Review Extracted Data" path — load record then overlay extraction
     loadFromDB(id).then(() => {
       const raw = sessionStorage.getItem('cp:extracted');
       if (raw) {
         sessionStorage.removeItem('cp:extracted');
         try {
           const data = JSON.parse(raw);
-          // applyExtractedData is defined in assessment.html inline script
           if (typeof applyExtractedData === 'function') applyExtractedData(data);
         } catch(e) { console.warn('Could not apply extracted data:', e); }
       }
@@ -38,8 +36,6 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   recalc();
 
-  // Hook dirty tracking onto all inputs after a short delay
-  // (so populateForm on load doesn't immediately trigger dirty)
   setTimeout(() => {
     document.querySelectorAll('input, select, textarea').forEach(el => {
       el.addEventListener('input', markDirty);
@@ -378,6 +374,40 @@ IMPORTANT: Do NOT make a funding recommendation or state/imply whether this orga
 function copyAssessment() {
   const text = document.getElementById('aiText').textContent;
   navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
+}
+
+// ── Share Assessment ─────────────────────────────────────────────────────────
+async function shareAssessment() {
+  if (!editingId) {
+    alert('Please save the assessment first before sharing.');
+    return;
+  }
+
+  const shareBtn = document.getElementById('shareBtn');
+  const originalText = shareBtn.textContent;
+  shareBtn.textContent = 'Generating link...';
+  shareBtn.disabled = true;
+
+  try {
+    const arr = new Uint8Array(24);
+    crypto.getRandomValues(arr);
+    const token = Array.from(arr).map(b => b.toString(16).padStart(2,'0')).join('');
+
+    await DB.saveShareToken(editingId, token);
+
+    const url = `${window.location.origin}/view.html?t=${token}`;
+    await navigator.clipboard.writeText(url);
+
+    shareBtn.textContent = '✓ Link copied!';
+    setTimeout(() => {
+      shareBtn.textContent = originalText;
+      shareBtn.disabled = false;
+    }, 2500);
+  } catch(e) {
+    alert('Could not generate share link: ' + e.message);
+    shareBtn.textContent = originalText;
+    shareBtn.disabled = false;
+  }
 }
 
 // ── Populate form on load ───────────────────────────────────────────────────
