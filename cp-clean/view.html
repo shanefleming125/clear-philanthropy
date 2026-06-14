@@ -7,88 +7,66 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect width='44' height='44' rx='10' fill='%231A6EB5'/><circle cx='17' cy='22' r='10' stroke='white' stroke-width='1.8' fill='rgba(255,255,255,0.1)'/><circle cx='27' cy='22' r='10' stroke='rgba(255,255,255,0.5)' stroke-width='1.8' fill='rgba(255,255,255,0.05)'/><path d='M22 13.2C19 16 19 28 22 30.8C25 28 25 16 22 13.2Z' fill='white'/></svg>">
 <style>
-  .view-hero {
-    background: var(--navy);
-    border-radius: var(--radius);
-    padding: 1.5rem 1.75rem;
-    margin-bottom: 1.25rem;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }
+  .view-hero { background: var(--navy); border-radius: var(--radius); padding: 1.5rem 1.75rem; margin-bottom: 1.25rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
   .view-hero-left { flex: 1; min-width: 0; }
   .view-org-name { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 6px; }
   .view-meta { font-size: 12px; color: rgba(255,255,255,0.5); display: flex; flex-wrap: wrap; gap: 12px; }
-  .view-meta span { display: flex; align-items: center; gap: 5px; }
   .view-score-block { text-align: center; flex-shrink: 0; }
   .view-score-label { font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
   .view-score-num { font-size: 42px; font-weight: 800; line-height: 1; }
   .view-score-denom { font-size: 14px; color: rgba(255,255,255,0.4); }
-
   .view-section { margin-bottom: 1.25rem; }
-  .view-section-title {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--text-secondary);
-    margin-bottom: 0.75rem;
-  }
-
-  .ratio-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
-  }
-  .ratio-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 0.875rem 1rem;
-  }
+  .view-section-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.75rem; }
+  .ratio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .ratio-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.875rem 1rem; }
   .ratio-card-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
   .ratio-card-formula { font-size: 10px; color: var(--text-secondary); margin-bottom: 8px; }
   .ratio-card-bottom { display: flex; align-items: center; justify-content: space-between; }
   .ratio-card-value { font-size: 18px; font-weight: 800; color: var(--text); }
-
   .flag-row { display: flex; align-items: flex-start; gap: 8px; padding: 7px 0; border-bottom: 1px solid #F3F4F6; font-size: 13px; }
   .flag-row:last-child { border-bottom: none; }
-
   .narrative-text { font-size: 14px; line-height: 1.9; color: var(--text); white-space: pre-wrap; }
-
-  .source-strip {
-    background: #F0F6FF;
-    border: 1px solid #BFDBFE;
-    border-radius: var(--radius);
-    padding: 0.875rem 1rem;
-    margin-bottom: 1.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
+  .source-strip { background: #F0F6FF; border: 1px solid #BFDBFE; border-radius: var(--radius); padding: 0.875rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
   .source-strip-left { font-size: 13px; color: var(--text); }
   .source-strip-left strong { color: var(--navy); }
-
-  .conf-pill {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px;
-  }
+  .conf-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
   .conf-high   { background: rgba(46,173,119,0.18); color: #2EAD77; }
   .conf-medium { background: rgba(77,166,232,0.18); color: #1A6EB5; }
   .conf-low    { background: rgba(107,114,128,0.15); color: #6B7280; }
   .conf-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
-  .view-footer {
-    text-align: center;
-    padding: 2rem 0 1rem;
-    font-size: 12px;
-    color: var(--text-secondary);
-    border-top: 1px solid var(--border);
+  /* About section */
+  .about-section {
+    background: var(--navy);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.75rem;
     margin-top: 2rem;
   }
-  .view-footer a { color: var(--blue); text-decoration: none; font-weight: 600; }
+  .about-section-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: rgba(255,255,255,0.4);
+    margin-bottom: 0.875rem;
+  }
+  .about-section-body {
+    font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.8;
+    max-width: 640px;
+  }
+  .about-section-body strong { color: rgba(255,255,255,0.9); }
+  .about-section-body a { color: #4DA6E8; text-decoration: none; font-weight: 600; }
+  .about-section-body a:hover { text-decoration: underline; }
+  .about-ratios {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem;
+  }
+  .about-ratio-tag {
+    font-size: 11px; font-weight: 600;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.6);
+    padding: 3px 10px; border-radius: 20px;
+  }
 
+  .view-footer { text-align: center; padding: 1.5rem 0 1rem; font-size: 12px; color: var(--text-secondary); border-top: 1px solid var(--border); margin-top: 1.5rem; }
+  .view-footer a { color: var(--blue); text-decoration: none; font-weight: 600; }
   .error-view { text-align: center; padding: 4rem 2rem; }
   .error-view h2 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
   .error-view p { font-size: 14px; color: var(--text-secondary); }
@@ -113,31 +91,45 @@
 
 <main class="container" id="mainContent" style="display:none">
 
-  <!-- Hero -->
   <div class="view-hero" id="viewHero"></div>
-
-  <!-- Data source strip -->
   <div class="source-strip" id="viewSource" style="display:none"></div>
-
-  <!-- Recommendation -->
   <div id="viewRec" style="display:none;margin-bottom:1.25rem"></div>
 
-  <!-- Ratios -->
   <div class="card view-section" id="viewRatiosSection" style="display:none">
     <div class="view-section-title">Key Financial Ratios</div>
     <div class="ratio-grid" id="viewRatios"></div>
   </div>
 
-  <!-- Health indicators -->
   <div class="card view-section" id="viewFlagsSection" style="display:none">
     <div class="view-section-title">Financial Health Indicators</div>
     <div id="viewFlags"></div>
   </div>
 
-  <!-- AI Narrative -->
   <div class="card view-section" id="viewNarrativeSection" style="display:none">
     <div class="view-section-title">Assessment Narrative</div>
     <div class="narrative-text" id="viewNarrative"></div>
+  </div>
+
+  <!-- About This Assessment -->
+  <div class="about-section">
+    <div class="about-section-title">About This Assessment</div>
+    <div class="about-section-body">
+      This report was prepared by <strong>Clear Philanthropy</strong>, a pre-grant due diligence practice that helps foundations and philanthropic funders assess nonprofit financial health before making a grant decision.
+      <br><br>
+      The Health Score is a weighted composite of <strong>8 financial ratios</strong> derived from established nonprofit sector benchmarks and practitioner standards — including liquidity, operating performance, program efficiency, leverage, revenue diversification, and net asset position. Each ratio is assessed against sector-informed thresholds and weighted to reflect its relative importance to organizational sustainability.
+      <br><br>
+      This assessment reflects the financial data available at the time of review. It is designed to surface material financial patterns and prompt informed inquiry — not to render a definitive judgment on organizational merit or mission impact.
+    </div>
+    <div class="about-ratios">
+      <span class="about-ratio-tag">Months of Cash</span>
+      <span class="about-ratio-tag">Operating Margin</span>
+      <span class="about-ratio-tag">Program Expense Ratio</span>
+      <span class="about-ratio-tag">Current Ratio</span>
+      <span class="about-ratio-tag">Revenue Concentration</span>
+      <span class="about-ratio-tag">Debt to Assets</span>
+      <span class="about-ratio-tag">Fundraising Efficiency</span>
+      <span class="about-ratio-tag">Net Asset Ratio</span>
+    </div>
   </div>
 
   <div class="view-footer">
@@ -146,7 +138,6 @@
 
 </main>
 
-<!-- Error state -->
 <div class="container" id="errorContent" style="display:none">
   <div class="error-view">
     <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin:0 auto 1rem;display:block"><rect width="48" height="48" rx="12" fill="#FEF2F2"/><path d="M24 16v10M24 32h.01" stroke="#E8472A" stroke-width="2.5" stroke-linecap="round"/></svg>
@@ -155,11 +146,8 @@
   </div>
 </div>
 
-<!-- Loading state -->
 <div class="container" id="loadingContent">
-  <div style="text-align:center;padding:4rem 2rem;color:var(--text-secondary)">
-    Loading assessment...
-  </div>
+  <div style="text-align:center;padding:4rem 2rem;color:var(--text-secondary)">Loading assessment...</div>
 </div>
 
 <script src="js/auth.js"></script>
@@ -168,18 +156,9 @@
 (async () => {
   const params = new URLSearchParams(window.location.search);
   const token = params.get('t');
-
-  if (!token) {
-    showError();
-    return;
-  }
-
+  if (!token) { showError(); return; }
   const data = await DB.getAssessmentByToken(token);
-  if (!data) {
-    showError();
-    return;
-  }
-
+  if (!data) { showError(); return; }
   renderView(data);
 })();
 
@@ -194,13 +173,10 @@ function renderView(d) {
 
   const scoreNum = parseInt(d.score) || 0;
   const scoreColor = scoreNum >= 65 ? '#4ade80' : scoreNum >= 35 ? '#fbbf24' : '#f87171';
-  const riskStyle = d.riskLevel === 'Low'
-    ? { bg:'#dcfce7', fg:'#166534' }
-    : d.riskLevel === 'High'
-    ? { bg:'#fee2e2', fg:'#991b1b' }
+  const riskStyle = d.riskLevel === 'Low' ? { bg:'#dcfce7', fg:'#166534' }
+    : d.riskLevel === 'High' ? { bg:'#fee2e2', fg:'#991b1b' }
     : { bg:'#fef3c7', fg:'#92400e' };
 
-  // Hero
   const metaParts = [];
   if (d.ein) metaParts.push(`EIN: ${d.ein}`);
   if (d.fyEnd) metaParts.push(`FY End: ${d.fyEnd}`);
@@ -221,21 +197,8 @@ function renderView(d) {
     </div>
   `;
 
-  // Source strip
-  const sourceLabels = {
-    audited: 'Audited Financial Statements',
-    reviewed: 'Reviewed Financial Statements',
-    '990': 'Form 990',
-    internal: 'Internal Statements Only',
-    mixed: 'Mixed Sources',
-  };
-  const confConfig = {
-    audited:  { label: 'High Confidence', cls: 'conf-high' },
-    reviewed: { label: 'Medium Confidence', cls: 'conf-medium' },
-    '990':    { label: 'Medium Confidence', cls: 'conf-medium' },
-    internal: { label: 'Lower Confidence', cls: 'conf-low' },
-    mixed:    { label: 'Mixed Sources', cls: 'conf-low' },
-  };
+  const sourceLabels = { audited:'Audited Financial Statements', reviewed:'Reviewed Financial Statements', '990':'Form 990', internal:'Internal Statements Only', mixed:'Mixed Sources' };
+  const confConfig = { audited:{ label:'High Confidence', cls:'conf-high' }, reviewed:{ label:'Medium Confidence', cls:'conf-medium' }, '990':{ label:'Medium Confidence', cls:'conf-medium' }, internal:{ label:'Lower Confidence', cls:'conf-low' }, mixed:{ label:'Mixed Sources', cls:'conf-low' } };
   if (d.dataSource) {
     const conf = confConfig[d.dataSource];
     const sourceEl = document.getElementById('viewSource');
@@ -249,7 +212,6 @@ function renderView(d) {
     `;
   }
 
-  // Recommendation
   if (d.recommendation && d.recommendation !== 'Pending Review') {
     const recStyles = {
       'Invite to Apply':    { bg:'#E8F5F0', fg:'#0F6E56', border:'#A7DDC9' },
@@ -269,7 +231,6 @@ function renderView(d) {
     `;
   }
 
-  // Ratios
   const ratios = [
     { label:'Operating Margin', formula:'Surplus / Revenue', key:'om', pct:true },
     { label:'Current Ratio', formula:'Current Assets / Liabilities', key:'cr', pct:false },
@@ -285,7 +246,6 @@ function renderView(d) {
   const rev=g('rev'), exp=g('exp'), assets=g('assets'), liab=g('liab'), cash=g('cash');
   const curra=g('currassets'), currl=g('currliab'), prog=g('prog'), fund=g('fund'), contrib=g('contrib'), toprev=g('toprev');
   const surplus=rev-exp, netassets=assets-liab;
-
   const computed = {
     om: rev ? surplus/rev*100 : NaN,
     cr: currl ? curra/currl : NaN,
@@ -297,15 +257,11 @@ function renderView(d) {
     na: exp ? netassets/exp : NaN,
   };
 
-  // Use same rating logic as assessment.js
   const toprevCat = d.toprevCategory || 'broad_base';
   const isConc = toprevCat === 'institutional' || toprevCat === 'major_donor';
 
   function rateBadge(k, v) {
-    if (k === 'rc') {
-      if (!isConc) return 'g';
-      return v<=40?'g':v<=60?'m':'p';
-    }
+    if (k === 'rc') { if (!isConc) return 'g'; return v<=40?'g':v<=60?'m':'p'; }
     return { om:v>=7?'g':v>=0?'m':'p', cr:v>=1.5?'g':v>=1?'m':'p', mc:v>=3?'g':v>=1.5?'m':'p', da:v<=40?'g':v<=65?'m':'p', pe:v>=65?'g':v>=55?'m':'p', fe:v<=20?'g':v<=35?'m':'p', na:v>=0.25?'g':v>=0.1?'m':'p' }[k] || 'm';
   }
 
@@ -314,8 +270,7 @@ function renderView(d) {
 
   const hasRatios = ratios.some(r => !isNaN(computed[r.key]));
   if (hasRatios) {
-    const ratioEl = document.getElementById('viewRatiosSection');
-    ratioEl.style.display = '';
+    document.getElementById('viewRatiosSection').style.display = '';
     document.getElementById('viewRatios').innerHTML = ratios.map(r => {
       const v = computed[r.key];
       if (isNaN(v) || !isFinite(v)) return '';
@@ -334,7 +289,6 @@ function renderView(d) {
     }).join('');
   }
 
-  // Health indicators — recompute same logic
   const flags = [];
   const cv = computed;
   if (!isNaN(cv.rc)) {
@@ -357,13 +311,11 @@ function renderView(d) {
     `).join('');
   }
 
-  // AI Narrative
   if (d.aiNarrative && d.aiNarrative !== 'Writing assessment...') {
     document.getElementById('viewNarrativeSection').style.display = '';
     document.getElementById('viewNarrative').textContent = d.aiNarrative;
   }
 
-  // Page title
   document.title = `${d.orgName || 'Assessment'} — Clear Philanthropy`;
 }
 
