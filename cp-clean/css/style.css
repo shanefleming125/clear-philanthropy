@@ -472,4 +472,84 @@ body {
   .org-table td:nth-child(6) { display: none !important; }
   .org-table th:nth-child(7),
   .org-table td:nth-child(7) { display: none !important; }
+  /* ══════════════════════════════════════════════════════════
+   MOBILE DASHBOARD CARD LAYOUT
+   Append this block to the end of style.css
+   ══════════════════════════════════════════════════════════ */
+
+/* Mobile card list — hidden on desktop */
+#orgMobileList { display: none; }
+
+.org-mobile-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.875rem 1rem;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+.org-mobile-card:active { box-shadow: 0 0 0 2px var(--blue); }
+
+.org-mobile-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.org-mobile-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.org-mobile-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.org-mobile-actions .action-btn {
+  display: inline-flex !important;
+  width: auto !important;
+  margin-bottom: 0 !important;
+  font-size: 12px;
+  padding: 5px 12px;
+}
+
+@media (max-width: 640px) {
+  /* Show mobile cards, hide desktop table */
+  #orgMobileList { display: block; }
+  #orgTable { display: none !important; }
+
+  /* Page header stacks on mobile */
+  .page-header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .page-header > div:last-child {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .page-header .btn-primary,
+  .page-header .btn-intake-green {
+    flex: 1;
+    justify-content: center;
+    font-size: 12px;
+    padding: 0 10px;
+  }
+
+  /* Stats 2-col on mobile */
+  .stats-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat-val { font-size: 22px; }
+
+  /* Search full width */
+  .search-wrap { max-width: 100%; }
+
+  /* Remove card padding on mobile list wrapper */
+  .card:has(#orgMobileList) { padding: 0.75rem 0.75rem; }
+}
 }
