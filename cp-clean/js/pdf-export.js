@@ -314,8 +314,85 @@ async function exportToPDF() {
   y += 2;
 
   // ════════════════════════════════
-  // Financial Health Indicators
+  // Financial Trends (3-year)
   // ════════════════════════════════
+  const gv = id => parseFloat(document.getElementById(id)?.value) || 0;
+  const rv  = [gv('rev0'),  gv('rev1'),  gv('rev2')];
+  const ex  = [gv('exp0'),  gv('exp1'),  gv('exp2')];
+  const ca  = [gv('cash0'), gv('cash1'), gv('cash2')];
+  const pr  = [gv('prog0'), gv('prog1'), gv('prog2')];
+  const mrg = rv.map((r,i) => r ? ((r - ex[i]) / r * 100) : NaN);
+  const moc = ex.map((e,i) => e ? (ca[i] / (e / 12)) : NaN);
+  const pe  = ex.map((e,i) => e ? (pr[i] / e * 100) : NaN);
+
+  const fmtM = n => isNaN(n) ? '—' : '$' + Math.round(n).toLocaleString();
+  const fmtP = n => isNaN(n) ? '—' : n.toFixed(1) + '%';
+  const fmtX = n => isNaN(n) ? '—' : n.toFixed(1) + 'mo';
+
+  function trendDir(a, b, c) {
+    if (!isNaN(a) && !isNaN(b) && !isNaN(c)) return a >= b && b >= c ? 'up' : a <= b && b <= c ? 'down' : 'mixed';
+    if (!isNaN(a) && !isNaN(b)) return a > b*1.02 ? 'up' : a < b*0.98 ? 'down' : 'flat';
+    return null;
+  }
+
+  const trendRows = [
+    { label:'Total Revenue',        vals: rv.map(fmtM),  dir: trendDir(rv[0],rv[1],rv[2]),  goodUp: true },
+    { label:'Total Expenses',       vals: ex.map(fmtM),  dir: trendDir(ex[0],ex[1],ex[2]),  goodUp: false },
+    { label:'Operating Margin',     vals: mrg.map(fmtP), dir: trendDir(mrg[0],mrg[1],mrg[2]), goodUp: true },
+    { label:'Months of Cash',       vals: moc.map(fmtX), dir: trendDir(moc[0],moc[1],moc[2]), goodUp: true },
+    { label:'Program Expense Ratio',vals: pe.map(fmtP),  dir: trendDir(pe[0],pe[1],pe[2]),  goodUp: true },
+  ].filter(r => r.dir !== null && r.vals[0] !== '—');
+
+  if (trendRows.length >= 2) {
+    sectionLabel('Financial Trends');
+
+    // Get fiscal year labels from fyEnd
+    const fyYear = fyEnd ? parseInt(fyEnd.split('/').pop()) : new Date().getFullYear();
+    const yrLabels = [`FY ${fyYear}`, `FY ${fyYear-1}`, `FY ${fyYear-2}`];
+
+    const colW = [W * 0.34, W * 0.2, W * 0.2, W * 0.2, W * 0.06];
+    const colX = [M, M + colW[0], M + colW[0]+colW[1], M + colW[0]+colW[1]+colW[2], M + colW[0]+colW[1]+colW[2]+colW[3]];
+    const rowH = 9;
+
+    // Header row
+    ensureSpace(rowH * (trendRows.length + 1) + 6);
+    fill(M, y, W, rowH, NAVY, 1);
+    sf('bold', 7, WHITE);
+    doc.text('Metric', colX[0] + 3, y + 6);
+    doc.text(yrLabels[0], colX[1] + colW[1]/2, y + 6, { align: 'center' });
+    doc.text(yrLabels[1], colX[2] + colW[2]/2, y + 6, { align: 'center' });
+    doc.text(yrLabels[2], colX[3] + colW[3]/2, y + 6, { align: 'center' });
+    doc.text('Trend', colX[4] + colW[4]/2, y + 6, { align: 'center' });
+    y += rowH;
+
+    trendRows.forEach((row, i) => {
+      const rowBg = i % 2 === 0 ? WHITE : LIGHT;
+      fill(M, y, W, rowH, rowBg);
+      box(M, y, W, rowH, BORDER);
+
+      sf('normal', 8, TEXT);
+      doc.text(row.label, colX[0] + 3, y + 6);
+
+      sf('bold', 8, TEXT);
+      doc.text(row.vals[0], colX[1] + colW[1]/2, y + 6, { align: 'center' });
+
+      sf('normal', 8, MUTED);
+      doc.text(row.vals[1] !== '—' ? row.vals[1] : '—', colX[2] + colW[2]/2, y + 6, { align: 'center' });
+      doc.text(row.vals[2] !== '—' ? row.vals[2] : '—', colX[3] + colW[3]/2, y + 6, { align: 'center' });
+
+      // Trend arrow with color
+      const arrowMap = { up:'↑', down:'↓', mixed:'↔', flat:'→' };
+      const arrow = arrowMap[row.dir] || '—';
+      const isGood = (row.goodUp && row.dir === 'up') || (!row.goodUp && row.dir === 'down');
+      const isBad  = (row.goodUp && row.dir === 'down') || (!row.goodUp && row.dir === 'up');
+      const arrowColor = isGood ? GREEN : isBad ? RED : MUTED;
+      sf('bold', 10, arrowColor);
+      doc.text(arrow, colX[4] + colW[4]/2, y + 6.5, { align: 'center' });
+
+      y += rowH;
+    });
+    y += 5;
+  }
   if (flags.length) {
     sectionLabel('Financial Health Indicators');
     flags.forEach(f => {
