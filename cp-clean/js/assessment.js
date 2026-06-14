@@ -187,19 +187,120 @@ function updateFlags({ om, cr, mc, da, pe, fe, rc }) {
 }
 
 function updateTrends() {
-  const metrics = [{ label:'Total Revenue', ids:['rev0','rev1','rev2'] }, { label:'Total Expenses', ids:['exp0','exp1','exp2'] }, { label:'Cash & Equivalents', ids:['cash0','cash1','cash2'] }];
-  const notes = { up:{ Revenue:'Growing — positive trend.', Expenses:'Rising costs — watch margin.', Equivalents:'Cash position improving.' }, down:{ Revenue:'Declining — investigate causes.', Expenses:'Costs decreasing.', Equivalents:'Cash declining — monitor closely.' }, flat:{ Revenue:'Revenue relatively stable.', Expenses:'Expenses stable.', Equivalents:'Cash holding steady.' } };
   const container = document.getElementById('trendRows');
-  const hasData = metrics.some(m => m.ids.some(id => g(id)>0));
-  if (!hasData) { container.innerHTML='<div class="flag-placeholder">Enter 3 years of data to see trends.</div>'; return; }
-  container.innerHTML = metrics.map(m => {
-    const [a,b,c] = m.ids.map(id => g(id));
-    if (!a||!b||!c) return '';
-    const dir = a>=b&&b>=c?'up':a<=b&&b<=c?'down':'flat';
-    const arrow = { up:'↑', down:'↓', flat:'→' }, cls = { up:'tu', down:'td2', flat:'tf' };
-    const key = m.label.split(' ').pop();
-    return `<div class="trend-row"><span class="tl">${m.label}</span><span class="${cls[dir]}">${arrow[dir]}</span><span class="tn">${notes[dir][key]||''}</span></div>`;
-  }).join('');
+
+  const g0 = id => parseFloat(document.getElementById(id)?.value) || 0;
+
+  // Raw values for all 3 years
+  const rev  = [g0('rev0'),  g0('rev1'),  g0('rev2')];
+  const exp  = [g0('exp0'),  g0('exp1'),  g0('exp2')];
+  const cash = [g0('cash0'), g0('cash1'), g0('cash2')];
+  const prog = [g0('prog0'), g0('prog1'), g0('prog2')];
+
+  // Derived ratios per year (NaN if data missing)
+  const margin = rev.map((r, i) => r ? (r - exp[i]) / r * 100 : NaN);
+  const moc    = exp.map((e, i) => e ? cash[i] / (e / 12) : NaN);
+  const pe     = exp.map((e, i) => e ? prog[i] / e * 100 : NaN);
+
+  const hasAny = [...rev, ...exp, ...cash].some(v => v > 0);
+  if (!hasAny) {
+    container.innerHTML = '<div class="flag-placeholder">Enter 3 years of data to see trends.</div>';
+    return;
+  }
+
+  // direction: compare year0 vs year2 (or year0 vs year1 if year2 missing)
+  function dir(a, b, c) {
+    // a = current (year0), b = prior (year1), c = two years ago (year2)
+    if (a && b && c) return a >= b && b >= c ? 'up' : a <= b && b <= c ? 'down' : 'mixed';
+    if (a && b)      return a > b ? 'up' : a < b ? 'down' : 'flat';
+    return null;
+  }
+
+  const trends = [
+    {
+      label: 'Total Revenue',
+      dir: dir(rev[0], rev[1], rev[2]),
+      hasData: rev[0] > 0 && rev[1] > 0,
+      notes: {
+        up:    'Revenue growing — positive trajectory.',
+        down:  'Revenue declining — worth understanding the cause.',
+        mixed: 'Revenue fluctuating — no clear trend.',
+        flat:  'Revenue relatively stable.'
+      }
+    },
+    {
+      label: 'Total Expenses',
+      dir: dir(exp[0], exp[1], exp[2]),
+      hasData: exp[0] > 0 && exp[1] > 0,
+      notes: {
+        up:    'Expenses rising — watch impact on margin.',
+        down:  'Expenses decreasing — monitor for service impact.',
+        mixed: 'Expenses fluctuating year to year.',
+        flat:  'Expenses relatively stable.'
+      }
+    },
+    {
+      label: 'Operating Margin',
+      dir: dir(margin[0], margin[1], margin[2]),
+      hasData: !isNaN(margin[0]) && !isNaN(margin[1]),
+      fmt: v => isNaN(v) ? '' : v.toFixed(1) + '%',
+      values: margin,
+      notes: {
+        up:    'Margin improving — organization moving toward surplus.',
+        down:  'Margin declining — deficit risk increasing.',
+        mixed: 'Margin has been inconsistent.',
+        flat:  'Margin has been relatively stable.'
+      }
+    },
+    {
+      label: 'Months of Cash',
+      dir: dir(moc[0], moc[1], moc[2]),
+      hasData: !isNaN(moc[0]) && !isNaN(moc[1]),
+      notes: {
+        up:    'Cash runway improving.',
+        down:  'Cash runway shrinking — liquidity risk increasing.',
+        mixed: 'Cash position has fluctuated.',
+        flat:  'Cash position has been stable.'
+      }
+    },
+    {
+      label: 'Program Expense Ratio',
+      dir: dir(pe[0], pe[1], pe[2]),
+      hasData: !isNaN(pe[0]) && !isNaN(pe[1]),
+      notes: {
+        up:    'Program spending share increasing — mission focus strengthening.',
+        down:  'Program spending share declining — review overhead trends.',
+        mixed: 'Program ratio has varied year to year.',
+        flat:  'Program ratio has been consistent.'
+      }
+    },
+    {
+      label: 'Cash & Equivalents',
+      dir: dir(cash[0], cash[1], cash[2]),
+      hasData: cash[0] > 0 && cash[1] > 0,
+      notes: {
+        up:    'Cash balance growing.',
+        down:  'Cash balance declining — monitor closely.',
+        mixed: 'Cash balance has fluctuated.',
+        flat:  'Cash balance holding steady.'
+      }
+    },
+  ];
+
+  const arrow = { up:'↑', down:'↓', mixed:'↔', flat:'→' };
+  const cls   = { up:'tu', down:'td2', mixed:'tf', flat:'tf' };
+
+  const rows = trends
+    .filter(t => t.hasData && t.dir)
+    .map(t => `
+      <div class="trend-row">
+        <span class="tl">${t.label}</span>
+        <span class="${cls[t.dir]}">${arrow[t.dir]}</span>
+        <span class="tn">${t.notes[t.dir] || ''}</span>
+      </div>
+    `).join('');
+
+  container.innerHTML = rows || '<div class="flag-placeholder">Enter prior year data to see trends.</div>';
 }
 
 // ── Save ────────────────────────────────────────────────────────────────────
