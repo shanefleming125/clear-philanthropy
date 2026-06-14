@@ -122,7 +122,7 @@ const DB = {
   async getAssessmentByToken(token) {
     try {
       const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/assessments?select=data&data->>shareToken=eq.${token}`,
+        `${SUPABASE_URL}/rest/v1/assessments?select=data&data->>shareToken=eq.${encodeURIComponent(token)}`,
         {
           headers: {
             'apikey': SUPABASE_ANON,
@@ -132,6 +132,7 @@ const DB = {
       );
       if (!res.ok) throw new Error('Not found');
       const rows = await res.json();
+      console.log('getAssessmentByToken rows:', rows);
       if (!rows.length) return null;
       return rows[0]?.data || null;
     } catch(e) {
