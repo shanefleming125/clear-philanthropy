@@ -639,7 +639,7 @@
       if (el) el.value = notes.join(' · ');
     }
 
-    const threeYear = ['rev','exp','cash'];
+    const threeYear = ['rev','exp','cash','assets','liab','currassets','currliab','prog','mgmt','fund','contrib'];
     Object.entries(metrics).forEach(([key, m]) => {
       if (threeYear.includes(key)) {
         if (m.year0 !== undefined) setFieldValue(key + '0', m.year0);
