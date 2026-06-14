@@ -245,6 +245,10 @@ async function saveAssessment() {
     currassets:g('currassets0'), currliab:g('currliab0'),
     prog:g('prog0'), mgmt:g('mgmt0'), fund:g('fund0'), contrib:g('contrib0'), toprev:g('toprev0'),
     rev1:g('rev1'), rev2:g('rev2'), exp1:g('exp1'), exp2:g('exp2'), cash1:g('cash1'), cash2:g('cash2'),
+    assets1:g('assets1'), assets2:g('assets2'), liab1:g('liab1'), liab2:g('liab2'),
+    currassets1:g('currassets1'), currassets2:g('currassets2'), currliab1:g('currliab1'), currliab2:g('currliab2'),
+    prog1:g('prog1'), prog2:g('prog2'), mgmt1:g('mgmt1'), mgmt2:g('mgmt2'),
+    fund1:g('fund1'), fund2:g('fund2'), contrib1:g('contrib1'), contrib2:g('contrib2'),
     docs: ['doc_990','doc_audit','doc_bs','doc_is','doc_cf','doc_budget','doc_minutes','doc_strategic'].filter(id => document.getElementById(id)?.checked),
     created_at: editingId ? undefined : new Date().toISOString(),
     savedAt: new Date().toISOString()
@@ -441,7 +445,16 @@ function populateForm(d) {
     document.getElementById('aiText').textContent = d.aiNarrative;
   }
 
-  const map = { rev0:'rev', exp0:'exp', assets0:'assets', liab0:'liab', cash0:'cash', currassets0:'currassets', currliab0:'currliab', prog0:'prog', mgmt0:'mgmt', fund0:'fund', contrib0:'contrib', toprev0:'toprev', rev1:'rev1', rev2:'rev2', exp1:'exp1', exp2:'exp2', cash1:'cash1', cash2:'cash2' };
+  const map = {
+    rev0:'rev', exp0:'exp', assets0:'assets', liab0:'liab', cash0:'cash',
+    currassets0:'currassets', currliab0:'currliab',
+    prog0:'prog', mgmt0:'mgmt', fund0:'fund', contrib0:'contrib', toprev0:'toprev',
+    rev1:'rev1', rev2:'rev2', exp1:'exp1', exp2:'exp2', cash1:'cash1', cash2:'cash2',
+    assets1:'assets1', assets2:'assets2', liab1:'liab1', liab2:'liab2',
+    currassets1:'currassets1', currassets2:'currassets2', currliab1:'currliab1', currliab2:'currliab2',
+    prog1:'prog1', prog2:'prog2', mgmt1:'mgmt1', mgmt2:'mgmt2',
+    fund1:'fund1', fund2:'fund2', contrib1:'contrib1', contrib2:'contrib2'
+  };
   Object.entries(map).forEach(([elId,key]) => { const el=document.getElementById(elId); if(el && d[key]) el.value=d[key]; });
   ['doc_990','doc_audit','doc_bs','doc_is','doc_cf','doc_budget','doc_minutes','doc_strategic'].forEach(id => {
     const el = document.getElementById(id); if (el) el.checked = d.docs?.includes(id) || false;
@@ -493,4 +506,4 @@ async function deleteFile(path, filename) {
   } catch(e) {
     alert('Could not delete file. Please try again.');
   }
-
+}
