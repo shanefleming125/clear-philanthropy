@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assessment — Clear Philanthropy</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect width='44' height='44' rx='10' fill='%231A6EB5'/><circle cx='17' cy='22' r='10' stroke='white' stroke-width='1.8' fill='rgba(255,255,255,0.1)'/><circle cx='27' cy='22' r='10' stroke='rgba(255,255,255,0.5)' stroke-width='1.8' fill='rgba(255,255,255,0.05)'/><path d='M22 13.2C19 16 19 28 22 30.8C25 28 25 16 22 13.2Z' fill='white'/></svg>">
+<style>
+  .view-hero {
+    background: var(--navy);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .view-hero-left { flex: 1; min-width: 0; }
+  .view-org-name { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+  .view-meta { font-size: 12px; color: rgba(255,255,255,0.5); display: flex; flex-wrap: wrap; gap: 12px; }
+  .view-meta span { display: flex; align-items: center; gap: 5px; }
+  .view-score-block { text-align: center; flex-shrink: 0; }
+  .view-score-label { font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+  .view-score-num { font-size: 42px; font-weight: 800; line-height: 1; }
+  .view-score-denom { font-size: 14px; color: rgba(255,255,255,0.4); }
+
+  .view-section { margin-bottom: 1.25rem; }
+  .view-section-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+  }
+
+  .ratio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .ratio-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.875rem 1rem;
+  }
+  .ratio-card-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .ratio-card-formula { font-size: 10px; color: var(--text-secondary); margin-bottom: 8px; }
+  .ratio-card-bottom { display: flex; align-items: center; justify-content: space-between; }
+  .ratio-card-value { font-size: 18px; font-weight: 800; color: var(--text); }
+
+  .flag-row { display: flex; align-items: flex-start; gap: 8px; padding: 7px 0; border-bottom: 1px solid #F3F4F6; font-size: 13px; }
+  .flag-row:last-child { border-bottom: none; }
+
+  .narrative-text { font-size: 14px; line-height: 1.9; color: var(--text); white-space: pre-wrap; }
+
+  .source-strip {
+    background: #F0F6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: var(--radius);
+    padding: 0.875rem 1rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .source-strip-left { font-size: 13px; color: var(--text); }
+  .source-strip-left strong { color: var(--navy); }
+
+  .conf-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px;
+  }
+  .conf-high   { background: rgba(46,173,119,0.18); color: #2EAD77; }
+  .conf-medium { background: rgba(77,166,232,0.18); color: #1A6EB5; }
+  .conf-low    { background: rgba(107,114,128,0.15); color: #6B7280; }
+  .conf-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .view-footer {
+    text-align: center;
+    padding: 2rem 0 1rem;
+    font-size: 12px;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+  .view-footer a { color: var(--blue); text-decoration: none; font-weight: 600; }
+
+  .error-view { text-align: center; padding: 4rem 2rem; }
+  .error-view h2 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .error-view p { font-size: 14px; color: var(--text-secondary); }
+
+  @media (max-width: 640px) {
+    .view-hero { flex-direction: column; gap: 1rem; }
+    .view-score-block { align-self: flex-start; display: flex; align-items: center; gap: 12px; }
+    .ratio-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<nav class="topbar">
+  <a href="https://clearphilanthropy.com" class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 28 26" fill="none" width="16" height="15"><circle cx="10" cy="13" r="9" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.15)"/><circle cx="18" cy="13" r="9" stroke="rgba(255,255,255,0.5)" stroke-width="2" fill="rgba(255,255,255,0.05)"/><path d="M14 5.2C11.2 7.8 11.2 18.2 14 20.8C16.8 18.2 16.8 7.8 14 5.2Z" fill="white"/></svg>
+    </div>
+    <div class="logo-text">Clear <span>Philanthropy</span></div>
+  </a>
+  <div style="font-size:12px;color:rgba(255,255,255,0.4);font-weight:500">Financial Assessment Report</div>
+</nav>
+
+<main class="container" id="mainContent" style="display:none">
+
+  <!-- Hero -->
+  <div class="view-hero" id="viewHero"></div>
+
+  <!-- Data source strip -->
+  <div class="source-strip" id="viewSource" style="display:none"></div>
+
+  <!-- Recommendation -->
+  <div id="viewRec" style="display:none;margin-bottom:1.25rem"></div>
+
+  <!-- Ratios -->
+  <div class="card view-section" id="viewRatiosSection" style="display:none">
+    <div class="view-section-title">Key Financial Ratios</div>
+    <div class="ratio-grid" id="viewRatios"></div>
+  </div>
+
+  <!-- Health indicators -->
+  <div class="card view-section" id="viewFlagsSection" style="display:none">
+    <div class="view-section-title">Financial Health Indicators</div>
+    <div id="viewFlags"></div>
+  </div>
+
+  <!-- AI Narrative -->
+  <div class="card view-section" id="viewNarrativeSection" style="display:none">
+    <div class="view-section-title">Assessment Narrative</div>
+    <div class="narrative-text" id="viewNarrative"></div>
+  </div>
+
+  <div class="view-footer">
+    Prepared by <a href="https://clearphilanthropy.com">Clear Philanthropy</a> · Pre-grant due diligence for foundations and philanthropic funders
+  </div>
+
+</main>
+
+<!-- Error state -->
+<div class="container" id="errorContent" style="display:none">
+  <div class="error-view">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin:0 auto 1rem;display:block"><rect width="48" height="48" rx="12" fill="#FEF2F2"/><path d="M24 16v10M24 32h.01" stroke="#E8472A" stroke-width="2.5" stroke-linecap="round"/></svg>
+    <h2>Assessment not found</h2>
+    <p>This link may have expired or been revoked. Contact the person who shared it with you.</p>
+  </div>
+</div>
+
+<!-- Loading state -->
+<div class="container" id="loadingContent">
+  <div style="text-align:center;padding:4rem 2rem;color:var(--text-secondary)">
+    Loading assessment...
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/db.js"></script>
+<script>
+(async () => {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('t');
+
+  if (!token) {
+    showError();
+    return;
+  }
+
+  const data = await DB.getAssessmentByToken(token);
+  if (!data) {
+    showError();
+    return;
+  }
+
+  renderView(data);
+})();
+
+function showError() {
+  document.getElementById('loadingContent').style.display = 'none';
+  document.getElementById('errorContent').style.display = '';
+}
+
+function renderView(d) {
+  document.getElementById('loadingContent').style.display = 'none';
+  document.getElementById('mainContent').style.display = '';
+
+  const scoreNum = parseInt(d.score) || 0;
+  const scoreColor = scoreNum >= 65 ? '#4ade80' : scoreNum >= 35 ? '#fbbf24' : '#f87171';
+  const riskStyle = d.riskLevel === 'Low'
+    ? { bg:'#dcfce7', fg:'#166534' }
+    : d.riskLevel === 'High'
+    ? { bg:'#fee2e2', fg:'#991b1b' }
+    : { bg:'#fef3c7', fg:'#92400e' };
+
+  // Hero
+  const metaParts = [];
+  if (d.ein) metaParts.push(`EIN: ${d.ein}`);
+  if (d.fyEnd) metaParts.push(`FY End: ${d.fyEnd}`);
+  if (d.reviewDate) metaParts.push(`Reviewed: ${d.reviewDate}`);
+
+  document.getElementById('viewHero').innerHTML = `
+    <div class="view-hero-left">
+      <div class="view-org-name">${esc(d.orgName || 'Organization')}</div>
+      <div class="view-meta">${metaParts.map(p => `<span>${esc(p)}</span>`).join('')}</div>
+    </div>
+    <div class="view-score-block">
+      <div class="view-score-label">Health Score</div>
+      <div>
+        <span class="view-score-num" style="color:${scoreColor}">${d.score || '—'}</span>
+        <span class="view-score-denom">/100</span>
+      </div>
+      ${d.riskLevel ? `<div style="margin-top:6px"><span style="display:inline-block;font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;background:${riskStyle.bg};color:${riskStyle.fg}">${esc(d.riskLevel)} Risk</span></div>` : ''}
+    </div>
+  `;
+
+  // Source strip
+  const sourceLabels = {
+    audited: 'Audited Financial Statements',
+    reviewed: 'Reviewed Financial Statements',
+    '990': 'Form 990',
+    internal: 'Internal Statements Only',
+    mixed: 'Mixed Sources',
+  };
+  const confConfig = {
+    audited:  { label: 'High Confidence', cls: 'conf-high' },
+    reviewed: { label: 'Medium Confidence', cls: 'conf-medium' },
+    '990':    { label: 'Medium Confidence', cls: 'conf-medium' },
+    internal: { label: 'Lower Confidence', cls: 'conf-low' },
+    mixed:    { label: 'Mixed Sources', cls: 'conf-low' },
+  };
+  if (d.dataSource) {
+    const conf = confConfig[d.dataSource];
+    const sourceEl = document.getElementById('viewSource');
+    sourceEl.style.display = '';
+    sourceEl.innerHTML = `
+      <div class="source-strip-left">
+        <strong>Data Source:</strong> ${esc(sourceLabels[d.dataSource] || d.dataSource)}
+        ${d.sourceNotes ? `<div style="font-size:11px;color:#6B7280;margin-top:3px">${esc(d.sourceNotes)}</div>` : ''}
+      </div>
+      ${conf ? `<span class="conf-pill ${conf.cls}"><span class="conf-dot"></span>${conf.label}</span>` : ''}
+    `;
+  }
+
+  // Recommendation
+  if (d.recommendation && d.recommendation !== 'Pending Review') {
+    const recStyles = {
+      'Invite to Apply':    { bg:'#E8F5F0', fg:'#0F6E56', border:'#A7DDC9' },
+      'Approved':           { bg:'#EAF3DE', fg:'#27500A', border:'#C8E0A8' },
+      'Decline':            { bg:'#FEE2E2', fg:'#991B1B', border:'#FCA5A5' },
+      'Request More Info':  { bg:'#E6F1FB', fg:'#0C447C', border:'#B3D5F2' },
+      'Full Due Diligence': { bg:'#FEF3C7', fg:'#92400E', border:'#FAD58C' },
+    };
+    const rs = recStyles[d.recommendation] || { bg:'#F3F4F6', fg:'#6B7280', border:'#E5E7EB' };
+    const recEl = document.getElementById('viewRec');
+    recEl.style.display = '';
+    recEl.innerHTML = `
+      <div style="background:${rs.bg};border:1px solid ${rs.border};border-radius:10px;padding:1rem 1.25rem;display:flex;align-items:center;gap:10px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:${rs.fg}">Recommendation</div>
+        <div style="font-size:15px;font-weight:800;color:${rs.fg}">${esc(d.recommendation)}</div>
+      </div>
+    `;
+  }
+
+  // Ratios
+  const ratios = [
+    { label:'Operating Margin', formula:'Surplus / Revenue', key:'om', pct:true },
+    { label:'Current Ratio', formula:'Current Assets / Liabilities', key:'cr', pct:false },
+    { label:'Months of Cash', formula:'Cash / (Expenses / 12)', key:'mc', pct:false },
+    { label:'Debt to Assets', formula:'Liabilities / Assets', key:'da', pct:true },
+    { label:'Program Expense Ratio', formula:'Program Exp / Total Exp', key:'pe', pct:true },
+    { label:'Fundraising Efficiency', formula:'Fundraising / Contributions', key:'fe', pct:true },
+    { label:'Revenue Concentration', formula:'Top Source / Revenue', key:'rc', pct:true },
+    { label:'Net Asset Ratio', formula:'Net Assets / Expenses', key:'na', pct:false },
+  ];
+
+  const g = k => parseFloat(d[k]) || 0;
+  const rev=g('rev'), exp=g('exp'), assets=g('assets'), liab=g('liab'), cash=g('cash');
+  const curra=g('currassets'), currl=g('currliab'), prog=g('prog'), fund=g('fund'), contrib=g('contrib'), toprev=g('toprev');
+  const surplus=rev-exp, netassets=assets-liab;
+
+  const computed = {
+    om: rev ? surplus/rev*100 : NaN,
+    cr: currl ? curra/currl : NaN,
+    mc: exp ? cash/(exp/12) : NaN,
+    da: assets ? liab/assets*100 : NaN,
+    pe: exp ? prog/exp*100 : NaN,
+    fe: contrib ? fund/contrib*100 : NaN,
+    rc: rev ? toprev/rev*100 : NaN,
+    na: exp ? netassets/exp : NaN,
+  };
+
+  // Use same rating logic as assessment.js
+  const toprevCat = d.toprevCategory || 'broad_base';
+  const isConc = toprevCat === 'institutional' || toprevCat === 'major_donor';
+
+  function rateBadge(k, v) {
+    if (k === 'rc') {
+      if (!isConc) return 'g';
+      return v<=40?'g':v<=60?'m':'p';
+    }
+    return { om:v>=7?'g':v>=0?'m':'p', cr:v>=1.5?'g':v>=1?'m':'p', mc:v>=3?'g':v>=1.5?'m':'p', da:v<=40?'g':v<=65?'m':'p', pe:v>=65?'g':v>=55?'m':'p', fe:v<=20?'g':v<=35?'m':'p', na:v>=0.25?'g':v>=0.1?'m':'p' }[k] || 'm';
+  }
+
+  const badgeCls = { g:'bdg-g', m:'bdg-m', p:'bdg-p' };
+  const badgeLbl = { g:'Good', m:'Moderate', p:'Poor' };
+
+  const hasRatios = ratios.some(r => !isNaN(computed[r.key]));
+  if (hasRatios) {
+    const ratioEl = document.getElementById('viewRatiosSection');
+    ratioEl.style.display = '';
+    document.getElementById('viewRatios').innerHTML = ratios.map(r => {
+      const v = computed[r.key];
+      if (isNaN(v) || !isFinite(v)) return '';
+      const display = r.pct ? v.toFixed(1) + '%' : v.toFixed(2);
+      const rating = rateBadge(r.key, v);
+      return `
+        <div class="ratio-card">
+          <div class="ratio-card-name">${r.label}</div>
+          <div class="ratio-card-formula">${r.formula}</div>
+          <div class="ratio-card-bottom">
+            <div class="ratio-card-value">${display}</div>
+            <span class="bdg ${badgeCls[rating]}">${badgeLbl[rating]}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Health indicators — recompute same logic
+  const flags = [];
+  const cv = computed;
+  if (!isNaN(cv.rc)) {
+    if (isConc) flags.push({ ok: cv.rc<=40, msg: cv.rc>40 ? 'Revenue concentration above 40% — diversification risk.' : 'Revenue sources are well-diversified.' });
+    else flags.push({ ok: true, msg: `Largest revenue source (${cv.rc.toFixed(1)}% of total) reflects a broad base of individual donors — a sign of community support, not concentration risk.` });
+  }
+  if (!isNaN(cv.mc)) flags.push({ ok: cv.mc>=3, msg: cv.mc<3 ? 'Months of cash below 3 — limited liquidity runway.' : 'Cash reserves meet the 3-month minimum.' });
+  if (!isNaN(cv.om)) flags.push({ ok: cv.om>=0, msg: cv.om<0 ? 'Operating deficit — expenses exceed revenue.' : 'Operating margin is positive.' });
+  if (!isNaN(cv.da)) flags.push({ ok: cv.da<=65, msg: cv.da>65 ? 'Debt load is high relative to total assets.' : 'Debt levels are within acceptable range.' });
+  if (!isNaN(cv.pe)) flags.push({ ok: cv.pe>=65, msg: cv.pe<65 ? 'Program expense ratio below 65% — review overhead.' : 'Program expense ratio is healthy.' });
+  if (!isNaN(cv.fe)) flags.push({ ok: cv.fe<=35, msg: cv.fe>35 ? 'Fundraising costs exceed 35% of contributions.' : 'Fundraising efficiency is strong.' });
+
+  if (flags.length) {
+    document.getElementById('viewFlagsSection').style.display = '';
+    document.getElementById('viewFlags').innerHTML = flags.map(f => `
+      <div class="flag-row">
+        <span style="font-size:14px;flex-shrink:0;margin-top:1px;color:${f.ok ? '#2EAD77' : '#D97706'}">${f.ok ? '✓' : '⚠'}</span>
+        <span style="font-size:13px;color:#111827;line-height:1.5">${esc(f.msg)}</span>
+      </div>
+    `).join('');
+  }
+
+  // AI Narrative
+  if (d.aiNarrative && d.aiNarrative !== 'Writing assessment...') {
+    document.getElementById('viewNarrativeSection').style.display = '';
+    document.getElementById('viewNarrative').textContent = d.aiNarrative;
+  }
+
+  // Page title
+  document.title = `${d.orgName || 'Assessment'} — Clear Philanthropy`;
+}
+
+function esc(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
