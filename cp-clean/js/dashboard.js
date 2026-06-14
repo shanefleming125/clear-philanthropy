@@ -35,6 +35,7 @@ function renderTable(orgs) {
   const noResults = document.getElementById('noResults');
   const table = document.getElementById('orgTable');
   const tbody = document.getElementById('orgTableBody');
+  const mobileList = document.getElementById('orgMobileList');
 
   loading.style.display = 'none';
 
@@ -42,6 +43,7 @@ function renderTable(orgs) {
     empty.style.display = 'block';
     noResults.style.display = 'none';
     table.style.display = 'none';
+    if (mobileList) mobileList.style.display = 'none';
     return;
   }
 
@@ -49,12 +51,12 @@ function renderTable(orgs) {
     empty.style.display = 'none';
     noResults.style.display = 'block';
     table.style.display = 'none';
+    if (mobileList) mobileList.style.display = 'none';
     return;
   }
 
   empty.style.display = 'none';
   noResults.style.display = 'none';
-  table.style.display = 'table';
 
   const recCls = {
     'Invite to Apply':    'rec-invite',
@@ -67,7 +69,7 @@ function renderTable(orgs) {
   const dotCls = { Low: 'dot-low', Moderate: 'dot-mod', High: 'dot-high' };
   const barColor = { Low: '#2EAD77', Moderate: '#D97706', High: '#E8472A' };
 
-  tbody.innerHTML = orgs.map(o => {
+  const rows = orgs.map(o => {
     const isPending = o.recommendation === 'Pending Review' && o.status === 'submitted';
     const hasExtraction = !!o.extractedData;
 
@@ -102,7 +104,12 @@ function renderTable(orgs) {
     const reviewerDisplay = truncate(o.reviewer || o.contactName, 18);
     const dateDisplay = (o.reviewDate || (o.created_at || '').split('T')[0] || '—').slice(0, 10);
 
-    return `
+    return { o, isPending, hasExtraction, actionCell, pendingBadge, subLine, orgDisplay, recDisplay, reviewerDisplay, dateDisplay, dotCls, barColor, recCls };
+  });
+
+  // ── Desktop table ──
+  table.style.display = 'table';
+  tbody.innerHTML = rows.map(({ o, actionCell, pendingBadge, subLine, orgDisplay, recDisplay, reviewerDisplay, dateDisplay, dotCls, barColor, recCls }) => `
     <tr onclick="window.location='/assessment?id=${o.id}'" style="cursor:pointer${o.is_sample ? ';opacity:0.85' : ''}">
       <td style="max-width:220px">
         <div class="org-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${o.orgName || ''}">
@@ -135,8 +142,35 @@ function renderTable(orgs) {
       </td>
       <td style="color:#6B7280;font-size:12px;width:90px;white-space:nowrap">${dateDisplay}</td>
       <td style="width:120px;vertical-align:middle">${actionCell}</td>
-    </tr>`;
-  }).join('');
+    </tr>`).join('');
+
+  // ── Mobile card list ──
+  if (mobileList) {
+    mobileList.innerHTML = rows.map(({ o, actionCell, pendingBadge, subLine, orgDisplay, recDisplay, dotCls, barColor, recCls }) => `
+      <div class="org-mobile-card" onclick="window.location='/assessment?id=${o.id}'" style="${o.is_sample ? 'opacity:0.85' : ''}">
+        <div class="org-mobile-top">
+          <div style="flex:1;min-width:0">
+            <div class="org-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+              ${orgDisplay}
+              ${o.is_sample ? '<span style="font-size:9px;font-weight:700;background:#E6F1FB;color:#1A6EB5;padding:1px 5px;border-radius:8px;margin-left:4px">SAMPLE</span>' : ''}
+              ${pendingBadge}
+            </div>
+            ${subLine ? `<div class="org-fy" style="font-size:11px;margin-top:3px">${subLine}</div>` : ''}
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:10px">
+            <div style="font-size:20px;font-weight:800;color:${barColor[o.riskLevel] || '#9CA3AF'};line-height:1">${o.score || '—'}<span style="font-size:12px;color:#9CA3AF;font-weight:500">${o.score ? '/100' : ''}</span></div>
+            <div style="display:flex;align-items:center;gap:4px;justify-content:flex-end;margin-top:3px;font-size:11px;color:#6B7280">
+              <span class="risk-dot ${dotCls[o.riskLevel] || 'dot-mod'}"></span>
+              ${o.riskLevel || 'Pending'}
+            </div>
+          </div>
+        </div>
+        <div class="org-mobile-bottom">
+          <span class="rec-badge ${recCls[o.recommendation] || 'rec-none'}" style="font-size:11px">${recDisplay || '—'}</span>
+          ${actionCell ? `<div class="org-mobile-actions" onclick="event.stopPropagation()">${actionCell}</div>` : ''}
+        </div>
+      </div>`).join('');
+  }
 
   document.querySelectorAll('.org-table th').forEach(th => {
     th.classList.remove('sort-asc', 'sort-desc');
