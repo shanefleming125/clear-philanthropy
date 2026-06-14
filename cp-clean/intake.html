@@ -7,16 +7,10 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect width='44' height='44' rx='10' fill='%231A6EB5'/><circle cx='17' cy='22' r='10' stroke='white' stroke-width='1.8' fill='rgba(255,255,255,0.1)'/><circle cx='27' cy='22' r='10' stroke='rgba(255,255,255,0.5)' stroke-width='1.8' fill='rgba(255,255,255,0.05)'/><path d='M22 13.2C19 16 19 28 22 30.8C25 28 25 16 22 13.2Z' fill='white'/></svg>">
 <style>
-  /* ── File upload ── */
   .upload-zone {
-    border: 2px dashed #D1D5DB;
-    border-radius: 10px;
-    padding: 2rem 1.5rem;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-    background: #FAFAFA;
-    position: relative;
+    border: 2px dashed #D1D5DB; border-radius: 10px; padding: 2rem 1.5rem;
+    text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s;
+    background: #FAFAFA; position: relative;
   }
   .upload-zone:hover, .upload-zone.dragover { border-color: #1A6EB5; background: #F0F6FF; }
   .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
@@ -30,79 +24,45 @@
   .file-item-size { font-size: 11px; color: #9CA3AF; flex-shrink: 0; }
   .file-item-remove { background: none; border: none; cursor: pointer; color: #9CA3AF; padding: 2px; line-height: 1; flex-shrink: 0; font-size: 16px; }
   .file-item-remove:hover { color: #EF4444; }
-  .file-status { font-size: 11px; flex-shrink: 0; font-weight: 600; }
-  .file-status.done { color: #2EAD77; }
-  .file-status.error { color: #EF4444; }
 
-  /* ── Submit loading overlay ── */
-  .submit-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(11,37,69,0.85); z-index: 300;
-    align-items: center; justify-content: center;
-    flex-direction: column; gap: 1.25rem;
-  }
+  .submit-overlay { display: none; position: fixed; inset: 0; background: rgba(11,37,69,0.85); z-index: 300; align-items: center; justify-content: center; flex-direction: column; gap: 1.25rem; }
   .submit-overlay.active { display: flex; }
-  .submit-spinner {
-    width: 44px; height: 44px;
-    border: 4px solid rgba(255,255,255,0.2);
-    border-top-color: #4DA6E8;
-    border-radius: 50%;
-    animation: submit-spin 0.8s linear infinite;
-  }
+  .submit-spinner { width: 44px; height: 44px; border: 4px solid rgba(255,255,255,0.2); border-top-color: #4DA6E8; border-radius: 50%; animation: submit-spin 0.8s linear infinite; }
   @keyframes submit-spin { to { transform: rotate(360deg); } }
   .submit-overlay-text { color: white; font-size: 15px; font-weight: 600; font-family: 'Manrope', sans-serif; text-align: center; max-width: 320px; line-height: 1.6; }
   .submit-overlay-sub { color: rgba(255,255,255,0.55); font-size: 12.5px; font-family: 'Manrope', sans-serif; text-align: center; }
 
-  /* ── Steps indicator ── */
-  .steps-row {
-    display: flex;
-    gap: 0;
-    margin-bottom: 2rem;
-  }
-  .step {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    text-align: center;
-  }
-  .step:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    top: 14px;
-    left: 50%;
-    width: 100%;
-    height: 2px;
-    background: #E5E7EB;
-    z-index: 0;
-  }
-  .step-circle {
-    width: 28px; height: 28px; border-radius: 50%;
-    background: #E5E7EB; color: #9CA3AF;
-    font-size: 12px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    position: relative; z-index: 1; flex-shrink: 0;
-    margin-bottom: 6px;
-  }
+  .steps-row { display: flex; gap: 0; margin-bottom: 2rem; }
+  .step { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; text-align: center; }
+  .step:not(:last-child)::after { content: ''; position: absolute; top: 14px; left: 50%; width: 100%; height: 2px; background: #E5E7EB; z-index: 0; }
+  .step-circle { width: 28px; height: 28px; border-radius: 50%; background: #E5E7EB; color: #9CA3AF; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; flex-shrink: 0; margin-bottom: 6px; }
   .step.active .step-circle { background: #1A6EB5; color: white; }
   .step.done .step-circle { background: #2EAD77; color: white; }
   .step-label { font-size: 11px; color: #9CA3AF; font-weight: 600; }
   .step.active .step-label { color: #1A6EB5; }
   .step.done .step-label { color: #2EAD77; }
 
-  /* ── Manual entry toggle ── */
-  .manual-toggle {
-    text-align: center;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #E5E7EB;
+  .doc-priority-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+  .doc-priority-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: #F9FAFB; border: 1px solid #E5E7EB;
+    border-radius: 8px; padding: 10px 12px;
   }
-  .manual-toggle-btn {
-    background: none; border: none; cursor: pointer;
-    font-size: 13px; color: #6B7280; font-family: 'Manrope', sans-serif;
-    text-decoration: underline; padding: 0;
+  .doc-priority-item.preferred { background: #F0F6FF; border-color: #BFDBFE; }
+  .doc-priority-badge {
+    flex-shrink: 0; font-size: 9px; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 4px; margin-top: 2px;
   }
+  .badge-best { background: #2EAD77; color: white; }
+  .badge-alt  { background: #1A6EB5; color: white; }
+  .badge-ok   { background: #9CA3AF; color: white; }
+  .doc-priority-text { font-size: 12.5px; color: #374151; line-height: 1.5; }
+  .doc-priority-text strong { color: #111827; font-weight: 700; }
+  .doc-priority-text span { color: #6B7280; }
+
+  .manual-toggle { text-align: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #E5E7EB; }
+  .manual-toggle-btn { background: none; border: none; cursor: pointer; font-size: 13px; color: #6B7280; font-family: 'Manrope', sans-serif; text-decoration: underline; padding: 0; }
   .manual-toggle-btn:hover { color: #374151; }
 </style>
 </head>
@@ -122,27 +82,17 @@
     <div style="text-align:center;padding:2rem 0 1.5rem">
       <div style="font-size:23px;font-weight:800;color:#111827;margin-bottom:8px">Submit Your Financial Documents</div>
       <div style="font-size:14px;color:#6B7280;max-width:460px;margin:0 auto;line-height:1.7">
-        Tell us a bit about your organization, then upload your financial documents — a Form 990, audited financials, or recent financial statements. Our team takes it from there.
+        Tell us a bit about your organization, then upload your financial documents. Our team reviews everything and follows up if we need anything additional.
       </div>
     </div>
 
-    <!-- Step indicator -->
     <div class="steps-row">
-      <div class="step active" id="step1">
-        <div class="step-circle">1</div>
-        <div class="step-label">Your Info</div>
-      </div>
-      <div class="step" id="step2">
-        <div class="step-circle">2</div>
-        <div class="step-label">Upload Docs</div>
-      </div>
-      <div class="step" id="step3">
-        <div class="step-circle">3</div>
-        <div class="step-label">Submit</div>
-      </div>
+      <div class="step active" id="step1"><div class="step-circle">1</div><div class="step-label">Your Info</div></div>
+      <div class="step" id="step2"><div class="step-circle">2</div><div class="step-label">Upload Docs</div></div>
+      <div class="step" id="step3"><div class="step-circle">3</div><div class="step-label">Submit</div></div>
     </div>
 
-    <!-- Step 1: Org info -->
+    <!-- Step 1 -->
     <div id="stepView1">
       <div class="card">
         <div class="sec-title">About Your Organization</div>
@@ -167,24 +117,44 @@
       </div>
     </div>
 
-    <!-- Step 2: Upload -->
+    <!-- Step 2 -->
     <div id="stepView2" style="display:none">
       <div class="card">
         <div class="sec-title">Upload Financial Documents</div>
-        <p style="font-size:13px;color:#6B7280;margin-bottom:1.25rem;line-height:1.7">
-          Upload your most recent Form 990, audited financial statements, or other financial documents (PDF only). You can upload multiple files — for example, a 990 and an audit from different years.
-        </p>
+
+        <!-- Document guidance -->
+        <div class="doc-priority-list">
+          <div class="doc-priority-item preferred">
+            <span class="doc-priority-badge badge-best">Best</span>
+            <div class="doc-priority-text">
+              <strong>Two most recent Form 990s</strong> — current year and prior year.<br>
+              <span>This gives us the most complete picture and allows year-over-year comparison. If you only have one, upload it — we'll work with what's available.</span>
+            </div>
+          </div>
+          <div class="doc-priority-item preferred">
+            <span class="doc-priority-badge badge-alt">Also great</span>
+            <div class="doc-priority-text">
+              <strong>Audited or reviewed financial statements</strong><br>
+              <span>Include the most recent year and prior year if available.</span>
+            </div>
+          </div>
+          <div class="doc-priority-item">
+            <span class="doc-priority-badge badge-ok">If needed</span>
+            <div class="doc-priority-text">
+              <strong>Internal financial statements</strong> — income statement and balance sheet.<br>
+              <span>Unaudited statements are fine as a supplement, but please include a 990 or audit if you have one.</span>
+            </div>
+          </div>
+        </div>
 
         <div class="upload-zone" id="uploadZone"
-          ondragover="handleDragOver(event)"
-          ondragleave="handleDragLeave(event)"
-          ondrop="handleDrop(event)">
+          ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
           <input type="file" id="fileInput" multiple accept=".pdf" onchange="handleFileSelect(event)">
           <div class="upload-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           </div>
           <div class="upload-label">Drop PDFs here or <span style="color:#1A6EB5">browse</span></div>
-          <div class="upload-hint">Form 990, audited financials, financial statements — up to 5 files, 10MB each</div>
+          <div class="upload-hint">PDF only — up to 5 files, 10MB each</div>
         </div>
 
         <div class="file-list" id="fileList"></div>
@@ -217,7 +187,7 @@
       </div>
     </div>
 
-  </div><!-- /formView -->
+  </div>
 
   <!-- Success view -->
   <div id="successView" style="display:none;text-align:center;padding:3rem 2rem">
@@ -258,7 +228,6 @@
   </div>
 </main>
 
-<!-- Submit loading overlay -->
 <div class="submit-overlay" id="submitOverlay">
   <div class="submit-spinner"></div>
   <div class="submit-overlay-text" id="submitOverlayText">Submitting...</div>
@@ -268,18 +237,15 @@
 <script src="js/auth.js"></script>
 <script src="js/db.js"></script>
 <script>
-
   let stagedFiles = [];
   let showingManual = false;
 
-  // ── Step navigation ──────────────────────────────────────────────────────────
   function setStep(n) {
     [1,2,3].forEach(i => {
       const s = document.getElementById('step' + i);
       s.classList.remove('active','done');
       if (i < n) s.classList.add('done');
       else if (i === n) s.classList.add('active');
-      // Update step circle for done steps
       const circle = s.querySelector('.step-circle');
       if (i < n) circle.innerHTML = '✓';
       else circle.innerHTML = i;
@@ -295,17 +261,8 @@
     const contactName = document.getElementById('contactName').value.trim();
     const contactEmail = document.getElementById('contactEmail').value.trim();
     const errEl = document.getElementById('step1Error');
-
-    if (!orgName || !contactName || !contactEmail) {
-      errEl.textContent = 'Please fill in all fields.';
-      errEl.style.display = 'block';
-      return;
-    }
-    if (!contactEmail.includes('@')) {
-      errEl.textContent = 'Please enter a valid email address.';
-      errEl.style.display = 'block';
-      return;
-    }
+    if (!orgName || !contactName || !contactEmail) { errEl.textContent = 'Please fill in all fields.'; errEl.style.display = 'block'; return; }
+    if (!contactEmail.includes('@')) { errEl.textContent = 'Please enter a valid email address.'; errEl.style.display = 'block'; return; }
     errEl.style.display = 'none';
     setStep(2);
   }
@@ -318,7 +275,6 @@
       : "Don't have documents? Enter financial data manually instead";
   }
 
-  // ── File upload ──────────────────────────────────────────────────────────────
   function fileIcon() {
     return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A6EB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
   }
@@ -357,22 +313,11 @@
   function handleFileSelect(e) { addFiles(e.target.files); e.target.value = ''; }
   function handleDragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('dragover'); }
   function handleDragLeave() { document.getElementById('uploadZone').classList.remove('dragover'); }
-  function handleDrop(e) {
-    e.preventDefault();
-    document.getElementById('uploadZone').classList.remove('dragover');
-    addFiles(e.dataTransfer.files);
-  }
+  function handleDrop(e) { e.preventDefault(); document.getElementById('uploadZone').classList.remove('dragover'); addFiles(e.dataTransfer.files); }
 
-  // ── Loading overlay ──────────────────────────────────────────────────────────
-  function showOverlay(text) {
-    document.getElementById('submitOverlayText').textContent = text;
-    document.getElementById('submitOverlay').classList.add('active');
-  }
-  function hideOverlay() {
-    document.getElementById('submitOverlay').classList.remove('active');
-  }
+  function showOverlay(text) { document.getElementById('submitOverlayText').textContent = text; document.getElementById('submitOverlay').classList.add('active'); }
+  function hideOverlay() { document.getElementById('submitOverlay').classList.remove('active'); }
 
-  // ── Submit ───────────────────────────────────────────────────────────────────
   async function submitIntake() {
     const orgName = document.getElementById('orgName').value.trim();
     const contactName = document.getElementById('contactName').value.trim();
@@ -380,7 +325,6 @@
     const errEl = document.getElementById('step2Error');
     const submitBtn = document.getElementById('submitBtn');
 
-    // Require at least docs OR some manual data
     const hasFiles = stagedFiles.length > 0;
     const hasManual = showingManual && (
       parseFloat(document.getElementById('rev0')?.value) > 0 ||
@@ -397,7 +341,6 @@
     errEl.style.display = 'none';
 
     const assessmentId = 'intake_' + Date.now();
-
     const g = id => parseFloat(document.getElementById(id)?.value) || 0;
 
     const data = {
@@ -411,11 +354,10 @@
       created_at: new Date().toISOString(),
       savedAt: new Date().toISOString(),
       sourceNotes: hasFiles
-        ? 'Submitted via self-report (documents uploaded — pending review)'
+        ? `Submitted via self-report — ${stagedFiles.length} document${stagedFiles.length === 1 ? '' : 's'} uploaded (pending review)`
         : 'Submitted via self-report (manual entry)'
     };
 
-    // If manual data provided, include it
     if (showingManual) {
       Object.assign(data, {
         ein: document.getElementById('ein')?.value || '',
@@ -438,7 +380,6 @@
         }
       }
 
-      // Populate success summary
       document.getElementById('summaryOrgName').textContent = orgName;
       document.getElementById('summaryContact').textContent = contactName;
       document.getElementById('summaryFileCount').textContent = hasFiles
