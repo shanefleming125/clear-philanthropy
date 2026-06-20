@@ -11,152 +11,279 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --navy: #0B2545;
-  --blue: #1A6EB5;
-  --sky: #4DA6E8;
-  --green: #2EAD77;
-  --text: #111827;
-  --muted: #6B7280;
-  --border: #E5E7EB;
-  --bg: #F3F6FA;
-  --white: #FFFFFF;
+  --navy: #0B2545; --blue: #1A6EB5; --sky: #4DA6E8; --green: #2EAD77;
+  --text: #111827; --muted: #6B7280; --border: #E5E7EB; --bg: #F3F6FA; --white: #FFFFFF;
 }
-body { font-family: 'Manrope', sans-serif; color: var(--text); background: var(--white); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Manrope', sans-serif; color: var(--text); background: var(--white); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 a { color: inherit; text-decoration: none; }
 
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
 /* NAV */
-nav { position: sticky; top: 0; z-index: 100; background: var(--navy); padding: 0 2.5rem; height: 62px; display: flex; align-items: center; justify-content: space-between; }
+nav { position: sticky; top: 0; z-index: 100; background: rgba(11,37,69,0.97); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 0 2.5rem; height: 64px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); }
 .logo { display: flex; align-items: center; gap: 10px; }
 .logo-mark { width: 32px; height: 32px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
 .logo-text { font-size: 16px; font-weight: 700; color: white; letter-spacing: -0.01em; }
 .logo-text span { color: var(--sky); }
-.nav-links { display: flex; align-items: center; gap: 4px; }
-.nav-link { color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 6px; transition: all 0.15s; }
+.nav-links { display: flex; align-items: center; gap: 2px; }
+.nav-link { color: rgba(255,255,255,0.45); font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 6px; transition: all 0.15s; }
 .nav-link:hover { color: white; background: rgba(255,255,255,0.08); }
-.nav-cta { background: white; color: var(--navy) !important; font-weight: 700; border-radius: 6px; padding: 7px 18px; font-size: 13px; transition: background 0.15s; margin-left: 6px; }
-.nav-cta:hover { background: #E6F1FB; }
+.nav-cta { background: white; color: var(--navy) !important; font-weight: 700; border-radius: 6px; padding: 7px 18px; font-size: 13px; transition: all 0.15s; margin-left: 8px; letter-spacing: -0.01em; }
+.nav-cta:hover { background: #E6F1FB; transform: translateY(-1px); }
 @media (max-width: 640px) { nav { padding: 0 1.25rem; } .nav-links .nav-link:not(.nav-cta) { display: none; } }
 
 /* HERO */
-.hero { background: var(--navy); padding: 6rem 2.5rem 5rem; }
-.hero-inner { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
-.hero-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sky); margin-bottom: 1.5rem; display: block; }
-.hero h1 { font-size: clamp(2.25rem, 4.5vw, 3.5rem); font-weight: 800; color: white; line-height: 1.1; letter-spacing: -0.025em; margin-bottom: 1.5rem; }
-.hero h1 em { color: var(--sky); font-style: normal; }
-.hero-sub { font-size: 17px; color: rgba(255,255,255,0.55); line-height: 1.8; margin-bottom: 2.5rem; }
+.hero { background: var(--navy); padding: 7rem 2.5rem 6rem; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -40%; right: -10%; width: 700px; height: 700px; border-radius: 50%; border: 1px solid rgba(77,166,232,0.08); pointer-events: none; }
+.hero::after { content: ''; position: absolute; top: -20%; right: 5%; width: 450px; height: 450px; border-radius: 50%; border: 1px solid rgba(77,166,232,0.05); pointer-events: none; }
+.hero-inner { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; position: relative; z-index: 1; }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sky); margin-bottom: 2rem; }
+.hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--sky); }
+.hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; color: white; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.75rem; }
+.hero h1 em { color: var(--sky); font-style: normal; display: block; }
+.hero-sub { font-size: 17px; color: rgba(255,255,255,0.5); line-height: 1.85; margin-bottom: 2.75rem; }
 .hero-sub strong { color: rgba(255,255,255,0.85); font-weight: 600; }
-.btn-hero { display: inline-flex; align-items: center; gap: 8px; background: var(--sky); color: white; font-weight: 700; font-size: 14px; padding: 13px 28px; border-radius: 8px; transition: background 0.15s; }
-.btn-hero:hover { background: #3a96d8; }
-.hero-note { margin-top: 1rem; font-size: 12px; color: rgba(255,255,255,0.25); }
-@media (max-width: 800px) { .hero-inner { grid-template-columns: 1fr; } .hero-mockup { display: none; } }
-
-/* ASSESSMENT MOCKUP */
-.assessment-mockup { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.3); }
-.mock-header { background: var(--navy); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 1rem 1.25rem; display: flex; align-items: flex-start; justify-content: space-between; }
-.mock-org { font-size: 13px; font-weight: 700; color: white; }
-.mock-meta { font-size: 10.5px; color: rgba(255,255,255,0.4); margin-top: 2px; }
-.mock-score { text-align: right; }
-.mock-score-num { font-size: 28px; font-weight: 800; color: #4ade80; line-height: 1; }
-.mock-score-num span { font-size: 12px; color: rgba(255,255,255,0.35); }
-.mock-risk { font-size: 10px; font-weight: 700; background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 8px; display: inline-block; margin-top: 3px; }
-.mock-body { padding: 1.125rem; }
-.mock-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-.mock-ratios { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1rem; }
-.mock-ratio { background: var(--bg); border-radius: 6px; padding: 7px 8px; }
-.mock-ratio-name { font-size: 9px; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
-.mock-ratio-val { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
-.badge { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 6px; display: inline-block; }
-.good { background: #dcfce7; color: #166534; }
-.mod { background: #fef3c7; color: #92400e; }
-.poor { background: #fee2e2; color: #991b1b; }
-.mock-divider { border: none; border-top: 1px solid var(--border); margin-bottom: 0.875rem; }
-.mock-finding { display: flex; align-items: flex-start; gap: 7px; font-size: 11px; color: var(--text); margin-bottom: 5px; line-height: 1.5; }
-.mock-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
-.mock-rec { display: flex; align-items: center; gap: 8px; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
-.mock-rec-label { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-.mock-rec-val { font-size: 12px; font-weight: 700; background: #E8F5F0; color: #0F6E56; padding: 3px 10px; border-radius: 8px; }
+.btn-hero { display: inline-flex; align-items: center; gap: 9px; background: var(--sky); color: white; font-weight: 700; font-size: 14px; padding: 14px 30px; border-radius: 8px; transition: all 0.2s; letter-spacing: -0.01em; }
+.btn-hero:hover { background: #3a96d8; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(77,166,232,0.3); }
+.hero-note { margin-top: 1.125rem; font-size: 12px; color: rgba(255,255,255,0.2); }
+@media (max-width: 800px) { .hero-inner { grid-template-columns: 1fr; } .hero-mockup-col { display: none; } }
 
 /* SHARED */
-.section { padding: 6rem 2.5rem; }
+.section { padding: 7rem 2.5rem; }
 .section.alt { background: var(--bg); }
-.inner { max-width: 960px; margin: 0 auto; }
-.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.875rem; display: block; }
-h2 { font-size: clamp(1.75rem, 3.5vw, 2.4rem); font-weight: 800; color: var(--text); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1rem; }
+.inner { max-width: 1040px; margin: 0 auto; }
+.inner-narrow { max-width: 960px; margin: 0 auto; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 1rem; }
+.eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--blue); }
+h2 { font-size: clamp(1.875rem, 3.5vw, 2.75rem); font-weight: 800; color: var(--text); letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 1.125rem; }
 h2 em { color: var(--blue); font-style: normal; }
-.lead { font-size: 16px; color: var(--muted); max-width: 580px; line-height: 1.8; margin-bottom: 3.5rem; }
+.lead { font-size: 16px; color: var(--muted); max-width: 560px; line-height: 1.85; margin-bottom: 4rem; }
+.section-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; margin-bottom: 4rem; }
+.section-intro-body { font-size: 16px; color: var(--muted); line-height: 1.9; }
+.section-intro-body p + p { margin-top: 1.25rem; }
+.section-intro-body strong { color: var(--text); font-weight: 700; }
+@media (max-width: 720px) { .section-intro { grid-template-columns: 1fr; gap: 2rem; } }
 
-/* PROBLEM */
-.problem-body { font-size: 16px; color: var(--muted); line-height: 1.9; max-width: 640px; }
-.problem-body p + p { margin-top: 1.25rem; }
-.problem-body strong { color: var(--text); font-weight: 700; }
-.pull-quote { margin-top: 3rem; padding: 2rem 2.5rem; background: var(--navy); border-radius: 12px; max-width: 640px; }
-.pull-quote-text { font-size: 18px; font-weight: 700; color: white; line-height: 1.6; letter-spacing: -0.01em; }
-.pull-quote-text em { color: var(--sky); font-style: normal; }
+/* ── BADGE SYSTEM ── */
+.badge { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 5px; display: inline-block; letter-spacing: 0.03em; }
+.good { background: #dcfce7; color: #166534; }
+.mod  { background: #fef3c7; color: #92400e; }
+.poor { background: #fee2e2; color: #991b1b; }
 
-/* SERVICES */
-.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border-radius: 14px; overflow: hidden; }
-.service { background: white; padding: 1.75rem; transition: background 0.15s; }
+/* ── HERO ASSESSMENT MOCKUP ── */
+.hero-mockup-col { position: relative; }
+.hero-mockup-col::before { content: ''; position: absolute; inset: -20px; background: radial-gradient(ellipse at center, rgba(77,166,232,0.08) 0%, transparent 70%); border-radius: 20px; pointer-events: none; }
+.hero-mockup { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08); font-size: 12px; }
+.hm-header { background: var(--navy); padding: 1rem 1.25rem; display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.hm-title { font-size: 13px; font-weight: 700; color: white; }
+.hm-meta { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+.hm-score-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); text-align: right; margin-bottom: 2px; }
+.hm-score { font-size: 30px; font-weight: 800; color: #4ade80; line-height: 1; text-align: right; }
+.hm-score span { font-size: 12px; color: rgba(255,255,255,0.3); }
+.hm-risk { font-size: 9px; font-weight: 700; background: #dcfce7; color: #166534; padding: 2px 7px; border-radius: 5px; display: inline-block; margin-top: 3px; float: right; }
+.hm-conf { display: inline-flex; align-items: center; gap: 4px; font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 5px; background: rgba(46,173,119,0.15); color: #2EAD77; margin-top: 4px; clear: both; float: right; }
+.hm-body { padding: 1rem 1.25rem; }
+.hm-source { background: #F0F6FF; border: 1px solid #BFDBFE; border-radius: 6px; padding: 6px 10px; margin-bottom: 10px; font-size: 10px; color: #1A6EB5; font-weight: 600; }
+.hm-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+.hm-ratios { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; margin-bottom: 10px; }
+.hm-ratio { background: var(--bg); border-radius: 6px; padding: 6px 7px; }
+.hm-ratio-name { font-size: 8.5px; color: var(--muted); font-weight: 600; margin-bottom: 2px; line-height: 1.3; }
+.hm-ratio-val { font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+.hm-divider { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+.hm-finding { display: flex; align-items: flex-start; gap: 6px; font-size: 10px; color: var(--text); margin-bottom: 4px; line-height: 1.4; }
+.hm-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+.hm-trends { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+.hm-trends th { font-size: 8px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 3px 5px; text-align: left; border-bottom: 1px solid var(--border); }
+.hm-trends td { font-size: 9.5px; padding: 4px 5px; border-bottom: 1px solid #F3F4F6; color: var(--text); }
+.hm-trends td:first-child { font-weight: 600; }
+.hm-trend-up { color: #2EAD77; font-weight: 700; }
+.hm-trend-flat { color: #9CA3AF; font-weight: 700; }
+.hm-rec { display: flex; align-items: center; gap: 7px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+.hm-rec-label { font-size: 8.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.hm-rec-val { font-size: 11px; font-weight: 700; background: #E8F5F0; color: #0F6E56; padding: 2px 9px; border-radius: 5px; }
+.hm-narrative-snippet { font-size: 10px; color: var(--muted); line-height: 1.6; background: #F9FAFB; border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; margin-top: 8px; position: relative; overflow: hidden; max-height: 60px; }
+.hm-narrative-snippet::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 30px; background: linear-gradient(transparent, #F9FAFB); }
+
+/* ── DASHBOARD MOCKUP ── */
+.dash-mockup { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.1), 0 0 0 1px var(--border); }
+.dash-header { padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+.dash-title { font-size: 16px; font-weight: 800; color: var(--text); }
+.dash-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.dash-header-actions { display: flex; gap: 8px; }
+.dash-btn { font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px; }
+.dash-btn-blue { background: var(--blue); color: white; }
+.dash-btn-green { background: var(--green); color: white; }
+.dash-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; padding: 1.125rem 1.5rem; border-bottom: 1px solid var(--border); background: var(--bg); }
+.dash-stat { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.875rem 1rem; }
+.dash-stat-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+.dash-stat-val { font-size: 24px; font-weight: 800; color: var(--text); line-height: 1; }
+.dash-stat-val.green { color: var(--green); }
+.dash-stat-val.amber { color: #D97706; }
+.dash-stat-val.red { color: #E8472A; }
+.dash-stat-sub { font-size: 10px; color: var(--muted); margin-top: 3px; }
+.dash-table { width: 100%; border-collapse: collapse; }
+.dash-table th { font-size: 9.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); background: #F9FAFB; white-space: nowrap; }
+.dash-table td { padding: 11px 14px; border-bottom: 1px solid #F3F4F6; font-size: 12px; color: var(--text); vertical-align: middle; }
+.dash-table tr:last-child td { border-bottom: none; }
+.dash-table tbody tr:hover td { background: #FAFBFF; }
+.dash-org-name { font-weight: 700; font-size: 12.5px; }
+.dash-org-fy { font-size: 10px; color: var(--muted); margin-top: 1px; }
+.dash-score-bar { height: 3px; background: var(--border); border-radius: 2px; width: 50px; margin-top: 3px; overflow: hidden; }
+.dash-score-fill { height: 100%; border-radius: 2px; }
+.dash-risk { display: flex; align-items: center; gap: 5px; font-size: 11px; white-space: nowrap; }
+.dash-risk-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.dot-low { background: var(--green); }
+.dot-mod { background: #D97706; }
+.dot-high { background: #E8472A; }
+.dash-rec { font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 10px; display: inline-block; white-space: nowrap; }
+.rec-invite { background: #E8F5F0; color: #0F6E56; }
+.rec-info { background: #E6F1FB; color: #0C447C; }
+.rec-approved { background: #EAF3DE; color: #27500A; }
+.rec-due { background: #FEF3C7; color: #92400E; }
+
+/* ── PDF MOCKUP ── */
+.pdf-scene { display: flex; justify-content: center; align-items: flex-start; gap: 20px; perspective: 1200px; padding: 2rem 0 3rem; position: relative; }
+.pdf-card { background: white; border-radius: 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.06); overflow: hidden; flex-shrink: 0; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.pdf-card:hover { transform: translateY(-4px); box-shadow: 0 28px 60px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.06); }
+.pdf-card-1 { width: 320px; transform: rotate(-2deg) translateY(8px); }
+.pdf-card-2 { width: 320px; transform: rotate(1.5deg) translateY(-4px); }
+.pdf-card-3 { width: 320px; transform: rotate(-1deg) translateY(12px); }
+.pdf-card-1:hover { transform: rotate(-2deg) translateY(4px); }
+.pdf-card-2:hover { transform: rotate(1.5deg) translateY(-8px); }
+.pdf-card-3:hover { transform: rotate(-1deg) translateY(8px); }
+.pdf-topbar { background: var(--navy); padding: 7px 12px; display: flex; align-items: center; justify-content: space-between; }
+.pdf-topbar-left { font-size: 8px; color: rgba(255,255,255,0.4); font-weight: 600; }
+.pdf-topbar-right { font-size: 8px; color: rgba(255,255,255,0.3); }
+.pdf-body { padding: 14px; }
+
+/* PDF Page 1 — Score page */
+.pdf-hero-block { background: var(--navy); border-radius: 8px; padding: 14px; margin-bottom: 10px; display: flex; align-items: flex-start; justify-content: space-between; }
+.pdf-org-name { font-size: 12px; font-weight: 800; color: white; margin-bottom: 3px; }
+.pdf-org-meta { font-size: 8.5px; color: rgba(255,255,255,0.4); }
+.pdf-score-block { text-align: right; }
+.pdf-score-label { font-size: 7px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 2px; }
+.pdf-score-num { font-size: 26px; font-weight: 800; color: #4ade80; line-height: 1; }
+.pdf-score-denom { font-size: 10px; color: rgba(255,255,255,0.3); }
+.pdf-risk-badge { font-size: 8px; font-weight: 700; background: #dcfce7; color: #166534; padding: 2px 7px; border-radius: 4px; display: inline-block; margin-top: 3px; }
+.pdf-section-label { font-size: 7.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.pdf-ratios { display: grid; grid-template-columns: repeat(4,1fr); gap: 4px; margin-bottom: 8px; }
+.pdf-ratio { background: var(--bg); border-radius: 5px; padding: 5px 6px; }
+.pdf-ratio-name { font-size: 7.5px; color: var(--muted); font-weight: 600; margin-bottom: 2px; line-height: 1.2; }
+.pdf-ratio-val { font-size: 12px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+.pdf-divider { border: none; border-top: 1px solid var(--border); margin: 7px 0; }
+.pdf-finding { display: flex; align-items: flex-start; gap: 5px; font-size: 8.5px; color: var(--text); margin-bottom: 3px; line-height: 1.4; }
+.pdf-finding-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; }
+.pdf-footer { background: var(--navy); padding: 5px 12px; display: flex; align-items: center; justify-content: space-between; }
+.pdf-footer-text { font-size: 7px; color: rgba(255,255,255,0.3); }
+
+/* PDF Page 2 — Trends */
+.pdf-trend-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+.pdf-trend-table th { font-size: 7.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: white; background: var(--navy); padding: 4px 6px; text-align: left; }
+.pdf-trend-table td { font-size: 8.5px; padding: 4px 6px; border-bottom: 1px solid #F3F4F6; color: var(--text); }
+.pdf-trend-table td:first-child { font-weight: 600; }
+.pdf-trend-up { color: var(--green); font-weight: 700; }
+.pdf-trend-flat { color: #9CA3AF; font-weight: 700; }
+.pdf-narrative { font-size: 8px; color: var(--muted); line-height: 1.6; background: #F9FAFB; border: 1px solid var(--border); border-radius: 5px; padding: 7px; position: relative; overflow: hidden; max-height: 80px; }
+.pdf-narrative::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 28px; background: linear-gradient(transparent, #F9FAFB); }
+
+/* PDF Page 3 — About */
+.pdf-about { font-size: 8px; color: var(--muted); line-height: 1.65; margin-bottom: 8px; }
+.pdf-about strong { color: var(--text); font-weight: 700; }
+.pdf-ratio-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.pdf-ratio-tag { font-size: 7.5px; font-weight: 600; background: #E6F1FB; color: #1A6EB5; padding: 2px 7px; border-radius: 10px; }
+
+/* ── SERVICES */
+.services-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border-radius: 16px; overflow: hidden; }
+.service { background: white; padding: 2rem 1.75rem; transition: background 0.2s; position: relative; }
+.service::after { content: ''; position: absolute; bottom: 0; left: 1.75rem; right: 1.75rem; height: 2px; background: var(--blue); transform: scaleX(0); transition: transform 0.25s cubic-bezier(0.16,1,0.3,1); transform-origin: left; }
 .service:hover { background: #FAFBFF; }
-.service-num { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--blue); margin-bottom: 0.875rem; }
-.service-title { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
-.service-desc { font-size: 13px; color: var(--muted); line-height: 1.7; }
-.service.featured { background: #F0F6FF; }
-.service.featured .service-num { color: var(--blue); }
+.service:hover::after { transform: scaleX(1); }
+.service-num { font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; color: var(--blue); margin-bottom: 1rem; text-transform: uppercase; }
+.service-title { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 8px; letter-spacing: -0.01em; }
+.service-desc { font-size: 13px; color: var(--muted); line-height: 1.75; }
+.service.dark { background: var(--navy); }
+.service.dark:hover { background: #0d2d5c; }
+.service.dark::after { background: var(--sky); }
+.service.dark .service-num { color: var(--sky); }
+.service.dark .service-title { color: white; }
+.service.dark .service-desc { color: rgba(255,255,255,0.55); }
 @media (max-width: 640px) { .services-grid { grid-template-columns: 1fr; } }
 
-/* ENGAGE */
-.engage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
-.engage-card { background: white; padding: 2rem 1.75rem; }
+/* ── ENGAGE */
+.engage-grid { display: grid; grid-template-columns: repeat(3,1fr); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.engage-card { background: white; padding: 2.25rem 2rem; transition: background 0.15s; }
+.engage-card:hover { background: #FAFBFF; }
 .engage-card + .engage-card { border-left: 1px solid var(--border); }
 .engage-card.dark { background: var(--navy); }
-.engage-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--bg); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; flex-shrink: 0; }
+.engage-card.dark:hover { background: #0d2d5c; }
+.engage-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--bg); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
 .engage-card.dark .engage-icon { background: rgba(255,255,255,0.08); }
-.engage-tier { font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
-.engage-card.dark .engage-tier { color: rgba(255,255,255,0.35); }
-.engage-title { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 10px; line-height: 1.3; }
+.engage-tier { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.engage-card.dark .engage-tier { color: rgba(255,255,255,0.3); }
+.engage-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 10px; line-height: 1.25; letter-spacing: -0.015em; }
 .engage-card.dark .engage-title { color: white; }
-.engage-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 1.25rem; }
-.engage-card.dark .engage-desc { color: rgba(255,255,255,0.55); }
-.engage-list { display: flex; flex-direction: column; gap: 7px; }
-.engage-item { display: flex; gap: 8px; font-size: 12.5px; color: var(--text); align-items: flex-start; }
+.engage-desc { font-size: 13px; color: var(--muted); line-height: 1.75; margin-bottom: 1.5rem; }
+.engage-card.dark .engage-desc { color: rgba(255,255,255,0.5); }
+.engage-list { display: flex; flex-direction: column; gap: 8px; }
+.engage-item { display: flex; gap: 8px; font-size: 13px; color: var(--text); align-items: flex-start; }
 .engage-card.dark .engage-item { color: rgba(255,255,255,0.7); }
-.engage-dash { color: var(--blue); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.engage-dash { color: var(--blue); font-weight: 700; flex-shrink: 0; line-height: 1.7; }
 .engage-card.dark .engage-dash { color: var(--sky); }
 @media (max-width: 720px) { .engage-grid { grid-template-columns: 1fr; } .engage-card + .engage-card { border-left: none; border-top: 1px solid var(--border); } }
 
-/* WHO */
-.who-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-.who-card { padding: 1.5rem; background: white; border: 1px solid var(--border); border-radius: 12px; border-top: 3px solid var(--blue); }
-.who-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
-.who-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
+/* ── WHO */
+.who-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 1.25rem; }
+.who-card { padding: 1.75rem; background: white; border: 1px solid var(--border); border-radius: 14px; border-top: 3px solid var(--blue); transition: transform 0.2s, box-shadow 0.2s; }
+.who-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.07); }
+.who-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 8px; letter-spacing: -0.01em; }
+.who-desc { font-size: 13px; color: var(--muted); line-height: 1.7; }
 
-/* ABOUT */
-.about-body { font-size: 16px; color: var(--muted); line-height: 1.9; max-width: 640px; }
-.about-body p + p { margin-top: 1.25rem; }
+/* ── ABOUT */
+.about-body { font-size: 16.5px; color: var(--muted); line-height: 1.95; max-width: 640px; }
+.about-body p + p { margin-top: 1.375rem; }
 .about-body strong { color: var(--text); font-weight: 700; }
+.principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 2.5rem; margin-top: 4rem; }
+.principle-title { font-size: 14px; font-weight: 800; color: var(--text); padding-bottom: 12px; margin-bottom: 12px; border-bottom: 2px solid var(--blue); letter-spacing: -0.01em; }
+.principle-desc { font-size: 13px; color: var(--muted); line-height: 1.75; }
 
-/* PRINCIPLES */
-.principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 3rem; }
-.principle-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 6px; padding-bottom: 10px; border-bottom: 2px solid var(--blue); }
-.principle-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-top: 10px; }
+/* ── PULL QUOTE */
+.pull-quote { margin-top: 4rem; padding: 3rem 3.5rem; background: var(--navy); border-radius: 16px; max-width: 680px; position: relative; overflow: hidden; }
+.pull-quote::before { content: '"'; position: absolute; top: -20px; left: 24px; font-size: 160px; font-weight: 800; color: rgba(77,166,232,0.07); line-height: 1; font-family: 'Manrope', sans-serif; pointer-events: none; }
+.pull-quote-text { font-size: 20px; font-weight: 700; color: white; line-height: 1.6; letter-spacing: -0.015em; position: relative; }
+.pull-quote-text em { color: var(--sky); font-style: normal; }
 
-/* CTA */
-.cta { background: var(--navy); padding: 8rem 2.5rem; }
-.cta-inner { max-width: 580px; }
-.cta h2 { color: white; margin-bottom: 1.25rem; }
-.cta h2 em { color: var(--sky); }
-.cta p { font-size: 17px; color: rgba(255,255,255,0.55); line-height: 1.8; margin-bottom: 2.5rem; }
-.btn-cta { display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--navy); font-weight: 700; font-size: 15px; padding: 14px 32px; border-radius: 8px; transition: background 0.15s; }
-.btn-cta:hover { background: #E6F1FB; }
-.cta-note { margin-top: 1rem; font-size: 12.5px; color: rgba(255,255,255,0.25); }
+/* ── CTA */
+.cta { background: var(--navy); padding: 9rem 2.5rem; position: relative; overflow: hidden; }
+.cta::before { content: ''; position: absolute; bottom: -30%; left: -10%; width: 600px; height: 600px; border-radius: 50%; border: 1px solid rgba(77,166,232,0.06); pointer-events: none; }
+.cta-inner { max-width: 720px; position: relative; z-index: 1; }
+.cta-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sky); margin-bottom: 1.5rem; }
+.cta-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--sky); }
+.cta h2 { font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 800; color: white; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 1.75rem; }
+.cta h2 em { color: var(--sky); font-style: normal; display: block; }
+.cta-sub { font-size: 17px; color: rgba(255,255,255,0.45); line-height: 1.8; margin-bottom: 3rem; max-width: 480px; }
+.cta-email { display: inline-flex; align-items: center; gap: 10px; font-size: clamp(1.1rem, 2.5vw, 1.5rem); font-weight: 700; color: white; border-bottom: 2px solid rgba(77,166,232,0.4); padding-bottom: 4px; transition: border-color 0.2s, color 0.2s; letter-spacing: -0.02em; }
+.cta-email:hover { color: var(--sky); border-color: var(--sky); }
+.cta-note { margin-top: 1.25rem; font-size: 12.5px; color: rgba(255,255,255,0.2); }
 
 /* FOOTER */
-footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-.footer-left { font-size: 13px; color: rgba(255,255,255,0.3); }
-.footer-left strong { color: rgba(255,255,255,0.45); }
+footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.05); }
+.footer-left { font-size: 13px; color: rgba(255,255,255,0.25); }
+.footer-left strong { color: rgba(255,255,255,0.4); }
 .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-.footer-links a { font-size: 12px; color: rgba(255,255,255,0.3); transition: color 0.15s; }
-.footer-links a:hover { color: rgba(255,255,255,0.6); }
+.footer-links a { font-size: 12px; color: rgba(255,255,255,0.25); transition: color 0.15s; }
+.footer-links a:hover { color: rgba(255,255,255,0.55); }
+
+/* PRODUCT SHOWCASE LABELS */
+.showcase-label { display: flex; align-items: center; gap: 12px; margin-bottom: 2.5rem; }
+.showcase-label-num { width: 36px; height: 36px; border-radius: 50%; background: var(--blue); color: white; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.showcase-label-text { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
 </style>
 </head>
 <body>
@@ -170,7 +297,7 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
     <div class="logo-text">Clear <span>Philanthropy</span></div>
   </a>
   <div class="nav-links">
-    <a href="#services" class="nav-link">What We Do</a>
+    <a href="#product" class="nav-link">What We Do</a>
     <a href="#engage" class="nav-link">How We Engage</a>
     <a href="#who" class="nav-link">Who We Work With</a>
     <a href="https://app.clearphilanthropy.com/login" class="nav-link">Sign In</a>
@@ -182,48 +309,66 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
 <section class="hero">
   <div class="hero-inner">
     <div>
-      <span class="hero-eyebrow">External Program Support</span>
-      <h1>Rigorous Grantmaking Doesn't Require a <em>Large Team.</em></h1>
-      <p class="hero-sub">Clear Philanthropy works alongside foundations and philanthropic funders as an <strong>extension of your team</strong> — bringing the judgment, structure, and operational support your grantmaking deserves.</p>
-      <a href="mailto:hello@clearphilanthropy.com" class="btn-hero">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        Let's Connect
-      </a>
-      <p class="hero-note">No pitch. Just a conversation about your work.</p>
+      <span class="hero-eyebrow reveal">External Program Support</span>
+      <h1 class="reveal reveal-delay-1">Rigorous Grantmaking Doesn't Require a <em>Large Team.</em></h1>
+      <p class="hero-sub reveal reveal-delay-2">Clear Philanthropy works alongside foundations and philanthropic funders as an <strong>extension of your team</strong> — bringing the judgment, structure, and operational support your grantmaking deserves.</p>
+      <div class="reveal reveal-delay-3">
+        <a href="mailto:hello@clearphilanthropy.com" class="btn-hero">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Let's Connect
+        </a>
+        <p class="hero-note">No pitch. Just a conversation about your work.</p>
+      </div>
     </div>
 
-    <!-- Assessment mockup -->
-    <div class="hero-mockup">
-      <div class="assessment-mockup">
-        <div class="mock-header">
+    <!-- Hero assessment mockup — rich version -->
+    <div class="hero-mockup-col reveal reveal-delay-2">
+      <div class="hero-mockup">
+        <div class="hm-header">
           <div>
-            <div class="mock-org">Eastside Family Resource Center</div>
-            <div class="mock-meta">Financial Assessment · FY 12/31/2024 · EIN 12-3456789</div>
+            <div class="hm-title">Lakeview Community Foundation</div>
+            <div class="hm-meta">Financial Assessment · FY 12/31/2024 · EIN 47-2918364</div>
           </div>
-          <div class="mock-score">
-            <div class="mock-score-num">78<span>/100</span></div>
-            <div class="mock-risk">Low Risk</div>
+          <div>
+            <div class="hm-score-label">Health Score</div>
+            <div class="hm-score">82<span>/100</span></div>
+            <div class="hm-risk">Low Risk</div>
+            <div class="hm-conf"><span style="width:5px;height:5px;border-radius:50%;background:#2EAD77;display:inline-block"></span>High Confidence</div>
           </div>
         </div>
-        <div class="mock-body">
-          <div class="mock-label">Key Financial Ratios</div>
-          <div class="mock-ratios">
-            <div class="mock-ratio"><div class="mock-ratio-name">Operating Margin</div><div class="mock-ratio-val">8.4%</div><span class="badge good">Good</span></div>
-            <div class="mock-ratio"><div class="mock-ratio-name">Current Ratio</div><div class="mock-ratio-val">1.82</div><span class="badge good">Good</span></div>
-            <div class="mock-ratio"><div class="mock-ratio-name">Months of Cash</div><div class="mock-ratio-val">2.1</div><span class="badge mod">Moderate</span></div>
-            <div class="mock-ratio"><div class="mock-ratio-name">Program Expense</div><div class="mock-ratio-val">71.3%</div><span class="badge good">Good</span></div>
-            <div class="mock-ratio"><div class="mock-ratio-name">Rev. Concentration</div><div class="mock-ratio-val">55.1%</div><span class="badge poor">Poor</span></div>
-            <div class="mock-ratio"><div class="mock-ratio-name">Debt to Assets</div><div class="mock-ratio-val">38.2%</div><span class="badge good">Good</span></div>
+        <div class="hm-body">
+          <div class="hm-source">📄 Data Source: Audited Financial Statements · Form 990 (FY2024, FY2023)</div>
+          <div class="hm-label">Key Financial Ratios</div>
+          <div class="hm-ratios">
+            <div class="hm-ratio"><div class="hm-ratio-name">Operating Margin</div><div class="hm-ratio-val">9.1%</div><span class="badge good">Good</span></div>
+            <div class="hm-ratio"><div class="hm-ratio-name">Current Ratio</div><div class="hm-ratio-val">2.14</div><span class="badge good">Good</span></div>
+            <div class="hm-ratio"><div class="hm-ratio-name">Months of Cash</div><div class="hm-ratio-val">3.8</div><span class="badge good">Good</span></div>
+            <div class="hm-ratio"><div class="hm-ratio-name">Debt to Assets</div><div class="hm-ratio-val">28.4%</div><span class="badge good">Good</span></div>
+            <div class="hm-ratio"><div class="hm-ratio-name">Program Expense</div><div class="hm-ratio-val">76.2%</div><span class="badge good">Good</span></div>
+            <div class="hm-ratio"><div class="hm-ratio-name">Fundraising Eff.</div><div class="hm-ratio-val">11.3%</div><span class="badge good">Good</span></div>
+            <div class="hm-ratio"><div class="hm-ratio-name">Rev. Concentration</div><div class="hm-ratio-val">44.8%</div><span class="badge mod">Moderate</span></div>
+            <div class="hm-ratio"><div class="hm-ratio-name">Net Asset Ratio</div><div class="hm-ratio-val">0.41</div><span class="badge good">Good</span></div>
           </div>
-          <hr class="mock-divider">
-          <div class="mock-label">Financial Health Indicators</div>
-          <div class="mock-finding"><div class="mock-dot" style="background:#D97706"></div>Revenue concentration warrants further inquiry into donor base composition.</div>
-          <div class="mock-finding"><div class="mock-dot" style="background:#2EAD77"></div>Operating margin is positive and sustainable year-over-year.</div>
-          <div class="mock-finding"><div class="mock-dot" style="background:#2EAD77"></div>Program expense ratio reflects strong mission alignment.</div>
-          <div class="mock-rec">
-            <div class="mock-rec-label">Recommendation</div>
-            <div class="mock-rec-val">Invite to Apply</div>
+          <div class="hm-label">Financial Trends</div>
+          <table class="hm-trends">
+            <thead><tr><th>Metric</th><th>FY 2024</th><th>FY 2023</th><th>FY 2022</th><th>Trend</th></tr></thead>
+            <tbody>
+              <tr><td>Total Revenue</td><td>$4.2M</td><td>$3.9M</td><td>$3.5M</td><td class="hm-trend-up">↑</td></tr>
+              <tr><td>Operating Margin</td><td>9.1%</td><td>7.4%</td><td>6.2%</td><td class="hm-trend-up">↑</td></tr>
+              <tr><td>Months of Cash</td><td>3.8</td><td>3.2</td><td>2.9</td><td class="hm-trend-up">↑</td></tr>
+              <tr><td>Program Expense</td><td>76.2%</td><td>74.8%</td><td>73.1%</td><td class="hm-trend-up">↑</td></tr>
+            </tbody>
+          </table>
+          <hr class="hm-divider">
+          <div class="hm-label">Financial Health Indicators</div>
+          <div class="hm-finding"><div class="hm-dot" style="background:#2EAD77"></div>Cash reserves exceed the 3-month minimum — solid liquidity position.</div>
+          <div class="hm-finding"><div class="hm-dot" style="background:#2EAD77"></div>Operating margin improving three years consecutively.</div>
+          <div class="hm-finding"><div class="hm-dot" style="background:#D97706"></div>Revenue concentration warrants further inquiry into donor base composition.</div>
+          <div class="hm-rec">
+            <div class="hm-rec-label">Recommendation</div>
+            <div class="hm-rec-val">Invite to Apply</div>
           </div>
+          <div class="hm-narrative-snippet">Lakeview Community Foundation demonstrates strong and improving financial health across all primary indicators. The organization closed FY2024 with total revenue of $4.2 million against expenses of $3.8 million, producing a surplus of $382,000 and a 9.1% operating margin — the third consecutive year of margin improvement...</div>
         </div>
       </div>
     </div>
@@ -232,72 +377,254 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
 
 <!-- PROBLEM -->
 <section class="section">
-  <div class="inner">
-    <span class="eyebrow">The Reality</span>
-    <h2>Most Foundations Are Making <em>Serious Decisions</em> With Very Little Support.</h2>
-    <div class="problem-body" style="margin-top:1.5rem">
+  <div class="inner-narrow">
+    <div class="reveal"><span class="eyebrow">The Reality</span></div>
+    <h2 class="reveal reveal-delay-1">Most Foundations Are Making <em>Serious Decisions</em> With Very Little Support.</h2>
+    <div class="reveal reveal-delay-2" style="font-size:16.5px;color:var(--muted);line-height:1.95;max-width:640px;margin-top:1.5rem">
       <p>A foundation making half a million dollars in grants a year might have one staff person — or none. They care deeply about where their money goes. But between the relationships, the reporting, the board, and the day-to-day, there's rarely enough bandwidth to give every decision the rigor it deserves.</p>
-      <p>That's not a failure of intent. It's a resource problem. And it's exactly the kind of problem Clear Philanthropy was built to solve.</p>
-      <p><strong>We work alongside funders as external program support</strong> — experienced, independent, and fully oriented around your vision and values. Not a vendor you manage. A partner who shows up.</p>
+      <p style="margin-top:1.375rem">That's not a failure of intent. It's a resource problem. And it's exactly the kind of problem Clear Philanthropy was built to solve.</p>
+      <p style="margin-top:1.375rem"><strong>We work alongside funders as external program support</strong> — experienced, independent, and fully oriented around your vision and values. Not a vendor you manage. A partner who shows up.</p>
     </div>
-    <div class="pull-quote">
+    <div class="pull-quote reveal reveal-delay-3">
       <div class="pull-quote-text">"We're not a platform. We're not a report mill. We're the program capacity your foundation needs — <em>built around your work.</em>"</div>
     </div>
   </div>
 </section>
 
-<!-- SERVICES -->
-<section class="section alt" id="services">
+<!-- PRODUCT SHOWCASE -->
+<section class="section alt" id="product">
   <div class="inner">
-    <span class="eyebrow">What We Do</span>
-    <h2>Support at Every Stage of <em>the Giving Cycle.</em></h2>
-    <p class="lead">Whether you need help at one moment or across the full arc of a grant relationship, CP brings the same rigor and care to every stage.</p>
-    <div class="services-grid">
-      <div class="service">
-        <div class="service-num">01</div>
-        <div class="service-title">Organizational Assessment</div>
-        <div class="service-desc">A structured financial and organizational health review — scored, interpreted, and delivered as a clear, shareable summary that gives you confidence in your decision.</div>
+    <div class="reveal"><span class="eyebrow">What We Deliver</span></div>
+    <h2 class="reveal reveal-delay-1">Every Engagement Produces <em>Clear Answers.</em></h2>
+    <p class="lead reveal reveal-delay-2">Here's a look at what CP actually delivers — across the assessment, the portfolio view, and the report your team receives.</p>
+
+    <!-- Dashboard mockup -->
+    <div style="margin-bottom:5rem" class="reveal">
+      <div class="showcase-label">
+        <div class="showcase-label-num">1</div>
+        <div class="showcase-label-text">Portfolio Dashboard — Every org, at a glance</div>
       </div>
-      <div class="service">
-        <div class="service-num">02</div>
-        <div class="service-title">Proposal Review</div>
-        <div class="service-desc">Independent evaluation of grant applications against your funding priorities — with a plain-language summary of what the proposal shows and what questions it raises.</div>
+      <div class="dash-mockup">
+        <div class="dash-header">
+          <div>
+            <div class="dash-title">Organization Assessments</div>
+            <div class="dash-sub">Review and manage all nonprofit financial assessments</div>
+          </div>
+          <div class="dash-header-actions">
+            <span class="dash-btn dash-btn-blue">+ New Assessment</span>
+            <span class="dash-btn dash-btn-green">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              Copy Intake Link
+            </span>
+          </div>
+        </div>
+        <div class="dash-stats">
+          <div class="dash-stat"><div class="dash-stat-label">Total Orgs</div><div class="dash-stat-val">8</div><div class="dash-stat-sub">assessed</div></div>
+          <div class="dash-stat"><div class="dash-stat-label">Low Risk</div><div class="dash-stat-val green">6</div><div class="dash-stat-sub">organizations</div></div>
+          <div class="dash-stat"><div class="dash-stat-label">Moderate Risk</div><div class="dash-stat-val amber">2</div><div class="dash-stat-sub">organizations</div></div>
+          <div class="dash-stat"><div class="dash-stat-label">High Risk</div><div class="dash-stat-val red">0</div><div class="dash-stat-sub">organizations</div></div>
+        </div>
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>Organization</th><th>Score</th><th>Risk Level</th><th>Recommendation</th><th>Reviewer</th><th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="dash-org-name">Harbor Light Mission</div><div class="dash-org-fy">12/31/2024</div></td>
+              <td><div style="font-weight:700;font-size:13px">95 <span style="color:#9CA3AF;font-size:11px">/100</span></div><div class="dash-score-bar"><div class="dash-score-fill" style="width:95%;background:#2EAD77"></div></div></td>
+              <td><div class="dash-risk"><div class="dash-risk-dot dot-low"></div>Low</div></td>
+              <td><span class="dash-rec rec-approved">Approved</span></td>
+              <td style="color:var(--muted);font-size:12px">Clear Philanthropy</td>
+              <td style="color:var(--muted);font-size:12px">2026-06-14</td>
+            </tr>
+            <tr>
+              <td><div class="dash-org-name">Lakeview Community Foundation</div><div class="dash-org-fy">12/31/2024</div></td>
+              <td><div style="font-weight:700;font-size:13px">82 <span style="color:#9CA3AF;font-size:11px">/100</span></div><div class="dash-score-bar"><div class="dash-score-fill" style="width:82%;background:#2EAD77"></div></div></td>
+              <td><div class="dash-risk"><div class="dash-risk-dot dot-low"></div>Low</div></td>
+              <td><span class="dash-rec rec-invite">Invite to Apply</span></td>
+              <td style="color:var(--muted);font-size:12px">Clear Philanthropy</td>
+              <td style="color:var(--muted);font-size:12px">2026-06-13</td>
+            </tr>
+            <tr>
+              <td><div class="dash-org-name">Westside Youth Alliance</div><div class="dash-org-fy">06/30/2024</div></td>
+              <td><div style="font-weight:700;font-size:13px">78 <span style="color:#9CA3AF;font-size:11px">/100</span></div><div class="dash-score-bar"><div class="dash-score-fill" style="width:78%;background:#2EAD77"></div></div></td>
+              <td><div class="dash-risk"><div class="dash-risk-dot dot-low"></div>Low</div></td>
+              <td><span class="dash-rec rec-invite">Invite to Apply</span></td>
+              <td style="color:var(--muted);font-size:12px">Clear Philanthropy</td>
+              <td style="color:var(--muted);font-size:12px">2026-06-12</td>
+            </tr>
+            <tr>
+              <td><div class="dash-org-name">Northside Family Services</div><div class="dash-org-fy">12/31/2023</div></td>
+              <td><div style="font-weight:700;font-size:13px">74 <span style="color:#9CA3AF;font-size:11px">/100</span></div><div class="dash-score-bar"><div class="dash-score-fill" style="width:74%;background:#D97706"></div></div></td>
+              <td><div class="dash-risk"><div class="dash-risk-dot dot-mod"></div>Moderate</div></td>
+              <td><span class="dash-rec rec-info">Request More Info</span></td>
+              <td style="color:var(--muted);font-size:12px">Clear Philanthropy</td>
+              <td style="color:var(--muted);font-size:12px">2026-06-11</td>
+            </tr>
+            <tr>
+              <td><div class="dash-org-name">Sunrise Education Initiative</div><div class="dash-org-fy">06/30/2024</div></td>
+              <td><div style="font-weight:700;font-size:13px">91 <span style="color:#9CA3AF;font-size:11px">/100</span></div><div class="dash-score-bar"><div class="dash-score-fill" style="width:91%;background:#2EAD77"></div></div></td>
+              <td><div class="dash-risk"><div class="dash-risk-dot dot-low"></div>Low</div></td>
+              <td><span class="dash-rec rec-due">Full Due Diligence</span></td>
+              <td style="color:var(--muted);font-size:12px">Clear Philanthropy</td>
+              <td style="color:var(--muted);font-size:12px">2026-06-10</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="service">
-        <div class="service-num">03</div>
-        <div class="service-title">Strategy & Sourcing</div>
-        <div class="service-desc">Help clarifying what you're trying to fund, where to find the right organizations, and how to build a portfolio that reflects your values over time.</div>
+    </div>
+
+    <!-- PDF Report mockup — three cards fanned -->
+    <div class="reveal">
+      <div class="showcase-label">
+        <div class="showcase-label-num">2</div>
+        <div class="showcase-label-text">The Report — A complete deliverable, every time</div>
       </div>
-      <div class="service">
-        <div class="service-num">04</div>
-        <div class="service-title">Decision & Board Support</div>
-        <div class="service-desc">The memos, materials, and preparation your board needs to move forward with confidence — from site visit reports to grant committee preparation.</div>
+      <div class="pdf-scene">
+
+        <!-- Page 1 — Score + Ratios -->
+        <div class="pdf-card pdf-card-1">
+          <div class="pdf-topbar">
+            <div class="pdf-topbar-left">Clear Philanthropy · clearphilanthropy.com</div>
+            <div class="pdf-topbar-right">Page 1 of 3</div>
+          </div>
+          <div class="pdf-body">
+            <div class="pdf-hero-block">
+              <div>
+                <div class="pdf-org-name">Westside Youth Alliance</div>
+                <div class="pdf-org-meta">EIN: 83-4721059 · FY End: 06/30/2024 · Reviewer: Clear Philanthropy</div>
+              </div>
+              <div class="pdf-score-block">
+                <div class="pdf-score-label">Health Score</div>
+                <div class="pdf-score-num">78<span class="pdf-score-denom">/100</span></div>
+                <div class="pdf-risk-badge">Low Risk</div>
+              </div>
+            </div>
+            <div class="pdf-section-label">Key Financial Ratios</div>
+            <div class="pdf-ratios">
+              <div class="pdf-ratio"><div class="pdf-ratio-name">Operating Margin</div><div class="pdf-ratio-val">8.4%</div><span class="badge good">Good</span></div>
+              <div class="pdf-ratio"><div class="pdf-ratio-name">Current Ratio</div><div class="pdf-ratio-val">1.82</div><span class="badge good">Good</span></div>
+              <div class="pdf-ratio"><div class="pdf-ratio-name">Months of Cash</div><div class="pdf-ratio-val">2.1</div><span class="badge mod">Moderate</span></div>
+              <div class="pdf-ratio"><div class="pdf-ratio-name">Debt to Assets</div><div class="pdf-ratio-val">31.2%</div><span class="badge good">Good</span></div>
+              <div class="pdf-ratio"><div class="pdf-ratio-name">Program Expense</div><div class="pdf-ratio-val">74.6%</div><span class="badge good">Good</span></div>
+              <div class="pdf-ratio"><div class="pdf-ratio-name">Fundraising Eff.</div><div class="pdf-ratio-val">9.2%</div><span class="badge good">Good</span></div>
+              <div class="pdf-ratio"><div class="pdf-ratio-name">Rev. Concentration</div><div class="pdf-ratio-val">38.5%</div><span class="badge good">Good</span></div>
+              <div class="pdf-ratio"><div class="pdf-ratio-name">Net Asset Ratio</div><div class="pdf-ratio-val">0.28</div><span class="badge good">Good</span></div>
+            </div>
+            <div class="pdf-divider"></div>
+            <div class="pdf-section-label">Financial Health Indicators</div>
+            <div class="pdf-finding"><div class="pdf-finding-dot" style="background:#2EAD77"></div>Revenue sources are well-diversified — broad base of community donors.</div>
+            <div class="pdf-finding"><div class="pdf-finding-dot" style="background:#D97706"></div>Months of cash below 3 — limited liquidity runway.</div>
+            <div class="pdf-finding"><div class="pdf-finding-dot" style="background:#2EAD77"></div>Operating margin is positive and improving.</div>
+            <div class="pdf-finding"><div class="pdf-finding-dot" style="background:#2EAD77"></div>Program expense ratio reflects strong mission alignment.</div>
+          </div>
+          <div class="pdf-footer">
+            <div class="pdf-footer-text">Clear Philanthropy · clearphilanthropy.com</div>
+            <div class="pdf-footer-text">Financial Health Assessment Report</div>
+          </div>
+        </div>
+
+        <!-- Page 2 — Trends + Narrative -->
+        <div class="pdf-card pdf-card-2">
+          <div class="pdf-topbar">
+            <div class="pdf-topbar-left">Clear Philanthropy · clearphilanthropy.com</div>
+            <div class="pdf-topbar-right">Page 2 of 3</div>
+          </div>
+          <div class="pdf-body">
+            <div class="pdf-section-label">Financial Trends</div>
+            <table class="pdf-trend-table">
+              <thead>
+                <tr><th>Metric</th><th>FY 2024</th><th>FY 2023</th><th>FY 2022</th><th>Trend</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Total Revenue</td><td>$3.1M</td><td>$2.8M</td><td>$2.5M</td><td class="pdf-trend-up">↑</td></tr>
+                <tr><td>Total Expenses</td><td>$2.8M</td><td>$2.6M</td><td>$2.3M</td><td class="pdf-trend-up">↑</td></tr>
+                <tr><td>Operating Margin</td><td>8.4%</td><td>6.9%</td><td>5.8%</td><td class="pdf-trend-up">↑</td></tr>
+                <tr><td>Months of Cash</td><td>2.1</td><td>2.0</td><td>1.9</td><td class="pdf-trend-flat">→</td></tr>
+                <tr><td>Program Expense</td><td>74.6%</td><td>73.1%</td><td>71.8%</td><td class="pdf-trend-up">↑</td></tr>
+              </tbody>
+            </table>
+            <div class="pdf-divider"></div>
+            <div class="pdf-section-label">Assessment Narrative</div>
+            <div class="pdf-narrative">Westside Youth Alliance demonstrates solid and improving financial health for the fiscal year ending June 30, 2024, with a composite health score of 78/100. The organization generated $3.1 million in revenue against $2.8 million in expenses, producing a positive operating margin of 8.4% — the third consecutive year of margin improvement. Program expense ratio of 74.6% reflects strong mission alignment, with approximately three-quarters of all expenditures directed toward direct service delivery. Revenue is well-diversified across individual donors, foundation grants, and program fees, with no single source exceeding 40% of total revenue...</div>
+          </div>
+          <div class="pdf-footer">
+            <div class="pdf-footer-text">Clear Philanthropy · clearphilanthropy.com</div>
+            <div class="pdf-footer-text">Financial Health Assessment Report</div>
+          </div>
+        </div>
+
+        <!-- Page 3 — About methodology -->
+        <div class="pdf-card pdf-card-3">
+          <div class="pdf-topbar">
+            <div class="pdf-topbar-left">Clear Philanthropy · clearphilanthropy.com</div>
+            <div class="pdf-topbar-right">Page 3 of 3</div>
+          </div>
+          <div class="pdf-body">
+            <div class="pdf-section-label" style="margin-bottom:8px">About This Assessment</div>
+            <div class="pdf-about">
+              <p>This report was prepared by <strong>Clear Philanthropy</strong>, an external program support practice that helps foundations and philanthropic funders assess nonprofit financial health and make more informed grant decisions.</p>
+              <p style="margin-top:7px">The Health Score is a weighted composite of <strong>8 financial ratios</strong> derived from established nonprofit sector benchmarks and practitioner standards — including liquidity, operating performance, program efficiency, leverage, revenue diversification, and net asset position.</p>
+              <p style="margin-top:7px">This assessment reflects the financial data available at the time of review. It is designed to surface material financial patterns and prompt informed inquiry — not to render a definitive judgment on organizational merit or mission impact.</p>
+            </div>
+            <div class="pdf-divider"></div>
+            <div class="pdf-section-label">Ratios Assessed</div>
+            <div class="pdf-ratio-tags">
+              <span class="pdf-ratio-tag">Months of Cash</span>
+              <span class="pdf-ratio-tag">Operating Margin</span>
+              <span class="pdf-ratio-tag">Program Expense Ratio</span>
+              <span class="pdf-ratio-tag">Current Ratio</span>
+              <span class="pdf-ratio-tag">Revenue Concentration</span>
+              <span class="pdf-ratio-tag">Debt to Assets</span>
+              <span class="pdf-ratio-tag">Fundraising Efficiency</span>
+              <span class="pdf-ratio-tag">Net Asset Ratio</span>
+            </div>
+            <div class="pdf-divider"></div>
+            <div style="text-align:center;padding:10px 0">
+              <div style="font-size:9px;font-weight:700;color:var(--blue);letter-spacing:0.04em">clearphilanthropy.com</div>
+              <div style="font-size:8px;color:var(--muted);margin-top:2px">hello@clearphilanthropy.com</div>
+            </div>
+          </div>
+          <div class="pdf-footer">
+            <div class="pdf-footer-text">Clear Philanthropy · clearphilanthropy.com</div>
+            <div class="pdf-footer-text">Financial Health Assessment Report</div>
+          </div>
+        </div>
+
       </div>
-      <div class="service">
-        <div class="service-num">05</div>
-        <div class="service-title">Portfolio Management</div>
-        <div class="service-desc">Ongoing management of active grantee relationships — check-ins, reporting, renewals, and the continuity that turns a grant into a real partnership.</div>
-      </div>
-      <div class="service featured">
-        <div class="service-num">All of the above</div>
-        <div class="service-title">The Full Cycle</div>
-        <div class="service-desc">For foundations that want CP fully embedded across the entire giving cycle — one partner, fully oriented around your work, from sourcing through closeout.</div>
-      </div>
+      <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:0.5rem">Every assessment produces a complete, branded PDF report — ready to share with colleagues or drop into a grant file.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="inner-narrow">
+    <div class="reveal"><span class="eyebrow">What We Do</span></div>
+    <h2 class="reveal reveal-delay-1">Support at Every Stage of <em>the Giving Cycle.</em></h2>
+    <p class="lead reveal reveal-delay-2">Whether you need help at one moment or across the full arc of a grant relationship, CP brings the same rigor and care to every stage.</p>
+    <div class="services-grid reveal reveal-delay-2">
+      <div class="service"><div class="service-num">01</div><div class="service-title">Organizational Assessment</div><div class="service-desc">A structured financial and organizational health review — scored, interpreted, and delivered as a clear, shareable summary that gives you confidence in your decision.</div></div>
+      <div class="service"><div class="service-num">02</div><div class="service-title">Proposal Review</div><div class="service-desc">Independent evaluation of grant applications against your funding priorities — with a plain-language summary of what the proposal shows and what questions it raises.</div></div>
+      <div class="service"><div class="service-num">03</div><div class="service-title">Strategy & Sourcing</div><div class="service-desc">Help clarifying what you're trying to fund, where to find the right organizations, and how to build a portfolio that reflects your values over time.</div></div>
+      <div class="service"><div class="service-num">04</div><div class="service-title">Decision & Board Support</div><div class="service-desc">The memos, materials, and preparation your board needs to move forward with confidence — from site visit reports to grant committee preparation.</div></div>
+      <div class="service"><div class="service-num">05</div><div class="service-title">Portfolio Management</div><div class="service-desc">Ongoing management of active grantee relationships — check-ins, reporting, renewals, and the continuity that turns a grant into a real partnership.</div></div>
+      <div class="service dark"><div class="service-num">All of the above</div><div class="service-title">The Full Cycle</div><div class="service-desc">For foundations that want CP fully embedded across the entire giving cycle — one partner, fully oriented around your work, from sourcing through closeout.</div></div>
     </div>
   </div>
 </section>
 
 <!-- ENGAGE -->
-<section class="section" id="engage">
-  <div class="inner">
-    <span class="eyebrow">How We Engage</span>
-    <h2>Start Anywhere. <em>Go as Deep as You Need.</em></h2>
-    <p class="lead">Some relationships begin with a single assessment. Others grow into something much more ongoing. CP is built to meet you where you are.</p>
-    <div class="engage-grid">
+<section class="section alt" id="engage">
+  <div class="inner-narrow">
+    <div class="reveal"><span class="eyebrow">How We Engage</span></div>
+    <h2 class="reveal reveal-delay-1">Start Anywhere. <em>Go as Deep as You Need.</em></h2>
+    <p class="lead reveal reveal-delay-2">Some relationships begin with a single assessment. Others grow into something much more ongoing. CP is built to meet you where you are.</p>
+    <div class="engage-grid reveal reveal-delay-2">
       <div class="engage-card">
-        <div class="engage-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-        </div>
+        <div class="engage-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
         <div class="engage-tier">One-Time</div>
         <div class="engage-title">Start with one thing.</div>
         <div class="engage-desc">For funders who need support on a specific decision — or want to see how CP works before a longer engagement.</div>
@@ -309,9 +636,7 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
         </div>
       </div>
       <div class="engage-card">
-        <div class="engage-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-        </div>
+        <div class="engage-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div>
         <div class="engage-tier">Cycle Support</div>
         <div class="engage-title">A full grant cycle, end to end.</div>
         <div class="engage-desc">CP works alongside your team through one complete grantmaking cycle. Project-based, defined scope, clear deliverables.</div>
@@ -323,9 +648,7 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
         </div>
       </div>
       <div class="engage-card dark">
-        <div class="engage-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
+        <div class="engage-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
         <div class="engage-tier">Embedded Support</div>
         <div class="engage-title">Your program team, when you need one.</div>
         <div class="engage-desc">An ongoing monthly engagement where CP functions as an extension of your foundation — present, accountable, built around your values.</div>
@@ -341,59 +664,35 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
 </section>
 
 <!-- WHO -->
-<section class="section alt" id="who">
-  <div class="inner">
-    <span class="eyebrow">Who We Work With</span>
-    <h2>Built for Funders With <em>Lean Teams</em> and High Standards.</h2>
-    <p class="lead">You don't need a large program staff to give rigorously. You need the right support.</p>
+<section class="section" id="who">
+  <div class="inner-narrow">
+    <div class="reveal"><span class="eyebrow">Who We Work With</span></div>
+    <h2 class="reveal reveal-delay-1">Built for Funders With <em>Lean Teams</em> and High Standards.</h2>
+    <p class="lead reveal reveal-delay-2">You don't need a large program staff to give rigorously. You need the right support.</p>
     <div class="who-grid">
-      <div class="who-card">
-        <div class="who-title">Private & Family Foundations</div>
-        <div class="who-desc">Small teams doing serious grantmaking — who want the rigor of a full program function without the overhead of building one in-house.</div>
-      </div>
-      <div class="who-card">
-        <div class="who-title">Corporate Giving Programs</div>
-        <div class="who-desc">Corporate philanthropy and community investment teams who want consistent, defensible grantmaking and the capacity to go deeper on key relationships.</div>
-      </div>
-      <div class="who-card">
-        <div class="who-title">Family Offices & DAF Advisors</div>
-        <div class="who-desc">Advisors who want to bring a higher standard of diligence and thoughtful counsel to their clients' philanthropic decisions.</div>
-      </div>
-      <div class="who-card">
-        <div class="who-title">Emerging Funders</div>
-        <div class="who-desc">New foundations and individual donors who want to build a rigorous, values-driven grantmaking practice from the very beginning.</div>
-      </div>
+      <div class="who-card reveal reveal-delay-1"><div class="who-title">Private & Family Foundations</div><div class="who-desc">Small teams doing serious grantmaking — who want the rigor of a full program function without the overhead of building one in-house.</div></div>
+      <div class="who-card reveal reveal-delay-2"><div class="who-title">Corporate Giving Programs</div><div class="who-desc">Corporate philanthropy and community investment teams who want consistent, defensible grantmaking and the capacity to go deeper on key relationships.</div></div>
+      <div class="who-card reveal reveal-delay-3"><div class="who-title">Family Offices & DAF Advisors</div><div class="who-desc">Advisors who want to bring a higher standard of diligence and thoughtful counsel to their clients' philanthropic decisions.</div></div>
+      <div class="who-card reveal reveal-delay-4"><div class="who-title">Emerging Funders</div><div class="who-desc">New foundations and individual donors who want to build a rigorous, values-driven grantmaking practice from the very beginning.</div></div>
     </div>
   </div>
 </section>
 
 <!-- ABOUT -->
-<section class="section">
-  <div class="inner">
-    <span class="eyebrow">Who We Are</span>
-    <h2>We've Worked on <em>Every Side</em> of Philanthropy.</h2>
-    <div class="about-body" style="margin-top:1.5rem">
+<section class="section alt">
+  <div class="inner-narrow">
+    <div class="reveal"><span class="eyebrow">Who We Are</span></div>
+    <h2 class="reveal reveal-delay-1">We've Worked on <em>Every Side</em> of Philanthropy.</h2>
+    <div class="about-body reveal reveal-delay-2" style="margin-top:1.5rem">
       <p>Clear Philanthropy is a team of professionals who have worked across the full spectrum of the philanthropic sector — with extensive grantmaking experience and equally deep roots in direct service delivery.</p>
-      <p>That combination matters. Our direct service background isn't just a credential — it shapes how we show up with the organizations we work with. We understand the operational realities, the resource constraints, and the day-to-day pressures that define nonprofit life from the inside. When we sit down with a grantee, we meet them where they are. Because we've been there.</p>
+      <p>That combination matters. Our direct service background shapes how we show up with the organizations we work with. We understand the operational realities, the resource constraints, and the day-to-day pressures that define nonprofit life from the inside. When we sit down with a grantee, we meet them where they are. Because we've been there.</p>
       <p><strong>We represent your vision and values — not our own.</strong> We bring the judgment. You make the call.</p>
     </div>
     <div class="principles">
-      <div>
-        <div class="principle-title">Independent</div>
-        <div class="principle-desc">CP works on behalf of the funder, not the grantee. Our assessments reflect what the data shows — not what anyone hopes it will say.</div>
-      </div>
-      <div>
-        <div class="principle-title">Practitioner-led</div>
-        <div class="principle-desc">Every engagement is informed by real program officer and direct service experience — the kind of judgment that comes from actually being in the room.</div>
-      </div>
-      <div>
-        <div class="principle-title">Values-driven</div>
-        <div class="principle-desc">CP doesn't impose a theory of change. We surface what the data shows and support decisions that reflect what you're trying to accomplish as a funder.</div>
-      </div>
-      <div>
-        <div class="principle-title">Relational</div>
-        <div class="principle-desc">The best grantmaking is built on trust — with grantees, with communities, with boards. CP brings a relational approach to every stage of the work.</div>
-      </div>
+      <div class="reveal reveal-delay-1"><div class="principle-title">Independent</div><div class="principle-desc">CP works on behalf of the funder, not the grantee. Our assessments reflect what the data shows — not what anyone hopes it will say.</div></div>
+      <div class="reveal reveal-delay-2"><div class="principle-title">Practitioner-led</div><div class="principle-desc">Every engagement is informed by real program officer and direct service experience — the kind of judgment that comes from actually being in the room.</div></div>
+      <div class="reveal reveal-delay-3"><div class="principle-title">Values-driven</div><div class="principle-desc">CP doesn't impose a theory of change. We surface what the data shows and support decisions that reflect what you're trying to accomplish as a funder.</div></div>
+      <div class="reveal reveal-delay-4"><div class="principle-title">Relational</div><div class="principle-desc">The best grantmaking is built on trust — with grantees, with communities, with boards. CP brings a relational approach to every stage of the work.</div></div>
     </div>
   </div>
 </section>
@@ -401,14 +700,16 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
 <!-- CTA -->
 <section class="cta">
   <div class="inner cta-inner">
-    <span class="eyebrow" style="color:var(--sky)">Let's Talk</span>
-    <h2>We'd Love to Learn About <em>Your Work.</em></h2>
-    <p>Every engagement starts with a conversation. Tell us about your foundation, what you're funding, and where you could use support — we'll go from there.</p>
-    <a href="mailto:hello@clearphilanthropy.com" class="btn-cta">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      hello@clearphilanthropy.com
-    </a>
-    <p class="cta-note">No pitch. No pressure. Just a conversation.</p>
+    <span class="cta-eyebrow reveal">Let's Talk</span>
+    <h2 class="reveal reveal-delay-1">We'd Love to Learn About <em>Your Work.</em></h2>
+    <p class="cta-sub reveal reveal-delay-2">Every engagement starts with a conversation. Tell us about your foundation, what you're funding, and where you could use support — we'll go from there.</p>
+    <div class="reveal reveal-delay-3">
+      <a href="mailto:hello@clearphilanthropy.com" class="cta-email">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        hello@clearphilanthropy.com
+      </a>
+      <p class="cta-note">No pitch. No pressure. Just a conversation.</p>
+    </div>
   </div>
 </section>
 
@@ -416,6 +717,7 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
 <footer>
   <div class="footer-left"><strong>Clear Philanthropy</strong> · External program support for intentional funders.</div>
   <div class="footer-links">
+    <a href="#product">What We Deliver</a>
     <a href="#services">What We Do</a>
     <a href="#engage">How We Engage</a>
     <a href="#who">Who We Work With</a>
@@ -423,6 +725,13 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
     <a href="https://app.clearphilanthropy.com/login">Sign In</a>
   </div>
 </footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 
 </body>
 </html>
