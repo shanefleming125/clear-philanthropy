@@ -4,271 +4,159 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clear Philanthropy — External Program Support for Funders</title>
-<meta name="description" content="Clear Philanthropy provides external program support for foundations and philanthropic funders — an extension of your team, built around your vision and values.">
+<meta name="description" content="Clear Philanthropy provides external program support for foundations and philanthropic funders. We work as an extension of your team — built around your vision and values.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect width='44' height='44' rx='10' fill='%231A6EB5'/><circle cx='17' cy='22' r='10' stroke='white' stroke-width='1.8' fill='rgba(255,255,255,0.1)'/><circle cx='27' cy='22' r='10' stroke='rgba(255,255,255,0.5)' stroke-width='1.8' fill='rgba(255,255,255,0.05)'/><path d='M22 13.2C19 16 19 28 22 30.8C25 28 25 16 22 13.2Z' fill='white'/></svg>">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --navy: #0B2545;
-    --blue: #1A6EB5;
-    --sky: #4DA6E8;
-    --green: #2EAD77;
-    --text: #111827;
-    --muted: #6B7280;
-    --border: #E5E7EB;
-    --bg: #F3F6FA;
-    --white: #FFFFFF;
-  }
-  body { font-family: 'Manrope', sans-serif; color: var(--text); background: var(--white); line-height: 1.6; }
-  a { color: inherit; text-decoration: none; }
-  img { display: block; max-width: 100%; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0B2545;
+  --blue: #1A6EB5;
+  --sky: #4DA6E8;
+  --green: #2EAD77;
+  --text: #111827;
+  --muted: #6B7280;
+  --border: #E5E7EB;
+  --bg: #F3F6FA;
+  --white: #FFFFFF;
+}
+body { font-family: 'Manrope', sans-serif; color: var(--text); background: var(--white); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
 
-  /* ── NAV ── */
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    background: var(--navy);
-    padding: 0 2.5rem;
-    height: 62px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .logo { display: flex; align-items: center; gap: 10px; }
-  .logo-mark { width: 32px; height: 32px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-  .logo-text { font-size: 16px; font-weight: 700; color: white; letter-spacing: -0.01em; }
-  .logo-text span { color: var(--sky); }
-  .nav-links { display: flex; align-items: center; gap: 4px; }
-  .nav-link { color: rgba(255,255,255,0.55); font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 6px; transition: all 0.15s; }
-  .nav-link:hover { color: white; background: rgba(255,255,255,0.08); }
-  .nav-cta {
-    background: white; color: var(--navy) !important;
-    font-weight: 700; border-radius: 6px;
-    padding: 7px 18px; font-size: 13px;
-    transition: background 0.15s, color 0.15s;
-    margin-left: 6px;
-  }
-  .nav-cta:hover { background: #E6F1FB; }
-  @media (max-width: 640px) {
-    nav { padding: 0 1.25rem; }
-    .nav-links .nav-link:not(.nav-cta) { display: none; }
-  }
+/* NAV */
+nav { position: sticky; top: 0; z-index: 100; background: var(--navy); padding: 0 2.5rem; height: 62px; display: flex; align-items: center; justify-content: space-between; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-mark { width: 32px; height: 32px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.logo-text { font-size: 16px; font-weight: 700; color: white; letter-spacing: -0.01em; }
+.logo-text span { color: var(--sky); }
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-link { color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 6px; transition: all 0.15s; }
+.nav-link:hover { color: white; background: rgba(255,255,255,0.08); }
+.nav-cta { background: white; color: var(--navy) !important; font-weight: 700; border-radius: 6px; padding: 7px 18px; font-size: 13px; transition: background 0.15s; margin-left: 6px; }
+.nav-cta:hover { background: #E6F1FB; }
+@media (max-width: 640px) { nav { padding: 0 1.25rem; } .nav-links .nav-link:not(.nav-cta) { display: none; } }
 
-  /* ── HERO ── */
-  .hero {
-    background: var(--navy);
-    padding: 7rem 2.5rem 5rem;
-  }
-  .hero-inner { max-width: 760px; }
-  .hero-eyebrow {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--sky);
-    margin-bottom: 1.5rem; display: block;
-  }
-  .hero h1 {
-    font-size: clamp(2.25rem, 5.5vw, 3.75rem);
-    font-weight: 800; color: white; line-height: 1.1;
-    letter-spacing: -0.025em; margin-bottom: 1.5rem;
-  }
-  .hero h1 em { color: var(--sky); font-style: normal; }
-  .hero-sub {
-    font-size: 18px; color: rgba(255,255,255,0.6);
-    max-width: 560px; line-height: 1.75; margin-bottom: 2.5rem;
-  }
-  .hero-sub strong { color: rgba(255,255,255,0.9); font-weight: 600; }
-  .btn-primary {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--sky); color: white;
-    font-weight: 700; font-size: 14px;
-    padding: 13px 28px; border-radius: 8px;
-    transition: background 0.15s; letter-spacing: -0.01em;
-  }
-  .btn-primary:hover { background: #3a96d8; }
-  .hero-note {
-    margin-top: 1.25rem;
-    font-size: 12.5px; color: rgba(255,255,255,0.3);
-  }
+/* HERO */
+.hero { background: var(--navy); padding: 6rem 2.5rem 5rem; }
+.hero-inner { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+.hero-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sky); margin-bottom: 1.5rem; display: block; }
+.hero h1 { font-size: clamp(2.25rem, 4.5vw, 3.5rem); font-weight: 800; color: white; line-height: 1.1; letter-spacing: -0.025em; margin-bottom: 1.5rem; }
+.hero h1 em { color: var(--sky); font-style: normal; }
+.hero-sub { font-size: 17px; color: rgba(255,255,255,0.55); line-height: 1.8; margin-bottom: 2.5rem; }
+.hero-sub strong { color: rgba(255,255,255,0.85); font-weight: 600; }
+.btn-hero { display: inline-flex; align-items: center; gap: 8px; background: var(--sky); color: white; font-weight: 700; font-size: 14px; padding: 13px 28px; border-radius: 8px; transition: background 0.15s; }
+.btn-hero:hover { background: #3a96d8; }
+.hero-note { margin-top: 1rem; font-size: 12px; color: rgba(255,255,255,0.25); }
+@media (max-width: 800px) { .hero-inner { grid-template-columns: 1fr; } .hero-mockup { display: none; } }
 
-  /* ── SHARED ── */
-  .section { padding: 6rem 2.5rem; }
-  .section.alt { background: var(--bg); }
-  .inner { max-width: 960px; margin: 0 auto; }
-  .eyebrow {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--blue);
-    margin-bottom: 0.875rem; display: block;
-  }
-  h2 {
-    font-size: clamp(1.75rem, 4vw, 2.5rem);
-    font-weight: 800; color: var(--text);
-    letter-spacing: -0.02em; line-height: 1.15;
-    margin-bottom: 1rem;
-  }
-  h2 em { color: var(--blue); font-style: normal; }
-  .lead {
-    font-size: 16px; color: var(--muted);
-    max-width: 580px; line-height: 1.75;
-    margin-bottom: 3.5rem;
-  }
+/* ASSESSMENT MOCKUP */
+.assessment-mockup { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.3); }
+.mock-header { background: var(--navy); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 1rem 1.25rem; display: flex; align-items: flex-start; justify-content: space-between; }
+.mock-org { font-size: 13px; font-weight: 700; color: white; }
+.mock-meta { font-size: 10.5px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.mock-score { text-align: right; }
+.mock-score-num { font-size: 28px; font-weight: 800; color: #4ade80; line-height: 1; }
+.mock-score-num span { font-size: 12px; color: rgba(255,255,255,0.35); }
+.mock-risk { font-size: 10px; font-weight: 700; background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 8px; display: inline-block; margin-top: 3px; }
+.mock-body { padding: 1.125rem; }
+.mock-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.mock-ratios { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1rem; }
+.mock-ratio { background: var(--bg); border-radius: 6px; padding: 7px 8px; }
+.mock-ratio-name { font-size: 9px; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
+.mock-ratio-val { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+.badge { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 6px; display: inline-block; }
+.good { background: #dcfce7; color: #166534; }
+.mod { background: #fef3c7; color: #92400e; }
+.poor { background: #fee2e2; color: #991b1b; }
+.mock-divider { border: none; border-top: 1px solid var(--border); margin-bottom: 0.875rem; }
+.mock-finding { display: flex; align-items: flex-start; gap: 7px; font-size: 11px; color: var(--text); margin-bottom: 5px; line-height: 1.5; }
+.mock-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+.mock-rec { display: flex; align-items: center; gap: 8px; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+.mock-rec-label { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.mock-rec-val { font-size: 12px; font-weight: 700; background: #E8F5F0; color: #0F6E56; padding: 3px 10px; border-radius: 8px; }
 
-  /* ── INTRO ── */
-  .intro-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-  }
-  .intro-body { font-size: 16px; color: var(--muted); line-height: 1.85; }
-  .intro-body p + p { margin-top: 1.25rem; }
-  .intro-body strong { color: var(--text); font-weight: 700; }
-  .intro-callout {
-    background: var(--navy);
-    border-radius: 14px;
-    padding: 2rem 2rem;
-    color: white;
-  }
-  .intro-callout-quote {
-    font-size: 17px; font-weight: 600; line-height: 1.65;
-    color: rgba(255,255,255,0.9); margin-bottom: 1.5rem;
-    font-style: italic;
-  }
-  .intro-callout-attr {
-    font-size: 12px; color: rgba(255,255,255,0.4);
-    font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
-  }
-  @media (max-width: 720px) { .intro-grid { grid-template-columns: 1fr; gap: 2rem; } }
+/* SHARED */
+.section { padding: 6rem 2.5rem; }
+.section.alt { background: var(--bg); }
+.inner { max-width: 960px; margin: 0 auto; }
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.875rem; display: block; }
+h2 { font-size: clamp(1.75rem, 3.5vw, 2.4rem); font-weight: 800; color: var(--text); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1rem; }
+h2 em { color: var(--blue); font-style: normal; }
+.lead { font-size: 16px; color: var(--muted); max-width: 580px; line-height: 1.8; margin-bottom: 3.5rem; }
 
-  /* ── WHAT WE DO ── */
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.25rem;
-  }
-  .service-card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 1.75rem;
-    transition: box-shadow 0.2s, border-color 0.2s;
-  }
-  .service-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.07); border-color: #BFDBFE; }
-  .service-number {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-    color: var(--blue); margin-bottom: 1rem;
-    text-transform: uppercase;
-  }
-  .service-title { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
-  .service-desc { font-size: 13.5px; color: var(--muted); line-height: 1.7; margin-bottom: 1rem; }
-  .service-list { display: flex; flex-direction: column; gap: 6px; }
-  .service-list-item {
-    display: flex; align-items: flex-start; gap: 8px;
-    font-size: 13px; color: var(--text);
-  }
-  .service-list-item::before {
-    content: '';
-    width: 4px; height: 4px; border-radius: 50%;
-    background: var(--blue); flex-shrink: 0; margin-top: 7px;
-  }
+/* PROBLEM */
+.problem-body { font-size: 16px; color: var(--muted); line-height: 1.9; max-width: 640px; }
+.problem-body p + p { margin-top: 1.25rem; }
+.problem-body strong { color: var(--text); font-weight: 700; }
+.pull-quote { margin-top: 3rem; padding: 2rem 2.5rem; background: var(--navy); border-radius: 12px; max-width: 640px; }
+.pull-quote-text { font-size: 18px; font-weight: 700; color: white; line-height: 1.6; letter-spacing: -0.01em; }
+.pull-quote-text em { color: var(--sky); font-style: normal; }
 
-  /* ── HOW WE ENGAGE ── */
-  .tiers { display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: 14px; overflow: hidden; }
-  .tier {
-    background: white;
-    padding: 2rem 2.25rem;
-    display: grid;
-    grid-template-columns: 180px 1fr auto;
-    gap: 2rem;
-    align-items: start;
-    transition: background 0.15s;
-  }
-  .tier:hover { background: #FAFBFF; }
-  .tier-label {
-    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
-  }
-  .tier-name { font-size: 17px; font-weight: 800; color: var(--text); }
-  .tier-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
-  .tier-items { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
-  .tier-tag {
-    font-size: 11.5px; font-weight: 600;
-    background: var(--bg); color: var(--text);
-    padding: 4px 12px; border-radius: 20px;
-    border: 1px solid var(--border);
-    white-space: nowrap;
-  }
-  @media (max-width: 720px) {
-    .tier { grid-template-columns: 1fr; gap: 1rem; }
-    .tier-items { justify-content: flex-start; }
-  }
+/* SERVICES */
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border-radius: 14px; overflow: hidden; }
+.service { background: white; padding: 1.75rem; transition: background 0.15s; }
+.service:hover { background: #FAFBFF; }
+.service-num { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--blue); margin-bottom: 0.875rem; }
+.service-title { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.service-desc { font-size: 13px; color: var(--muted); line-height: 1.7; }
+.service.featured { background: #F0F6FF; }
+.service.featured .service-num { color: var(--blue); }
+@media (max-width: 640px) { .services-grid { grid-template-columns: 1fr; } }
 
-  /* ── ASSESSMENT PREVIEW ── */
-  .preview-wrap {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-    max-width: 680px;
-  }
-  .preview-header {
-    background: var(--navy); padding: 1.125rem 1.5rem;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .preview-org { font-size: 14px; font-weight: 700; color: white; }
-  .preview-meta { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
-  .preview-score { text-align: right; }
-  .preview-score-num { font-size: 32px; font-weight: 800; color: #4ade80; line-height: 1; }
-  .preview-score-num span { font-size: 14px; color: rgba(255,255,255,0.35); }
-  .preview-risk { font-size: 10px; font-weight: 700; background: #dcfce7; color: #166534; padding: 2px 9px; border-radius: 10px; display: inline-block; margin-top: 4px; }
-  .preview-body { padding: 1.25rem 1.5rem; }
-  .preview-label { font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-  .preview-ratios { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 1.125rem; }
-  .preview-ratio { background: var(--bg); border-radius: 8px; padding: 8px 10px; }
-  .preview-ratio-name { font-size: 9.5px; color: var(--muted); font-weight: 600; margin-bottom: 3px; }
-  .preview-ratio-val { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 3px; }
-  .badge { font-size: 9px; font-weight: 700; padding: 1px 7px; border-radius: 8px; display: inline-block; }
-  .good { background: #dcfce7; color: #166534; }
-  .mod  { background: #fef3c7; color: #92400e; }
-  .poor { background: #fee2e2; color: #991b1b; }
-  .preview-divider { border: none; border-top: 1px solid var(--border); margin-bottom: 1rem; }
-  .preview-finding { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text); margin-bottom: 6px; line-height: 1.5; }
-  .preview-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
-  .preview-rec { margin-top: 0.875rem; display: flex; align-items: center; gap: 8px; }
-  .preview-rec-label { font-size: 9.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-  .preview-rec-val { font-size: 12px; font-weight: 700; background: #E8F5F0; color: #0F6E56; padding: 3px 12px; border-radius: 10px; }
+/* ENGAGE */
+.engage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.engage-card { background: white; padding: 2rem 1.75rem; }
+.engage-card + .engage-card { border-left: 1px solid var(--border); }
+.engage-card.dark { background: var(--navy); }
+.engage-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--bg); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; flex-shrink: 0; }
+.engage-card.dark .engage-icon { background: rgba(255,255,255,0.08); }
+.engage-tier { font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.engage-card.dark .engage-tier { color: rgba(255,255,255,0.35); }
+.engage-title { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 10px; line-height: 1.3; }
+.engage-card.dark .engage-title { color: white; }
+.engage-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 1.25rem; }
+.engage-card.dark .engage-desc { color: rgba(255,255,255,0.55); }
+.engage-list { display: flex; flex-direction: column; gap: 7px; }
+.engage-item { display: flex; gap: 8px; font-size: 12.5px; color: var(--text); align-items: flex-start; }
+.engage-card.dark .engage-item { color: rgba(255,255,255,0.7); }
+.engage-dash { color: var(--blue); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.engage-card.dark .engage-dash { color: var(--sky); }
+@media (max-width: 720px) { .engage-grid { grid-template-columns: 1fr; } .engage-card + .engage-card { border-left: none; border-top: 1px solid var(--border); } }
 
-  /* ── WHO ── */
-  .who-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-  .who-card {
-    border-left: 3px solid var(--blue);
-    padding: 1.25rem 1.25rem 1.25rem 1.5rem;
-    background: white; border-radius: 0 10px 10px 0;
-    border-top: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-  .who-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-  .who-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
+/* WHO */
+.who-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+.who-card { padding: 1.5rem; background: white; border: 1px solid var(--border); border-radius: 12px; border-top: 3px solid var(--blue); }
+.who-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.who-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
 
-  /* ── CTA ── */
-  .cta { background: var(--navy); padding: 7rem 2.5rem; }
-  .cta-inner { max-width: 640px; }
-  .cta h2 { color: white; margin-bottom: 1rem; }
-  .cta h2 em { color: var(--sky); }
-  .cta p { font-size: 17px; color: rgba(255,255,255,0.6); line-height: 1.75; margin-bottom: 2.5rem; max-width: 500px; }
-  .cta-note { margin-top: 1rem; font-size: 13px; color: rgba(255,255,255,0.3); }
+/* ABOUT */
+.about-body { font-size: 16px; color: var(--muted); line-height: 1.9; max-width: 640px; }
+.about-body p + p { margin-top: 1.25rem; }
+.about-body strong { color: var(--text); font-weight: 700; }
 
-  /* ── FOOTER ── */
-  footer {
-    background: #060F1E;
-    padding: 2rem 2.5rem;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 1rem;
-  }
-  .footer-left { font-size: 13px; color: rgba(255,255,255,0.3); }
-  .footer-left strong { color: rgba(255,255,255,0.5); }
-  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-  .footer-links a { font-size: 12px; color: rgba(255,255,255,0.3); transition: color 0.15s; }
-  .footer-links a:hover { color: rgba(255,255,255,0.6); }
+/* PRINCIPLES */
+.principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 3rem; }
+.principle-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 6px; padding-bottom: 10px; border-bottom: 2px solid var(--blue); }
+.principle-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-top: 10px; }
+
+/* CTA */
+.cta { background: var(--navy); padding: 8rem 2.5rem; }
+.cta-inner { max-width: 580px; }
+.cta h2 { color: white; margin-bottom: 1.25rem; }
+.cta h2 em { color: var(--sky); }
+.cta p { font-size: 17px; color: rgba(255,255,255,0.55); line-height: 1.8; margin-bottom: 2.5rem; }
+.btn-cta { display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--navy); font-weight: 700; font-size: 15px; padding: 14px 32px; border-radius: 8px; transition: background 0.15s; }
+.btn-cta:hover { background: #E6F1FB; }
+.cta-note { margin-top: 1rem; font-size: 12.5px; color: rgba(255,255,255,0.25); }
+
+/* FOOTER */
+footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+.footer-left { font-size: 13px; color: rgba(255,255,255,0.3); }
+.footer-left strong { color: rgba(255,255,255,0.45); }
+.footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.footer-links a { font-size: 12px; color: rgba(255,255,255,0.3); transition: color 0.15s; }
+.footer-links a:hover { color: rgba(255,255,255,0.6); }
 </style>
 </head>
 <body>
@@ -282,7 +170,7 @@
     <div class="logo-text">Clear <span>Philanthropy</span></div>
   </a>
   <div class="nav-links">
-    <a href="#what" class="nav-link">What We Do</a>
+    <a href="#services" class="nav-link">What We Do</a>
     <a href="#engage" class="nav-link">How We Engage</a>
     <a href="#who" class="nav-link">Who We Work With</a>
     <a href="https://app.clearphilanthropy.com/login" class="nav-link">Sign In</a>
@@ -293,216 +181,159 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-inner">
-    <span class="hero-eyebrow">External Program Support for Funders</span>
-    <h1>Your Grantmaking,<br><em>Fully Supported.</em></h1>
-    <p class="hero-sub">
-      Clear Philanthropy works alongside foundations and philanthropic funders as an <strong>extension of your team</strong> — bringing the operational support, practitioner judgment, and analytical rigor your grantmaking deserves.
-    </p>
-    <a href="mailto:hello@clearphilanthropy.com" class="btn-primary">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      Let's Connect
-    </a>
-    <p class="hero-note">No pitch. Just a conversation about your work.</p>
-  </div>
-</section>
+    <div>
+      <span class="hero-eyebrow">External Program Support</span>
+      <h1>Rigorous Grantmaking Doesn't Require a <em>Large Team.</em></h1>
+      <p class="hero-sub">Clear Philanthropy works alongside foundations and philanthropic funders as an <strong>extension of your team</strong> — bringing the judgment, structure, and operational support your grantmaking deserves.</p>
+      <a href="mailto:hello@clearphilanthropy.com" class="btn-hero">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Let's Connect
+      </a>
+      <p class="hero-note">No pitch. Just a conversation about your work.</p>
+    </div>
 
-<!-- INTRO -->
-<section class="section">
-  <div class="inner">
-    <div class="intro-grid">
-      <div>
-        <span class="eyebrow">Who We Are</span>
-        <h2>Built for Funders With <em>Lean Teams.</em></h2>
-        <div class="intro-body" style="margin-top:1.5rem">
-          <p>Most foundations doing meaningful work don't have a large program staff. They have one or two people — sometimes none — carrying the weight of every grant decision, every grantee relationship, and every reporting cycle.</p>
-          <p>Clear Philanthropy exists for those funders. We step in as <strong>external program support</strong> — not a vendor you manage, but a partner who understands your vision, represents your values, and helps you give with the same rigor and intentionality as foundations ten times your size.</p>
-          <p>We're not a platform. We're not a report mill. We're the program capacity your foundation needs, without the overhead of a full-time hire.</p>
+    <!-- Assessment mockup -->
+    <div class="hero-mockup">
+      <div class="assessment-mockup">
+        <div class="mock-header">
+          <div>
+            <div class="mock-org">Eastside Family Resource Center</div>
+            <div class="mock-meta">Financial Assessment · FY 12/31/2024 · EIN 12-3456789</div>
+          </div>
+          <div class="mock-score">
+            <div class="mock-score-num">78<span>/100</span></div>
+            <div class="mock-risk">Low Risk</div>
+          </div>
         </div>
-      </div>
-      <div class="intro-callout">
-        <div class="intro-callout-quote">"We step in as an extension of your team — representing your vision, your values, and your commitment to giving well."</div>
-        <div class="intro-callout-attr">— Clear Philanthropy</div>
+        <div class="mock-body">
+          <div class="mock-label">Key Financial Ratios</div>
+          <div class="mock-ratios">
+            <div class="mock-ratio"><div class="mock-ratio-name">Operating Margin</div><div class="mock-ratio-val">8.4%</div><span class="badge good">Good</span></div>
+            <div class="mock-ratio"><div class="mock-ratio-name">Current Ratio</div><div class="mock-ratio-val">1.82</div><span class="badge good">Good</span></div>
+            <div class="mock-ratio"><div class="mock-ratio-name">Months of Cash</div><div class="mock-ratio-val">2.1</div><span class="badge mod">Moderate</span></div>
+            <div class="mock-ratio"><div class="mock-ratio-name">Program Expense</div><div class="mock-ratio-val">71.3%</div><span class="badge good">Good</span></div>
+            <div class="mock-ratio"><div class="mock-ratio-name">Rev. Concentration</div><div class="mock-ratio-val">55.1%</div><span class="badge poor">Poor</span></div>
+            <div class="mock-ratio"><div class="mock-ratio-name">Debt to Assets</div><div class="mock-ratio-val">38.2%</div><span class="badge good">Good</span></div>
+          </div>
+          <hr class="mock-divider">
+          <div class="mock-label">Financial Health Indicators</div>
+          <div class="mock-finding"><div class="mock-dot" style="background:#D97706"></div>Revenue concentration warrants further inquiry into donor base composition.</div>
+          <div class="mock-finding"><div class="mock-dot" style="background:#2EAD77"></div>Operating margin is positive and sustainable year-over-year.</div>
+          <div class="mock-finding"><div class="mock-dot" style="background:#2EAD77"></div>Program expense ratio reflects strong mission alignment.</div>
+          <div class="mock-rec">
+            <div class="mock-rec-label">Recommendation</div>
+            <div class="mock-rec-val">Invite to Apply</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- WHAT WE DO -->
-<section class="section alt" id="what">
+<!-- PROBLEM -->
+<section class="section">
+  <div class="inner">
+    <span class="eyebrow">The Reality</span>
+    <h2>Most Foundations Are Making <em>Serious Decisions</em> With Very Little Support.</h2>
+    <div class="problem-body" style="margin-top:1.5rem">
+      <p>A foundation making half a million dollars in grants a year might have one staff person — or none. They care deeply about where their money goes. But between the relationships, the reporting, the board, and the day-to-day, there's rarely enough bandwidth to give every decision the rigor it deserves.</p>
+      <p>That's not a failure of intent. It's a resource problem. And it's exactly the kind of problem Clear Philanthropy was built to solve.</p>
+      <p><strong>We work alongside funders as external program support</strong> — experienced, independent, and fully oriented around your vision and values. Not a vendor you manage. A partner who shows up.</p>
+    </div>
+    <div class="pull-quote">
+      <div class="pull-quote-text">"We're not a platform. We're not a report mill. We're the program capacity your foundation needs — <em>built around your work.</em>"</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section alt" id="services">
   <div class="inner">
     <span class="eyebrow">What We Do</span>
     <h2>Support at Every Stage of <em>the Giving Cycle.</em></h2>
-    <p class="lead">Whether you need help at one moment or across the full arc of a grant relationship, CP brings practitioner experience to every stage.</p>
-
+    <p class="lead">Whether you need help at one moment or across the full arc of a grant relationship, CP brings the same rigor and care to every stage.</p>
     <div class="services-grid">
-      <div class="service-card">
-        <div class="service-number">01</div>
+      <div class="service">
+        <div class="service-num">01</div>
         <div class="service-title">Organizational Assessment</div>
-        <div class="service-desc">A structured financial and organizational health review on any nonprofit you're considering — scored, interpreted, and delivered as a clear, shareable summary.</div>
-        <div class="service-list">
-          <div class="service-list-item">Financial health score across 8 key ratios</div>
-          <div class="service-list-item">Three-year trend analysis</div>
-          <div class="service-list-item">Plain-language narrative and recommendation</div>
-          <div class="service-list-item">Shareable assessment report</div>
-        </div>
+        <div class="service-desc">A structured financial and organizational health review — scored, interpreted, and delivered as a clear, shareable summary that gives you confidence in your decision.</div>
       </div>
-
-      <div class="service-card">
-        <div class="service-number">02</div>
+      <div class="service">
+        <div class="service-num">02</div>
         <div class="service-title">Proposal Review</div>
-        <div class="service-desc">Independent review of grant applications — evaluated against your funding priorities, with a clear summary of strengths, gaps, and recommended next steps.</div>
-        <div class="service-list">
-          <div class="service-list-item">Alignment with your funding priorities</div>
-          <div class="service-list-item">Budget and program narrative review</div>
-          <div class="service-list-item">Recommendation with rationale</div>
-        </div>
+        <div class="service-desc">Independent evaluation of grant applications against your funding priorities — with a plain-language summary of what the proposal shows and what questions it raises.</div>
       </div>
-
-      <div class="service-card">
-        <div class="service-number">03</div>
+      <div class="service">
+        <div class="service-num">03</div>
         <div class="service-title">Strategy & Sourcing</div>
-        <div class="service-desc">Help clarifying what you're trying to fund and how to find the organizations best positioned to get you there.</div>
-        <div class="service-list">
-          <div class="service-list-item">Grantmaking strategy refinement</div>
-          <div class="service-list-item">Applicant sourcing and outreach</div>
-          <div class="service-list-item">Portfolio mapping and gap analysis</div>
-        </div>
+        <div class="service-desc">Help clarifying what you're trying to fund, where to find the right organizations, and how to build a portfolio that reflects your values over time.</div>
       </div>
-
-      <div class="service-card">
-        <div class="service-number">04</div>
+      <div class="service">
+        <div class="service-num">04</div>
         <div class="service-title">Decision & Board Support</div>
-        <div class="service-desc">Support getting from assessment to decision — with the memos, materials, and preparation your board needs to move forward with confidence.</div>
-        <div class="service-list">
-          <div class="service-list-item">Grant decision memos</div>
-          <div class="service-list-item">Board meeting preparation</div>
-          <div class="service-list-item">Site visit facilitation and reporting</div>
-        </div>
+        <div class="service-desc">The memos, materials, and preparation your board needs to move forward with confidence — from site visit reports to grant committee preparation.</div>
       </div>
-
-      <div class="service-card">
-        <div class="service-number">05</div>
+      <div class="service">
+        <div class="service-num">05</div>
         <div class="service-title">Portfolio Management</div>
-        <div class="service-desc">Ongoing management of active grantee relationships — check-ins, reporting, renewals, and the continuity that makes grants land well.</div>
-        <div class="service-list">
-          <div class="service-list-item">Grantee relationship management</div>
-          <div class="service-list-item">Progress monitoring and reporting</div>
-          <div class="service-list-item">Renewal evaluation and closeout</div>
-        </div>
+        <div class="service-desc">Ongoing management of active grantee relationships — check-ins, reporting, renewals, and the continuity that turns a grant into a real partnership.</div>
       </div>
-
-      <div class="service-card" style="background:var(--navy);border-color:var(--navy)">
-        <div class="service-number" style="color:var(--sky)">All of the above</div>
-        <div class="service-title" style="color:white">The Full Cycle</div>
-        <div class="service-desc" style="color:rgba(255,255,255,0.6)">For foundations that want CP embedded across the entire giving cycle — from strategy and sourcing through closeout and renewal. One partner, fully in it with you.</div>
-        <div style="margin-top:1.25rem">
-          <a href="mailto:hello@clearphilanthropy.com" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--sky)">
-            Let's talk about your work →
-          </a>
-        </div>
+      <div class="service featured">
+        <div class="service-num">All of the above</div>
+        <div class="service-title">The Full Cycle</div>
+        <div class="service-desc">For foundations that want CP fully embedded across the entire giving cycle — one partner, fully oriented around your work, from sourcing through closeout.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ASSESSMENT PREVIEW -->
-<section class="section" style="padding-top:5rem;padding-bottom:5rem">
-  <div class="inner">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center">
-      <div>
-        <span class="eyebrow">How It Works in Practice</span>
-        <h2>Clear Answers, <em>Every Time.</em></h2>
-        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-top:1rem">
-          Every organizational assessment CP runs produces a complete financial picture — scored, interpreted, and ready to act on. You get a health score, ratio analysis, trend data, a plain-language narrative, and a recommendation. All of it grounded in a documented methodology, all of it built around your values as a funder.
-        </p>
-        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-top:1rem">
-          This is one piece of what CP does. But it gives you a sense of the rigor we bring to every engagement.
-        </p>
-      </div>
-      <div class="preview-wrap">
-        <div class="preview-header">
-          <div>
-            <div class="preview-org">Eastside Family Resource Center</div>
-            <div class="preview-meta">Financial Assessment · FY 12/31/2024</div>
-          </div>
-          <div class="preview-score">
-            <div class="preview-score-num">78<span>/100</span></div>
-            <div class="preview-risk">Low Risk</div>
-          </div>
-        </div>
-        <div class="preview-body">
-          <div class="preview-label">Key Financial Ratios</div>
-          <div class="preview-ratios">
-            <div class="preview-ratio"><div class="preview-ratio-name">Operating Margin</div><div class="preview-ratio-val">8.4%</div><span class="badge good">Good</span></div>
-            <div class="preview-ratio"><div class="preview-ratio-name">Current Ratio</div><div class="preview-ratio-val">1.82</div><span class="badge good">Good</span></div>
-            <div class="preview-ratio"><div class="preview-ratio-name">Months of Cash</div><div class="preview-ratio-val">2.1</div><span class="badge mod">Moderate</span></div>
-            <div class="preview-ratio"><div class="preview-ratio-name">Program Expense</div><div class="preview-ratio-val">71.3%</div><span class="badge good">Good</span></div>
-            <div class="preview-ratio"><div class="preview-ratio-name">Rev. Concentration</div><div class="preview-ratio-val">55.1%</div><span class="badge poor">Poor</span></div>
-            <div class="preview-ratio"><div class="preview-ratio-name">Debt to Assets</div><div class="preview-ratio-val">38.2%</div><span class="badge good">Good</span></div>
-          </div>
-          <hr class="preview-divider">
-          <div class="preview-label">Financial Health Indicators</div>
-          <div class="preview-finding"><div class="preview-dot" style="background:#D97706"></div>Revenue concentration warrants further inquiry into donor base composition.</div>
-          <div class="preview-finding"><div class="preview-dot" style="background:#2EAD77"></div>Operating margin is positive and sustainable year-over-year.</div>
-          <div class="preview-finding"><div class="preview-dot" style="background:#2EAD77"></div>Program expense ratio reflects strong mission alignment.</div>
-          <div class="preview-rec">
-            <div class="preview-rec-label">Recommendation</div>
-            <div class="preview-rec-val">Invite to Apply</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- HOW WE ENGAGE -->
-<section class="section alt" id="engage">
+<!-- ENGAGE -->
+<section class="section" id="engage">
   <div class="inner">
     <span class="eyebrow">How We Engage</span>
     <h2>Start Anywhere. <em>Go as Deep as You Need.</em></h2>
     <p class="lead">Some relationships begin with a single assessment. Others grow into something much more ongoing. CP is built to meet you where you are.</p>
-
-    <div class="tiers">
-      <div class="tier">
-        <div>
-          <div class="tier-label">One-Time</div>
-          <div class="tier-name">Start with one thing.</div>
+    <div class="engage-grid">
+      <div class="engage-card">
+        <div class="engage-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
         </div>
-        <div class="tier-desc">A natural entry point. Good for funders who want independent support on a specific decision or want to get a sense of how CP works before a deeper engagement.</div>
-        <div class="tier-items">
-          <span class="tier-tag">Single assessment</span>
-          <span class="tier-tag">Portfolio review</span>
-          <span class="tier-tag">Site visit report</span>
-          <span class="tier-tag">Proposal evaluation</span>
-        </div>
-      </div>
-
-      <div class="tier">
-        <div>
-          <div class="tier-label">Cycle Support</div>
-          <div class="tier-name">A full grant cycle, start to finish.</div>
-        </div>
-        <div class="tier-desc">CP works alongside your team through one complete grantmaking cycle. Project-based, defined scope, clear deliverables. Everything from strategy through board prep.</div>
-        <div class="tier-items">
-          <span class="tier-tag">Strategy & sourcing</span>
-          <span class="tier-tag">Applicant screening</span>
-          <span class="tier-tag">Assessments</span>
-          <span class="tier-tag">Decision memos</span>
-          <span class="tier-tag">Board prep</span>
+        <div class="engage-tier">One-Time</div>
+        <div class="engage-title">Start with one thing.</div>
+        <div class="engage-desc">For funders who need support on a specific decision — or want to see how CP works before a longer engagement.</div>
+        <div class="engage-list">
+          <div class="engage-item"><span class="engage-dash">—</span>Organizational assessment</div>
+          <div class="engage-item"><span class="engage-dash">—</span>Grant portfolio review</div>
+          <div class="engage-item"><span class="engage-dash">—</span>Site visit report</div>
+          <div class="engage-item"><span class="engage-dash">—</span>Proposal evaluation</div>
         </div>
       </div>
-
-      <div class="tier" style="background:#F0F6FF;border-left:3px solid var(--blue)">
-        <div>
-          <div class="tier-label" style="color:var(--blue)">Embedded Support</div>
-          <div class="tier-name">Your program team, when you need one.</div>
+      <div class="engage-card">
+        <div class="engage-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
         </div>
-        <div class="tier-desc">An ongoing monthly engagement where CP functions as an extension of your foundation — present at board meetings, managing grantee relationships, handling everything from sourcing through closeout.</div>
-        <div class="tier-items">
-          <span class="tier-tag">Full portfolio management</span>
-          <span class="tier-tag">Grantee relationships</span>
-          <span class="tier-tag">Board participation</span>
-          <span class="tier-tag">Sourcing through closeout</span>
+        <div class="engage-tier">Cycle Support</div>
+        <div class="engage-title">A full grant cycle, end to end.</div>
+        <div class="engage-desc">CP works alongside your team through one complete grantmaking cycle. Project-based, defined scope, clear deliverables.</div>
+        <div class="engage-list">
+          <div class="engage-item"><span class="engage-dash">—</span>Strategy & sourcing</div>
+          <div class="engage-item"><span class="engage-dash">—</span>Applicant screening & assessments</div>
+          <div class="engage-item"><span class="engage-dash">—</span>Decision memos & board prep</div>
+          <div class="engage-item"><span class="engage-dash">—</span>Defined timeline & deliverables</div>
+        </div>
+      </div>
+      <div class="engage-card dark">
+        <div class="engage-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="engage-tier">Embedded Support</div>
+        <div class="engage-title">Your program team, when you need one.</div>
+        <div class="engage-desc">An ongoing monthly engagement where CP functions as an extension of your foundation — present, accountable, built around your values.</div>
+        <div class="engage-list">
+          <div class="engage-item"><span class="engage-dash">—</span>Full portfolio management</div>
+          <div class="engage-item"><span class="engage-dash">—</span>Grantee relationships & site visits</div>
+          <div class="engage-item"><span class="engage-dash">—</span>Board meeting participation</div>
+          <div class="engage-item"><span class="engage-dash">—</span>Sourcing through closeout</div>
         </div>
       </div>
     </div>
@@ -510,28 +341,58 @@
 </section>
 
 <!-- WHO -->
-<section class="section" id="who">
+<section class="section alt" id="who">
   <div class="inner">
     <span class="eyebrow">Who We Work With</span>
-    <h2>Any Funder Who Wants to <em>Give with Intention.</em></h2>
-    <p class="lead">CP works with funders of all shapes and sizes — but we're built for lean teams doing meaningful work without the infrastructure of a large foundation.</p>
-
+    <h2>Built for Funders With <em>Lean Teams</em> and High Standards.</h2>
+    <p class="lead">You don't need a large program staff to give rigorously. You need the right support.</p>
     <div class="who-grid">
       <div class="who-card">
         <div class="who-title">Private & Family Foundations</div>
-        <div class="who-desc">Foundations with small teams doing serious grantmaking — who want the rigor of a full program function without the overhead of building one.</div>
+        <div class="who-desc">Small teams doing serious grantmaking — who want the rigor of a full program function without the overhead of building one in-house.</div>
       </div>
       <div class="who-card">
         <div class="who-title">Corporate Giving Programs</div>
-        <div class="who-desc">Corporate philanthropy and community investment teams who need consistent, defensible assessments and the capacity to go deeper on key grantee relationships.</div>
+        <div class="who-desc">Corporate philanthropy and community investment teams who want consistent, defensible grantmaking and the capacity to go deeper on key relationships.</div>
       </div>
       <div class="who-card">
         <div class="who-title">Family Offices & DAF Advisors</div>
-        <div class="who-desc">Advisors who want to offer clients a higher standard of due diligence and thoughtful counsel on where and how to direct philanthropic capital.</div>
+        <div class="who-desc">Advisors who want to bring a higher standard of diligence and thoughtful counsel to their clients' philanthropic decisions.</div>
       </div>
       <div class="who-card">
         <div class="who-title">Emerging Funders</div>
         <div class="who-desc">New foundations and individual donors who want to build a rigorous, values-driven grantmaking practice from the very beginning.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section">
+  <div class="inner">
+    <span class="eyebrow">Who We Are</span>
+    <h2>Practitioner Experience, <em>In Your Corner.</em></h2>
+    <div class="about-body" style="margin-top:1.5rem">
+      <p>Clear Philanthropy was built by someone who has done this work — managing grant portfolios, conducting site visits, building relationships with nonprofit leaders, and preparing board materials. Not an algorithm. Not a platform that generates reports. A practitioner who brings real experience to every engagement.</p>
+      <p>That matters because grantmaking at its best isn't purely analytical. It requires judgment about organizations, people, and context that doesn't come from a spreadsheet. CP brings both — the rigor of a documented methodology and the instincts that come from actually being in the room.</p>
+      <p><strong>We represent your vision and values.</strong> Not our own theory of change. Not a one-size-fits-all framework. Yours.</p>
+    </div>
+    <div class="principles">
+      <div>
+        <div class="principle-title">Independent</div>
+        <div class="principle-desc">CP works on behalf of the funder, not the grantee. Our assessments reflect what the data shows — not what anyone hopes it will say.</div>
+      </div>
+      <div>
+        <div class="principle-title">Practitioner-led</div>
+        <div class="principle-desc">Every engagement is informed by real program officer experience — the kind of judgment that comes from actually sitting across the table from nonprofit leaders.</div>
+      </div>
+      <div>
+        <div class="principle-title">Values-driven</div>
+        <div class="principle-desc">CP doesn't impose a theory of change. We surface what the data shows and support decisions that reflect what you're trying to accomplish as a funder.</div>
+      </div>
+      <div>
+        <div class="principle-title">Relational</div>
+        <div class="principle-desc">The best grantmaking is built on trust — with grantees, with communities, with boards. CP brings a relational approach to every stage of the work.</div>
       </div>
     </div>
   </div>
@@ -542,12 +403,12 @@
   <div class="inner cta-inner">
     <span class="eyebrow" style="color:var(--sky)">Let's Talk</span>
     <h2>We'd Love to Learn About <em>Your Work.</em></h2>
-    <p>Every engagement starts with a conversation. Tell us about your foundation, what you're trying to accomplish, and where you could use support — we'll take it from there.</p>
-    <a href="mailto:hello@clearphilanthropy.com" class="btn-primary">
+    <p>Every engagement starts with a conversation. Tell us about your foundation, what you're funding, and where you could use support — we'll go from there.</p>
+    <a href="mailto:hello@clearphilanthropy.com" class="btn-cta">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
       hello@clearphilanthropy.com
     </a>
-    <p class="cta-note">No pitch. No pressure. Just a conversation about your work and how CP can help.</p>
+    <p class="cta-note">No pitch. No pressure. Just a conversation.</p>
   </div>
 </section>
 
@@ -555,7 +416,7 @@
 <footer>
   <div class="footer-left"><strong>Clear Philanthropy</strong> · External program support for intentional funders.</div>
   <div class="footer-links">
-    <a href="#what">What We Do</a>
+    <a href="#services">What We Do</a>
     <a href="#engage">How We Engage</a>
     <a href="#who">Who We Work With</a>
     <a href="mailto:hello@clearphilanthropy.com">hello@clearphilanthropy.com</a>
