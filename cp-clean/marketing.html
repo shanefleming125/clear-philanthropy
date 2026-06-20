@@ -54,7 +54,20 @@ nav { position: sticky; top: 0; z-index: 100; background: rgba(11,37,69,0.97); b
 .btn-hero:hover { background: #3a96d8; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(77,166,232,0.3); }
 .hero-note { margin-top: 1.125rem; font-size: 12px; color: rgba(255,255,255,0.2); }
 @media (max-width: 800px) { .hero-inner { grid-template-columns: 1fr; } .hero-mockup-col { display: none; } }
-@media (max-width: 760px) { .dash-mockup { overflow-x: auto; } .dash-table { min-width: 600px; } .dash-stats { grid-template-columns: repeat(2,1fr); } .showcase-label { flex-direction: column; align-items: flex-start; gap: 6px; } }
+@media (max-width: 760px) { .dash-stats { grid-template-columns: repeat(2,1fr); } .showcase-label { flex-direction: column; align-items: flex-start; gap: 6px; } }
+.dash-table-wrap { overflow: visible; }
+.dash-mobile-list { display: none; padding: 0.75rem; }
+.dash-mobile-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 0.875rem 1rem; margin-bottom: 8px; }
+.dash-mobile-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+.dash-mobile-org { font-size: 13px; font-weight: 700; color: var(--text); }
+.dash-mobile-fy { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.dash-mobile-score { font-size: 20px; font-weight: 800; line-height: 1; text-align: right; }
+.dash-mobile-bottom { display: flex; align-items: center; justify-content: space-between; }
+@media (max-width: 640px) {
+  .dash-table-wrap { display: none; }
+  .dash-mobile-list { display: block; }
+  .dash-stats { grid-template-columns: repeat(2,1fr); gap: 8px; }
+}
 
 /* SHARED */
 .section { padding: 7rem 2.5rem; }
@@ -418,6 +431,7 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
           <div class="dash-stat"><div class="dash-stat-label">Moderate Risk</div><div class="dash-stat-val amber">2</div><div class="dash-stat-sub">organizations</div></div>
           <div class="dash-stat"><div class="dash-stat-label">High Risk</div><div class="dash-stat-val red">0</div><div class="dash-stat-sub">organizations</div></div>
         </div>
+        <div class="dash-table-wrap">
         <table class="dash-table">
           <thead>
             <tr>
@@ -467,6 +481,46 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
             </tr>
           </tbody>
         </table>
+        </div>
+
+        <!-- Mobile card list -->
+        <div class="dash-mobile-list">
+          <div class="dash-mobile-card">
+            <div class="dash-mobile-top">
+              <div><div class="dash-mobile-org">Harbor Light Mission</div><div class="dash-mobile-fy">12/31/2024</div></div>
+              <div><div class="dash-mobile-score" style="color:#2EAD77">95<span style="font-size:12px;color:#9CA3AF;font-weight:500">/100</span></div><div style="text-align:right;margin-top:3px"><div class="dash-risk" style="justify-content:flex-end"><div class="dash-risk-dot dot-low"></div><span style="font-size:11px">Low</span></div></div></div>
+            </div>
+            <div class="dash-mobile-bottom"><span class="dash-rec rec-approved">Approved</span><span style="font-size:11px;color:var(--muted)">Clear Philanthropy</span></div>
+          </div>
+          <div class="dash-mobile-card">
+            <div class="dash-mobile-top">
+              <div><div class="dash-mobile-org">Lakeview Community Foundation</div><div class="dash-mobile-fy">12/31/2024</div></div>
+              <div><div class="dash-mobile-score" style="color:#2EAD77">82<span style="font-size:12px;color:#9CA3AF;font-weight:500">/100</span></div><div style="text-align:right;margin-top:3px"><div class="dash-risk" style="justify-content:flex-end"><div class="dash-risk-dot dot-low"></div><span style="font-size:11px">Low</span></div></div></div>
+            </div>
+            <div class="dash-mobile-bottom"><span class="dash-rec rec-invite">Invite to Apply</span><span style="font-size:11px;color:var(--muted)">Clear Philanthropy</span></div>
+          </div>
+          <div class="dash-mobile-card">
+            <div class="dash-mobile-top">
+              <div><div class="dash-mobile-org">Westside Youth Alliance</div><div class="dash-mobile-fy">06/30/2024</div></div>
+              <div><div class="dash-mobile-score" style="color:#2EAD77">78<span style="font-size:12px;color:#9CA3AF;font-weight:500">/100</span></div><div style="text-align:right;margin-top:3px"><div class="dash-risk" style="justify-content:flex-end"><div class="dash-risk-dot dot-low"></div><span style="font-size:11px">Low</span></div></div></div>
+            </div>
+            <div class="dash-mobile-bottom"><span class="dash-rec rec-invite">Invite to Apply</span><span style="font-size:11px;color:var(--muted)">Clear Philanthropy</span></div>
+          </div>
+          <div class="dash-mobile-card">
+            <div class="dash-mobile-top">
+              <div><div class="dash-mobile-org">Northside Family Services</div><div class="dash-mobile-fy">12/31/2023</div></div>
+              <div><div class="dash-mobile-score" style="color:#D97706">74<span style="font-size:12px;color:#9CA3AF;font-weight:500">/100</span></div><div style="text-align:right;margin-top:3px"><div class="dash-risk" style="justify-content:flex-end"><div class="dash-risk-dot dot-mod"></div><span style="font-size:11px">Moderate</span></div></div></div>
+            </div>
+            <div class="dash-mobile-bottom"><span class="dash-rec rec-info">Request More Info</span><span style="font-size:11px;color:var(--muted)">Clear Philanthropy</span></div>
+          </div>
+          <div class="dash-mobile-card">
+            <div class="dash-mobile-top">
+              <div><div class="dash-mobile-org">Sunrise Education Initiative</div><div class="dash-mobile-fy">06/30/2024</div></div>
+              <div><div class="dash-mobile-score" style="color:#2EAD77">91<span style="font-size:12px;color:#9CA3AF;font-weight:500">/100</span></div><div style="text-align:right;margin-top:3px"><div class="dash-risk" style="justify-content:flex-end"><div class="dash-risk-dot dot-low"></div><span style="font-size:11px">Low</span></div></div></div>
+            </div>
+            <div class="dash-mobile-bottom"><span class="dash-rec rec-due">Full Due Diligence</span><span style="font-size:11px;color:var(--muted)">Clear Philanthropy</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
