@@ -54,6 +54,7 @@ nav { position: sticky; top: 0; z-index: 100; background: rgba(11,37,69,0.97); b
 .btn-hero:hover { background: #3a96d8; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(77,166,232,0.3); }
 .hero-note { margin-top: 1.125rem; font-size: 12px; color: rgba(255,255,255,0.2); }
 @media (max-width: 800px) { .hero-inner { grid-template-columns: 1fr; } .hero-mockup-col { display: none; } }
+@media (max-width: 760px) { .dash-mockup { overflow-x: auto; } .dash-table { min-width: 600px; } .dash-stats { grid-template-columns: repeat(2,1fr); } .showcase-label { flex-direction: column; align-items: flex-start; gap: 6px; } }
 
 /* SHARED */
 .section { padding: 7rem 2.5rem; }
@@ -310,7 +311,7 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
   <div class="hero-inner">
     <div>
       <span class="hero-eyebrow reveal">External Program Support</span>
-      <h1 class="reveal reveal-delay-1">Rigorous Grantmaking Doesn't Require a <em>Large Team.</em></h1>
+      <h1 class="reveal reveal-delay-1">Rigorous Grantmaking<br>Doesn't Require <em>a Large Team.</em></h1>
       <p class="hero-sub reveal reveal-delay-2">Clear Philanthropy works alongside foundations and philanthropic funders as an <strong>extension of your team</strong> — bringing the judgment, structure, and operational support your grantmaking deserves.</p>
       <div class="reveal reveal-delay-3">
         <a href="mailto:hello@clearphilanthropy.com" class="btn-hero">
@@ -337,7 +338,7 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
           </div>
         </div>
         <div class="hm-body">
-          <div class="hm-source">📄 Data Source: Audited Financial Statements · Form 990 (FY2024, FY2023)</div>
+          <div class="hm-source">📄 Audited Financial Statements · Form 990 (FY2024, FY2023)</div>
           <div class="hm-label">Key Financial Ratios</div>
           <div class="hm-ratios">
             <div class="hm-ratio"><div class="hm-ratio-name">Operating Margin</div><div class="hm-ratio-val">9.1%</div><span class="badge good">Good</span></div>
@@ -399,7 +400,7 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
     <p class="lead reveal reveal-delay-2">Here's a look at what CP actually delivers — across the assessment, the portfolio view, and the report your team receives.</p>
 
     <!-- Dashboard mockup -->
-    <div style="margin-bottom:5rem" class="reveal">
+    <div class="reveal">
       <div class="showcase-label">
         <div class="showcase-label-num">1</div>
         <div class="showcase-label-text">Portfolio Dashboard — Every org, at a glance</div>
@@ -408,14 +409,7 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
         <div class="dash-header">
           <div>
             <div class="dash-title">Organization Assessments</div>
-            <div class="dash-sub">Review and manage all nonprofit financial assessments</div>
-          </div>
-          <div class="dash-header-actions">
-            <span class="dash-btn dash-btn-blue">+ New Assessment</span>
-            <span class="dash-btn dash-btn-green">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-              Copy Intake Link
-            </span>
+            <div class="dash-sub">Financial health across your full grant portfolio</div>
           </div>
         </div>
         <div class="dash-stats">
@@ -475,127 +469,6 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
         </table>
       </div>
     </div>
-
-    <!-- PDF Report mockup — three cards fanned -->
-    <div class="reveal">
-      <div class="showcase-label">
-        <div class="showcase-label-num">2</div>
-        <div class="showcase-label-text">The Report — A complete deliverable, every time</div>
-      </div>
-      <div class="pdf-scene">
-
-        <!-- Page 1 — Score + Ratios -->
-        <div class="pdf-card pdf-card-1">
-          <div class="pdf-topbar">
-            <div class="pdf-topbar-left">Clear Philanthropy · clearphilanthropy.com</div>
-            <div class="pdf-topbar-right">Page 1 of 3</div>
-          </div>
-          <div class="pdf-body">
-            <div class="pdf-hero-block">
-              <div>
-                <div class="pdf-org-name">Westside Youth Alliance</div>
-                <div class="pdf-org-meta">EIN: 83-4721059 · FY End: 06/30/2024 · Reviewer: Clear Philanthropy</div>
-              </div>
-              <div class="pdf-score-block">
-                <div class="pdf-score-label">Health Score</div>
-                <div class="pdf-score-num">78<span class="pdf-score-denom">/100</span></div>
-                <div class="pdf-risk-badge">Low Risk</div>
-              </div>
-            </div>
-            <div class="pdf-section-label">Key Financial Ratios</div>
-            <div class="pdf-ratios">
-              <div class="pdf-ratio"><div class="pdf-ratio-name">Operating Margin</div><div class="pdf-ratio-val">8.4%</div><span class="badge good">Good</span></div>
-              <div class="pdf-ratio"><div class="pdf-ratio-name">Current Ratio</div><div class="pdf-ratio-val">1.82</div><span class="badge good">Good</span></div>
-              <div class="pdf-ratio"><div class="pdf-ratio-name">Months of Cash</div><div class="pdf-ratio-val">2.1</div><span class="badge mod">Moderate</span></div>
-              <div class="pdf-ratio"><div class="pdf-ratio-name">Debt to Assets</div><div class="pdf-ratio-val">31.2%</div><span class="badge good">Good</span></div>
-              <div class="pdf-ratio"><div class="pdf-ratio-name">Program Expense</div><div class="pdf-ratio-val">74.6%</div><span class="badge good">Good</span></div>
-              <div class="pdf-ratio"><div class="pdf-ratio-name">Fundraising Eff.</div><div class="pdf-ratio-val">9.2%</div><span class="badge good">Good</span></div>
-              <div class="pdf-ratio"><div class="pdf-ratio-name">Rev. Concentration</div><div class="pdf-ratio-val">38.5%</div><span class="badge good">Good</span></div>
-              <div class="pdf-ratio"><div class="pdf-ratio-name">Net Asset Ratio</div><div class="pdf-ratio-val">0.28</div><span class="badge good">Good</span></div>
-            </div>
-            <div class="pdf-divider"></div>
-            <div class="pdf-section-label">Financial Health Indicators</div>
-            <div class="pdf-finding"><div class="pdf-finding-dot" style="background:#2EAD77"></div>Revenue sources are well-diversified — broad base of community donors.</div>
-            <div class="pdf-finding"><div class="pdf-finding-dot" style="background:#D97706"></div>Months of cash below 3 — limited liquidity runway.</div>
-            <div class="pdf-finding"><div class="pdf-finding-dot" style="background:#2EAD77"></div>Operating margin is positive and improving.</div>
-            <div class="pdf-finding"><div class="pdf-finding-dot" style="background:#2EAD77"></div>Program expense ratio reflects strong mission alignment.</div>
-          </div>
-          <div class="pdf-footer">
-            <div class="pdf-footer-text">Clear Philanthropy · clearphilanthropy.com</div>
-            <div class="pdf-footer-text">Financial Health Assessment Report</div>
-          </div>
-        </div>
-
-        <!-- Page 2 — Trends + Narrative -->
-        <div class="pdf-card pdf-card-2">
-          <div class="pdf-topbar">
-            <div class="pdf-topbar-left">Clear Philanthropy · clearphilanthropy.com</div>
-            <div class="pdf-topbar-right">Page 2 of 3</div>
-          </div>
-          <div class="pdf-body">
-            <div class="pdf-section-label">Financial Trends</div>
-            <table class="pdf-trend-table">
-              <thead>
-                <tr><th>Metric</th><th>FY 2024</th><th>FY 2023</th><th>FY 2022</th><th>Trend</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>Total Revenue</td><td>$3.1M</td><td>$2.8M</td><td>$2.5M</td><td class="pdf-trend-up">↑</td></tr>
-                <tr><td>Total Expenses</td><td>$2.8M</td><td>$2.6M</td><td>$2.3M</td><td class="pdf-trend-up">↑</td></tr>
-                <tr><td>Operating Margin</td><td>8.4%</td><td>6.9%</td><td>5.8%</td><td class="pdf-trend-up">↑</td></tr>
-                <tr><td>Months of Cash</td><td>2.1</td><td>2.0</td><td>1.9</td><td class="pdf-trend-flat">→</td></tr>
-                <tr><td>Program Expense</td><td>74.6%</td><td>73.1%</td><td>71.8%</td><td class="pdf-trend-up">↑</td></tr>
-              </tbody>
-            </table>
-            <div class="pdf-divider"></div>
-            <div class="pdf-section-label">Assessment Narrative</div>
-            <div class="pdf-narrative">Westside Youth Alliance demonstrates solid and improving financial health for the fiscal year ending June 30, 2024, with a composite health score of 78/100. The organization generated $3.1 million in revenue against $2.8 million in expenses, producing a positive operating margin of 8.4% — the third consecutive year of margin improvement. Program expense ratio of 74.6% reflects strong mission alignment, with approximately three-quarters of all expenditures directed toward direct service delivery. Revenue is well-diversified across individual donors, foundation grants, and program fees, with no single source exceeding 40% of total revenue...</div>
-          </div>
-          <div class="pdf-footer">
-            <div class="pdf-footer-text">Clear Philanthropy · clearphilanthropy.com</div>
-            <div class="pdf-footer-text">Financial Health Assessment Report</div>
-          </div>
-        </div>
-
-        <!-- Page 3 — About methodology -->
-        <div class="pdf-card pdf-card-3">
-          <div class="pdf-topbar">
-            <div class="pdf-topbar-left">Clear Philanthropy · clearphilanthropy.com</div>
-            <div class="pdf-topbar-right">Page 3 of 3</div>
-          </div>
-          <div class="pdf-body">
-            <div class="pdf-section-label" style="margin-bottom:8px">About This Assessment</div>
-            <div class="pdf-about">
-              <p>This report was prepared by <strong>Clear Philanthropy</strong>, an external program support practice that helps foundations and philanthropic funders assess nonprofit financial health and make more informed grant decisions.</p>
-              <p style="margin-top:7px">The Health Score is a weighted composite of <strong>8 financial ratios</strong> derived from established nonprofit sector benchmarks and practitioner standards — including liquidity, operating performance, program efficiency, leverage, revenue diversification, and net asset position.</p>
-              <p style="margin-top:7px">This assessment reflects the financial data available at the time of review. It is designed to surface material financial patterns and prompt informed inquiry — not to render a definitive judgment on organizational merit or mission impact.</p>
-            </div>
-            <div class="pdf-divider"></div>
-            <div class="pdf-section-label">Ratios Assessed</div>
-            <div class="pdf-ratio-tags">
-              <span class="pdf-ratio-tag">Months of Cash</span>
-              <span class="pdf-ratio-tag">Operating Margin</span>
-              <span class="pdf-ratio-tag">Program Expense Ratio</span>
-              <span class="pdf-ratio-tag">Current Ratio</span>
-              <span class="pdf-ratio-tag">Revenue Concentration</span>
-              <span class="pdf-ratio-tag">Debt to Assets</span>
-              <span class="pdf-ratio-tag">Fundraising Efficiency</span>
-              <span class="pdf-ratio-tag">Net Asset Ratio</span>
-            </div>
-            <div class="pdf-divider"></div>
-            <div style="text-align:center;padding:10px 0">
-              <div style="font-size:9px;font-weight:700;color:var(--blue);letter-spacing:0.04em">clearphilanthropy.com</div>
-              <div style="font-size:8px;color:var(--muted);margin-top:2px">hello@clearphilanthropy.com</div>
-            </div>
-          </div>
-          <div class="pdf-footer">
-            <div class="pdf-footer-text">Clear Philanthropy · clearphilanthropy.com</div>
-            <div class="pdf-footer-text">Financial Health Assessment Report</div>
-          </div>
-        </div>
-
-      </div>
-      <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:0.5rem">Every assessment produces a complete, branded PDF report — ready to share with colleagues or drop into a grant file.</p>
-    </div>
   </div>
 </section>
 
@@ -620,7 +493,7 @@ footer { background: #060F1E; padding: 2rem 2.5rem; display: flex; align-items: 
 <section class="section alt" id="engage">
   <div class="inner-narrow">
     <div class="reveal"><span class="eyebrow">How We Engage</span></div>
-    <h2 class="reveal reveal-delay-1">Start Anywhere. <em>Go as Deep as You Need.</em></h2>
+    <h2 class="reveal reveal-delay-1">Start Anywhere. <em>Grow From There.</em></h2>
     <p class="lead reveal reveal-delay-2">Some relationships begin with a single assessment. Others grow into something much more ongoing. CP is built to meet you where you are.</p>
     <div class="engage-grid reveal reveal-delay-2">
       <div class="engage-card">
