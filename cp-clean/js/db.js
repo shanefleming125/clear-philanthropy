@@ -19,33 +19,45 @@ const DB = {
   },
 
   async saveAssessment(data) {
-    try {
-      const headers = await this.headers();
-      if (typeof AUTH !== 'undefined') {
-        const user = await AUTH.getUser();
-        if (user) data.user_id = user.id;
-      }
-      const payload = {
-        id: data.id,
-        data: data,
-        created_at: data.created_at || new Date().toISOString()
+  try {
+    const isIntake = data.id && data.id.startsWith('intake_');
+    
+    let headers;
+    if (isIntake) {
+      headers = {
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${SUPABASE_ANON}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation,resolution=merge-duplicates'
       };
-      if (data.user_id) payload.user_id = data.user_id;
-
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/assessments`, {
-        method: 'POST',
-        headers: { ...headers, 'Prefer': 'return=representation,resolution=merge-duplicates' },
-        body: JSON.stringify(payload)
-      });
-      if (!res.ok) throw new Error('DB error ' + res.status);
-      localStorage.setItem('cp:' + data.id, JSON.stringify(data));
-      return data;
-    } catch(e) {
-      console.warn('Supabase save failed, using localStorage:', e.message);
-      localStorage.setItem('cp:' + data.id, JSON.stringify(data));
-      return data;
+    } else {
+      headers = await this.headers();
+      headers['Prefer'] = 'return=representation,resolution=merge-duplicates';
+      const user = await AUTH.getUser();
+      if (user) data.user_id = user.id;
     }
-  },
+
+    const payload = {
+      id: data.id,
+      data: data,
+      created_at: data.created_at || new Date().toISOString()
+    };
+    if (data.user_id) payload.user_id = data.user_id;
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/assessments`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('DB error ' + res.status);
+    localStorage.setItem('cp:' + data.id, JSON.stringify(data));
+    return data;
+  } catch(e) {
+    console.warn('Supabase save failed, using localStorage:', e.message);
+    localStorage.setItem('cp:' + data.id, JSON.stringify(data));
+    return data;
+  }
+},
 
   async listAssessments() {
     try {
