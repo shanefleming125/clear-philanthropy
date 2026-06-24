@@ -191,13 +191,11 @@ function updateTrends() {
 
   const g0 = id => parseFloat(document.getElementById(id)?.value) || 0;
 
-  // Raw values for all 3 years
   const rev  = [g0('rev0'),  g0('rev1'),  g0('rev2')];
   const exp  = [g0('exp0'),  g0('exp1'),  g0('exp2')];
   const cash = [g0('cash0'), g0('cash1'), g0('cash2')];
   const prog = [g0('prog0'), g0('prog1'), g0('prog2')];
 
-  // Derived ratios per year (NaN if data missing)
   const margin = rev.map((r, i) => r ? (r - exp[i]) / r * 100 : NaN);
   const moc    = exp.map((e, i) => e ? cash[i] / (e / 12) : NaN);
   const pe     = exp.map((e, i) => e ? prog[i] / e * 100 : NaN);
@@ -208,9 +206,7 @@ function updateTrends() {
     return;
   }
 
-  // direction: compare year0 vs year2 (or year0 vs year1 if year2 missing)
   function dir(a, b, c) {
-    // a = current (year0), b = prior (year1), c = two years ago (year2)
     if (a && b && c) return a >= b && b >= c ? 'up' : a <= b && b <= c ? 'down' : 'mixed';
     if (a && b)      return a > b ? 'up' : a < b ? 'down' : 'flat';
     return null;
@@ -221,69 +217,37 @@ function updateTrends() {
       label: 'Total Revenue',
       dir: dir(rev[0], rev[1], rev[2]),
       hasData: rev[0] > 0 && rev[1] > 0,
-      notes: {
-        up:    'Revenue growing — positive trajectory.',
-        down:  'Revenue declining — worth understanding the cause.',
-        mixed: 'Revenue fluctuating — no clear trend.',
-        flat:  'Revenue relatively stable.'
-      }
+      notes: { up:'Revenue growing — positive trajectory.', down:'Revenue declining — worth understanding the cause.', mixed:'Revenue fluctuating — no clear trend.', flat:'Revenue relatively stable.' }
     },
     {
       label: 'Total Expenses',
       dir: dir(exp[0], exp[1], exp[2]),
       hasData: exp[0] > 0 && exp[1] > 0,
-      notes: {
-        up:    'Expenses rising — watch impact on margin.',
-        down:  'Expenses decreasing — monitor for service impact.',
-        mixed: 'Expenses fluctuating year to year.',
-        flat:  'Expenses relatively stable.'
-      }
+      notes: { up:'Expenses rising — watch impact on margin.', down:'Expenses decreasing — monitor for service impact.', mixed:'Expenses fluctuating year to year.', flat:'Expenses relatively stable.' }
     },
     {
       label: 'Operating Margin',
       dir: dir(margin[0], margin[1], margin[2]),
       hasData: !isNaN(margin[0]) && !isNaN(margin[1]),
-      fmt: v => isNaN(v) ? '' : v.toFixed(1) + '%',
-      values: margin,
-      notes: {
-        up:    'Margin improving — organization moving toward surplus.',
-        down:  'Margin declining — deficit risk increasing.',
-        mixed: 'Margin has been inconsistent.',
-        flat:  'Margin has been relatively stable.'
-      }
+      notes: { up:'Margin improving — organization moving toward surplus.', down:'Margin declining — deficit risk increasing.', mixed:'Margin has been inconsistent.', flat:'Margin has been relatively stable.' }
     },
     {
       label: 'Months of Cash',
       dir: dir(moc[0], moc[1], moc[2]),
       hasData: !isNaN(moc[0]) && !isNaN(moc[1]),
-      notes: {
-        up:    'Cash runway improving.',
-        down:  'Cash runway shrinking — liquidity risk increasing.',
-        mixed: 'Cash position has fluctuated.',
-        flat:  'Cash position has been stable.'
-      }
+      notes: { up:'Cash runway improving.', down:'Cash runway shrinking — liquidity risk increasing.', mixed:'Cash position has fluctuated.', flat:'Cash position has been stable.' }
     },
     {
       label: 'Program Expense Ratio',
       dir: dir(pe[0], pe[1], pe[2]),
       hasData: !isNaN(pe[0]) && !isNaN(pe[1]),
-      notes: {
-        up:    'Program spending share increasing — mission focus strengthening.',
-        down:  'Program spending share declining — review overhead trends.',
-        mixed: 'Program ratio has varied year to year.',
-        flat:  'Program ratio has been consistent.'
-      }
+      notes: { up:'Program spending share increasing — mission focus strengthening.', down:'Program spending share declining — review overhead trends.', mixed:'Program ratio has varied year to year.', flat:'Program ratio has been consistent.' }
     },
     {
       label: 'Cash & Equivalents',
       dir: dir(cash[0], cash[1], cash[2]),
       hasData: cash[0] > 0 && cash[1] > 0,
-      notes: {
-        up:    'Cash balance growing.',
-        down:  'Cash balance declining — monitor closely.',
-        mixed: 'Cash balance has fluctuated.',
-        flat:  'Cash balance holding steady.'
-      }
+      notes: { up:'Cash balance growing.', down:'Cash balance declining — monitor closely.', mixed:'Cash balance has fluctuated.', flat:'Cash balance holding steady.' }
     },
   ];
 
@@ -305,19 +269,23 @@ function updateTrends() {
 
 // ── Save ────────────────────────────────────────────────────────────────────
 async function saveAssessment() {
-  const required = [
-    { id: 'orgName', label: 'Organization Name' },
-    { id: 'ein', label: 'EIN' },
-    { id: 'fyEnd', label: 'Fiscal Year End' },
-    { id: 'reviewer', label: 'Reviewer Name' },
-  ];
-  const missing = required.filter(f => !document.getElementById(f.id)?.value?.trim());
-  if (missing.length) {
-    const errorMsg = document.getElementById('errorMsg');
-    errorMsg.textContent = 'Please fill in required fields: ' + missing.map(f => f.label).join(', ');
-    errorMsg.style.display = 'inline';
-    setTimeout(() => errorMsg.style.display = 'none', 4000);
-    return;
+  // Skip required field validation for intake submissions — they won't have EIN, FY End, or Reviewer yet
+  const isIntake = editingId && editingId.startsWith('intake_');
+  if (!isIntake) {
+    const required = [
+      { id: 'orgName', label: 'Organization Name' },
+      { id: 'ein', label: 'EIN' },
+      { id: 'fyEnd', label: 'Fiscal Year End' },
+      { id: 'reviewer', label: 'Reviewer Name' },
+    ];
+    const missing = required.filter(f => !document.getElementById(f.id)?.value?.trim());
+    if (missing.length) {
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.textContent = 'Please fill in required fields: ' + missing.map(f => f.label).join(', ');
+      errorMsg.style.display = 'inline';
+      setTimeout(() => errorMsg.style.display = 'none', 4000);
+      return;
+    }
   }
 
   const { score } = recalc();
@@ -517,7 +485,7 @@ async function shareAssessment() {
 
 // ── Populate form on load ───────────────────────────────────────────────────
 function populateForm(d) {
-  document.getElementById('formTitle').textContent = 'Edit — ' + d.orgName;
+  document.getElementById('formTitle').textContent = 'Edit — ' + (d.orgName || 'Intake Submission');
   ['orgName','ein','fyEnd','reviewer','reviewDate','recommendation','impression','questions'].forEach(id => {
     const el = document.getElementById(id); if (el && d[id] !== undefined) el.value = d[id];
   });
@@ -569,9 +537,6 @@ function populateForm(d) {
 async function loadExistingFiles(assessmentId) {
   if (!assessmentId) return;
   try {
-    const token = await AUTH.getToken();
-    if (!token) return;
-
     const files = await DB.listFiles(assessmentId);
     const list = document.getElementById('fileList');
     if (!files || !files.length) return;
