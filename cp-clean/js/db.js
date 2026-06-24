@@ -101,7 +101,21 @@ const DB = {
           .filter(d => !userAssessments.find(u => u.id === d.id));
       }
 
-      return [...userAssessments, ...intakeAssessments, ...sampleAssessments];
+      const allAssessments = [...userAssessments, ...intakeAssessments, ...sampleAssessments];
+
+      // Sync localStorage — remove any stale entries that aren't in Supabase
+      const supabaseIds = new Set(allAssessments.map(a => a.id));
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('cp:')) {
+          const id = key.slice(3);
+          if (!supabaseIds.has(id)) {
+            localStorage.removeItem(key);
+          }
+        }
+      }
+
+      return allAssessments;
     } catch(e) {
       console.warn('Supabase list failed, using localStorage');
       return this.localList();
