@@ -18,46 +18,51 @@ const DB = {
     };
   },
 
-  async saveAssessment(data) {
-  try {
-    const isIntake = data.id && data.id.startsWith('intake_');
-    
-    let headers;
-    if (isIntake) {
-      headers = {
-        'apikey': SUPABASE_ANON,
-        'Authorization': `Bearer ${SUPABASE_ANON}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=representation,resolution=merge-duplicates'
-      };
-    } else {
-      headers = await this.headers();
-      headers['Prefer'] = 'return=representation,resolution=merge-duplicates';
-      const user = await AUTH.getUser();
-      if (user) data.user_id = user.id;
-    }
-
-    const payload = {
-      id: data.id,
-      data: data,
-      created_at: data.created_at || new Date().toISOString()
+  // Headers for anonymous intake submissions — always uses anon key, no auth check
+  anonHeaders() {
+    return {
+      'apikey': SUPABASE_ANON,
+      'Authorization': `Bearer ${SUPABASE_ANON}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation,resolution=merge-duplicates'
     };
-    if (data.user_id) payload.user_id = data.user_id;
+  },
 
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/assessments`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(payload)
-    });
-    if (!res.ok) throw new Error('DB error ' + res.status);
-    localStorage.setItem('cp:' + data.id, JSON.stringify(data));
-    return data;
-  } catch(e) {
-    console.warn('Supabase save failed, using localStorage:', e.message);
-    localStorage.setItem('cp:' + data.id, JSON.stringify(data));
-    return data;
-  }
-},
+  async saveAssessment(data) {
+    try {
+      const isIntake = data.id && data.id.startsWith('intake_');
+
+      let headers;
+      if (isIntake) {
+        headers = this.anonHeaders();
+      } else {
+        headers = await this.headers();
+        headers['Prefer'] = 'return=representation,resolution=merge-duplicates';
+        const user = await AUTH.getUser();
+        if (user) data.user_id = user.id;
+      }
+
+      const payload = {
+        id: data.id,
+        data: data,
+        created_at: data.created_at || new Date().toISOString()
+      };
+      if (data.user_id) payload.user_id = data.user_id;
+
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/assessments`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('DB error ' + res.status);
+      localStorage.setItem('cp:' + data.id, JSON.stringify(data));
+      return data;
+    } catch(e) {
+      console.warn('Supabase save failed, using localStorage:', e.message);
+      localStorage.setItem('cp:' + data.id, JSON.stringify(data));
+      return data;
+    }
+  },
 
   async listAssessments() {
     try {
@@ -144,7 +149,6 @@ const DB = {
       );
       if (!res.ok) throw new Error('Not found');
       const rows = await res.json();
-      console.log('getAssessmentByToken rows:', rows);
       if (!rows.length) return null;
       return rows[0]?.data || null;
     } catch(e) {
@@ -155,33 +159,33 @@ const DB = {
 
   // ── File uploads ───────────────────────────────────────────────────────────
 
-async uploadFile(assessmentId, file) {
-  try {
-    const isIntake = assessmentId && assessmentId.startsWith('intake_');
-    const baseHeaders = isIntake
-      ? { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }
-      : await this.headers();
-    delete baseHeaders['Content-Type'];
+  async uploadFile(assessmentId, file) {
+    try {
+      const isIntake = assessmentId && assessmentId.startsWith('intake_');
+      const baseHeaders = isIntake
+        ? { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }
+        : await this.headers();
+      delete baseHeaders['Content-Type'];
 
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-    const path = `${assessmentId}/${Date.now()}_${safeName}`;
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const path = `${assessmentId}/${Date.now()}_${safeName}`;
 
-    const res = await fetch(
-      `${SUPABASE_URL}/storage/v1/object/assessment-files/${path}`,
-      { method: 'POST', headers: baseHeaders, body: file }
-    );
+      const res = await fetch(
+        `${SUPABASE_URL}/storage/v1/object/assessment-files/${path}`,
+        { method: 'POST', headers: baseHeaders, body: file }
+      );
 
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || 'Upload failed ' + res.status);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Upload failed ' + res.status);
+      }
+
+      return { path, name: file.name, size: file.size, type: file.type, uploadedAt: new Date().toISOString() };
+    } catch(e) {
+      console.error('File upload error:', e.message);
+      throw e;
     }
-
-    return { path, name: file.name, size: file.size, type: file.type, uploadedAt: new Date().toISOString() };
-  } catch(e) {
-    console.error('File upload error:', e.message);
-    throw e;
-  }
-},
+  },
 
   async listFiles(assessmentId) {
     try {
