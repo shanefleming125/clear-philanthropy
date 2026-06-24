@@ -155,34 +155,33 @@ const DB = {
 
   // ── File uploads ───────────────────────────────────────────────────────────
 
-  async uploadFile(assessmentId, file) {
-    try {
-      const headers = await this.headers();
-      delete headers['Content-Type'];
+async uploadFile(assessmentId, file) {
+  try {
+    const isIntake = assessmentId && assessmentId.startsWith('intake_');
+    const baseHeaders = isIntake
+      ? { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }
+      : await this.headers();
+    delete baseHeaders['Content-Type'];
 
-      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-      const path = `${assessmentId}/${Date.now()}_${safeName}`;
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const path = `${assessmentId}/${Date.now()}_${safeName}`;
 
-      const res = await fetch(
-        `${SUPABASE_URL}/storage/v1/object/assessment-files/${path}`,
-        {
-          method: 'POST',
-          headers,
-          body: file
-        }
-      );
+    const res = await fetch(
+      `${SUPABASE_URL}/storage/v1/object/assessment-files/${path}`,
+      { method: 'POST', headers: baseHeaders, body: file }
+    );
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || 'Upload failed ' + res.status);
-      }
-
-      return { path, name: file.name, size: file.size, type: file.type, uploadedAt: new Date().toISOString() };
-    } catch(e) {
-      console.error('File upload error:', e.message);
-      throw e;
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'Upload failed ' + res.status);
     }
-  },
+
+    return { path, name: file.name, size: file.size, type: file.type, uploadedAt: new Date().toISOString() };
+  } catch(e) {
+    console.error('File upload error:', e.message);
+    throw e;
+  }
+},
 
   async listFiles(assessmentId) {
     try {
