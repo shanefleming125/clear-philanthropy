@@ -122,7 +122,6 @@
       <div class="card">
         <div class="sec-title">Upload Financial Documents</div>
 
-        <!-- Document guidance -->
         <div class="doc-priority-list">
           <div class="doc-priority-item preferred">
             <span class="doc-priority-badge badge-best">Best</span>
@@ -234,9 +233,9 @@
   <div class="submit-overlay-sub">This usually takes just a few seconds.</div>
 </div>
 
-<script src="js/auth.js"></script>
-<script src="js/db.js"></script>
 <script>
+  const WORKER_URL = 'https://calm-forest-dfc5.shanefleming125.workers.dev';
+
   let stagedFiles = [];
   let showingManual = false;
 
@@ -343,58 +342,62 @@
     const assessmentId = 'intake_' + Date.now();
     const g = id => parseFloat(document.getElementById(id)?.value) || 0;
 
-    const data = {
-      id: assessmentId,
-      orgName, contactName, contactEmail,
-      status: 'submitted',
-      recommendation: 'Pending Review',
-      riskLevel: 'Pending',
-      score: 0,
-      docs: [],
-      created_at: new Date().toISOString(),
-      savedAt: new Date().toISOString(),
-      sourceNotes: hasFiles
-        ? `Submitted via self-report — ${stagedFiles.length} document${stagedFiles.length === 1 ? '' : 's'} uploaded (pending review)`
-        : 'Submitted via self-report (manual entry)'
-    };
+    // Build form data to send to Worker
+    const formData = new FormData();
+    formData.append('orgName', orgName);
+    formData.append('contactName', contactName);
+    formData.append('contactEmail', contactEmail);
+    formData.append('assessmentId', assessmentId);
 
+    // Attach manual data if present
     if (showingManual) {
-      Object.assign(data, {
+      const manualData = {
         ein: document.getElementById('ein')?.value || '',
         fyEnd: document.getElementById('fyEnd')?.value || '',
         rev: g('rev0'), exp: g('exp0'), assets: g('assets0'), liab: g('liab0'),
         cash: g('cash0'), prog: g('prog0'),
         dataSource: 'internal'
-      });
+      };
+      formData.append('manualData', JSON.stringify(manualData));
+    }
+
+    // Attach files
+    for (const file of stagedFiles) {
+      formData.append('files', file);
     }
 
     try {
-      showOverlay('Saving your submission...');
-      await DB.saveAssessment(data);
+      showOverlay('Submitting your documents...');
 
-      if (hasFiles) {
-        showOverlay('Uploading documents...');
-        for (const file of stagedFiles) {
-          try { await DB.uploadFile(assessmentId, file); }
-          catch(e) { console.error('Upload failed:', file.name, e.message); }
-        }
+      const res = await fetch(`${WORKER_URL}/intake`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await res.json();
+
+      if (!res.ok || result.error) {
+        throw new Error(result.error || 'Submission failed');
       }
 
+      // Show success
       document.getElementById('summaryOrgName').textContent = orgName;
       document.getElementById('summaryContact').textContent = contactName;
       document.getElementById('summaryFileCount').textContent = hasFiles
-        ? `${stagedFiles.length} file${stagedFiles.length === 1 ? '' : 's'}`
+        ? `${result.filesUploaded} file${result.filesUploaded === 1 ? '' : 's'}`
         : 'None (manual entry)';
 
       setStep(3);
       hideOverlay();
       document.getElementById('formView').style.display = 'none';
       document.getElementById('successView').style.display = 'block';
+
     } catch(e) {
       hideOverlay();
       errEl.textContent = 'Submission failed. Please try again.';
       errEl.style.display = 'block';
       submitBtn.disabled = false;
+      console.error('Intake submission error:', e.message);
     }
   }
 </script>
