@@ -67,6 +67,8 @@ const DB = {
   async listAssessments() {
     try {
       const headers = await this.headers();
+
+      // Fetch user's own assessments
       const res = await fetch(`${SUPABASE_URL}/rest/v1/assessments?order=created_at.desc&select=*`, {
         headers
       });
@@ -74,6 +76,7 @@ const DB = {
       const rows = await res.json();
       const userAssessments = rows.map(r => r.data || r);
 
+      // Fetch sample assessments
       const sampleRes = await fetch(`${SUPABASE_URL}/rest/v1/assessments?select=*&data->>is_sample=eq.true`, {
         headers
       });
@@ -85,7 +88,20 @@ const DB = {
           .filter(d => d.is_sample && !userAssessments.find(u => u.id === d.id));
       }
 
-      return [...userAssessments, ...sampleAssessments];
+      // Fetch intake submissions (no user_id — saved by Worker via service role)
+      const intakeRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/assessments?id=like.intake_%25&order=created_at.desc&select=*`,
+        { headers }
+      );
+      let intakeAssessments = [];
+      if (intakeRes.ok) {
+        const intakeRows = await intakeRes.json();
+        intakeAssessments = intakeRows
+          .map(r => r.data || r)
+          .filter(d => !userAssessments.find(u => u.id === d.id));
+      }
+
+      return [...userAssessments, ...intakeAssessments, ...sampleAssessments];
     } catch(e) {
       console.warn('Supabase list failed, using localStorage');
       return this.localList();
