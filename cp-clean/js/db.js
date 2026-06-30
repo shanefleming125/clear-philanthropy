@@ -2,6 +2,8 @@
 // All Supabase database operations, auth-aware
 // Note: SUPABASE_URL and SUPABASE_ANON are defined in auth.js
 
+const WORKER_URL = 'https://calm-forest-dfc5.shanefleming125.workers.dev';
+
 const DB = {
 
   async headers() {
@@ -18,29 +20,32 @@ const DB = {
     };
   },
 
-  // Headers for anonymous intake submissions — always uses anon key, no auth check
-  anonHeaders() {
-    return {
-      'apikey': SUPABASE_ANON,
-      'Authorization': `Bearer ${SUPABASE_ANON}`,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation,resolution=merge-duplicates'
-    };
-  },
-
   async saveAssessment(data) {
-    try {
-      const isIntake = data.id && data.id.startsWith('intake_');
-
-      let headers;
-      if (isIntake) {
-        headers = this.anonHeaders();
-      } else {
-        headers = await this.headers();
-        headers['Prefer'] = 'return=representation,resolution=merge-duplicates';
-        const user = await AUTH.getUser();
-        if (user) data.user_id = user.id;
+    // Intake records always go through the Worker using service role key
+    if (data.id && data.id.startsWith('intake_')) {
+      try {
+        const res = await fetch(`${WORKER_URL}/intake-update`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: data.id, data })
+        });
+        const result = await res.json();
+        if (!res.ok || result.error) throw new Error(result.error || 'Worker update failed');
+        localStorage.setItem('cp:' + data.id, JSON.stringify(data));
+        return data;
+      } catch(e) {
+        console.warn('Intake save failed:', e.message);
+        localStorage.setItem('cp:' + data.id, JSON.stringify(data));
+        return data;
       }
+    }
+
+    // Regular assessments go through Supabase directly with user auth
+    try {
+      const headers = await this.headers();
+      headers['Prefer'] = 'return=representation,resolution=merge-duplicates';
+      const user = await AUTH.getUser();
+      if (user) data.user_id = user.id;
 
       const payload = {
         id: data.id,
@@ -69,17 +74,13 @@ const DB = {
       const headers = await this.headers();
 
       // Fetch user's own assessments
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/assessments?order=created_at.desc&select=*`, {
-        headers
-      });
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/assessments?order=created_at.desc&select=*`, { headers });
       if (!res.ok) throw new Error('DB error');
       const rows = await res.json();
       const userAssessments = rows.map(r => r.data || r);
 
       // Fetch sample assessments
-      const sampleRes = await fetch(`${SUPABASE_URL}/rest/v1/assessments?select=*&data->>is_sample=eq.true`, {
-        headers
-      });
+      const sampleRes = await fetch(`${SUPABASE_URL}/rest/v1/assessments?select=*&data->>is_sample=eq.true`, { headers });
       let sampleAssessments = [];
       if (sampleRes.ok) {
         const sampleRows = await sampleRes.json();
@@ -88,7 +89,7 @@ const DB = {
           .filter(d => d.is_sample && !userAssessments.find(u => u.id === d.id));
       }
 
-      // Fetch intake submissions (no user_id — saved by Worker via service role)
+      // Fetch intake submissions
       const intakeRes = await fetch(
         `${SUPABASE_URL}/rest/v1/assessments?id=like.intake_%25&order=created_at.desc&select=*`,
         { headers }
@@ -103,15 +104,13 @@ const DB = {
 
       const allAssessments = [...userAssessments, ...intakeAssessments, ...sampleAssessments];
 
-      // Sync localStorage — remove any stale entries that aren't in Supabase
+      // Sync localStorage — remove stale entries not in Supabase
       const supabaseIds = new Set(allAssessments.map(a => a.id));
       for (let i = localStorage.length - 1; i >= 0; i--) {
         const key = localStorage.key(i);
         if (key && key.startsWith('cp:')) {
           const id = key.slice(3);
-          if (!supabaseIds.has(id)) {
-            localStorage.removeItem(key);
-          }
+          if (!supabaseIds.has(id)) localStorage.removeItem(key);
         }
       }
 
@@ -125,9 +124,7 @@ const DB = {
   async getAssessment(id) {
     try {
       const headers = await this.headers();
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/assessments?id=eq.${id}&select=*`, {
-        headers
-      });
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/assessments?id=eq.${id}&select=*`, { headers });
       if (!res.ok) throw new Error('DB error');
       const rows = await res.json();
       return rows[0]?.data || rows[0] || null;
@@ -138,6 +135,24 @@ const DB = {
   },
 
   async deleteAssessment(id) {
+    // Intake records deleted via Worker
+    if (id && id.startsWith('intake_')) {
+      try {
+        const res = await fetch(`${WORKER_URL}/intake-delete`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        const result = await res.json();
+        if (!res.ok || result.error) throw new Error(result.error || 'Worker delete failed');
+      } catch(e) {
+        console.warn('Intake delete failed:', e.message);
+      }
+      localStorage.removeItem('cp:' + id);
+      return;
+    }
+
+    // Regular assessments deleted via Supabase
     try {
       const headers = await this.headers();
       const res = await fetch(`${SUPABASE_URL}/rest/v1/assessments?id=eq.${id}`, {
@@ -170,12 +185,7 @@ const DB = {
     try {
       const res = await fetch(
         `${SUPABASE_URL}/rest/v1/assessments?select=data&data->>shareToken=eq.${encodeURIComponent(token)}`,
-        {
-          headers: {
-            'apikey': SUPABASE_ANON,
-            'Authorization': `Bearer ${SUPABASE_ANON}`,
-          }
-        }
+        { headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` } }
       );
       if (!res.ok) throw new Error('Not found');
       const rows = await res.json();
@@ -191,18 +201,15 @@ const DB = {
 
   async uploadFile(assessmentId, file) {
     try {
-      const isIntake = assessmentId && assessmentId.startsWith('intake_');
-      const baseHeaders = isIntake
-        ? { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }
-        : await this.headers();
-      delete baseHeaders['Content-Type'];
+      const headers = await this.headers();
+      delete headers['Content-Type'];
 
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
       const path = `${assessmentId}/${Date.now()}_${safeName}`;
 
       const res = await fetch(
         `${SUPABASE_URL}/storage/v1/object/assessment-files/${path}`,
-        { method: 'POST', headers: baseHeaders, body: file }
+        { method: 'POST', headers, body: file }
       );
 
       if (!res.ok) {
@@ -220,25 +227,12 @@ const DB = {
   async listFiles(assessmentId) {
     try {
       const headers = await this.headers();
-
-      const res = await fetch(
-        `${SUPABASE_URL}/storage/v1/object/list/assessment-files`,
-        {
-          method: 'POST',
-          headers: { ...headers, 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            prefix: `${assessmentId}/`,
-            limit: 100,
-            offset: 0,
-            sortBy: { column: 'name', order: 'asc' }
-          })
-        }
-      );
-
-      if (!res.ok) {
-        console.warn('listFiles response not ok:', res.status, await res.text());
-        return [];
-      }
+      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/list/assessment-files`, {
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prefix: `${assessmentId}/`, limit: 100, offset: 0, sortBy: { column: 'name', order: 'asc' } })
+      });
+      if (!res.ok) { console.warn('listFiles not ok:', res.status); return []; }
       const files = await res.json();
       return (files || []).filter(f => f.name && f.name !== '.emptyFolderPlaceholder');
     } catch(e) {
@@ -250,20 +244,12 @@ const DB = {
   async getFileUrl(path) {
     try {
       const headers = await this.headers();
-
-      const res = await fetch(
-        `${SUPABASE_URL}/storage/v1/object/sign/assessment-files/${path}`,
-        {
-          method: 'POST',
-          headers: { ...headers, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ expiresIn: 3600 })
-        }
-      );
-
-      if (!res.ok) {
-        console.warn('getFileUrl not ok:', res.status, await res.text());
-        return null;
-      }
+      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/sign/assessment-files/${path}`, {
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ expiresIn: 3600 })
+      });
+      if (!res.ok) { console.warn('getFileUrl not ok:', res.status); return null; }
       const data = await res.json();
       return `${SUPABASE_URL}/storage/v1${data.signedURL}`;
     } catch(e) {
@@ -275,17 +261,13 @@ const DB = {
   async deleteFile(path) {
     try {
       const headers = await this.headers();
-      const res = await fetch(
-        `${SUPABASE_URL}/storage/v1/object/assessment-files`,
-        {
-          method: 'DELETE',
-          headers: { ...headers, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prefixes: [path] })
-        }
-      );
+      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/assessment-files`, {
+        method: 'DELETE',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prefixes: [path] })
+      });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        console.warn('File delete error:', res.status, err);
         throw new Error('Delete failed ' + res.status);
       }
       return true;
